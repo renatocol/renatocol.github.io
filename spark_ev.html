@@ -391,9 +391,14 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <p class="sl">Iniciar viagem</p>
     <div class="g3">
       <div class="fg"><label>SoC ao sair (%)</label><input type="number" id="va-soc-inicio" min="1" max="100" value="100"></div>
-      <div class="fg"><label>Horário de partida</label><input type="time" id="va-hora-inicio"></div>
-      <div class="fg"><label>Destino (opcional)</label><input type="text" id="va-destino" placeholder="ex: Campinas"></div>
+      <div class="fg"><label>Horário de partida — opcional</label><input type="time" id="va-hora-inicio"></div>
+      <div class="fg"><label>Destino — opcional</label><input type="text" id="va-destino" placeholder="ex: Campinas"></div>
     </div>
+    <div class="g3" style="margin-top:4px">
+      <div class="fg"><label>Km no Trajeto ao sair — opcional</label><input type="number" id="va-km-inicio" min="0" step="0.1" placeholder="0 se zerou o Trajeto" value="0"></div>
+      <div class="fg"><label>Modo de condução</label><select id="va-modo-inicio"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
+    </div>
+    <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:4px 0 12px">Se não zerou o Trajeto no painel, informe o km atual para desconto automático.</p>
     <div style="margin-bottom:14px">
       <div class="seg-label">Tipo de trajeto</div>
       <div class="seg-ctrl" id="va-perfil-ctrl">
@@ -432,14 +437,18 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <p class="sl" id="va-trecho-titulo">Trecho 1 — em andamento</p>
       <div class="g3">
         <div class="fg"><label>SoC agora (%)</label><input type="number" id="va-soc-now" min="0" max="99" placeholder="ex: 42" oninput="calcTrecho()"></div>
-        <div class="fg"><label>Km neste trecho</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()"></div>
+        <div class="fg"><label>Trajeto indicado no painel (km)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()"></div>
         <div class="fg"><label>Aut. indicada (km)</label><input type="number" id="va-aut-panel" min="0" placeholder="ex: 78" oninput="calcTrecho()"></div>
+      </div>
+      <div class="g2" style="margin-bottom:8px">
+        <div class="fg"><label>Modo de condução neste trecho</label><select id="va-modo-trecho"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
       </div>
       <div class="g2">
         <div class="fg"><label>Horário de chegada / parada</label><input type="time" id="va-hora-trecho" oninput="calcTrechoVel()"></div>
-        <div class="fg"><label>Distância ao destino (km)</label><input type="number" id="va-dest-restante" min="1" placeholder="ex: 110" oninput="calcTrecho()"></div>
+        <div class="fg"><label>Distância ao destino — opcional</label><input type="number" id="va-dest-restante" min="1" placeholder="deixe vazio se não souber" oninput="calcTrecho()"></div>
       </div>
       <div class="vel-calc" id="va-vel-calc">Informe km + horário para calcular velocidade.</div>
+          <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:4px 0 8px">Leia o campo <strong style="color:var(--text2)">Trajeto</strong> no painel do Spark. Dica: zere-o ao sair para leitura direta a cada parada.</p>
       <input type="hidden" id="va-vel-hidden" value="90">
       <p class="sdiv">Recarga nesta parada (opcional)</p>
       <div class="g3">
@@ -520,15 +529,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     </div>
     <div class="panel">
       <p class="sl">Viagens registradas</p>
-      <div class="log-wrap">
-        <table class="log-table">
-          <thead><tr>
-            <th>Data</th><th>Perfil</th><th>SoC</th><th>km</th><th>kWh</th><th>km/kWh</th><th>km/h</th><th>R$/km</th><th>Local</th><th></th>
-          </tr></thead>
-          <tbody id="log-tbody"></tbody>
-        </table>
-      </div>
+      <div id="log-tbody"></div>
     </div>
+
   </div>
 </div>
 
@@ -779,9 +782,10 @@ function addTrip(){
   const km=parseFloat(document.getElementById('f-km').value);
   const fb=document.getElementById('f-fb');
   if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0){fb.textContent='Erro: verifique SoC e km.';fb.style.color='var(--danger)';return;}
-  trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||90,temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
+  trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||90,temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   ['f-sf','f-km','f-aut','f-thora','f-tcheg','f-temp','f-tarifa','f-total','f-posto','f-mun','f-oper','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-modo').value='padrao';
   document.getElementById('f-si').value=100;document.getElementById('f-vel-calc').textContent='Informe km + horários para calcular velocidade média.';
   fb.textContent='Registrado!';fb.style.color='var(--green-light)';setTimeout(()=>fb.textContent='',3000);
   previewLog();updateCalc();setStatus(trips.length+' viagem(ns) registrada(s)');
@@ -794,7 +798,9 @@ function iniciarViagem(){
   const hora=document.getElementById('va-hora-inicio').value;
   const dest=document.getElementById('va-destino').value.trim();
   if(isNaN(socI)||socI<=0){alert('Informe o SoC inicial.');return;}
-  viagemAtiva={socInicio:socI,horaInicio:hora,horaUltimaPartida:hora,destino:dest,perfilManual:vaPerfil,trechos:[],socAtual:socI};
+  const kmInicio=parseFloat(document.getElementById('va-km-inicio').value)||0;
+  const modoInicio=document.getElementById('va-modo-inicio').value;
+  viagemAtiva={socInicio:socI,horaInicio:hora,horaUltimaPartida:hora,destino:dest,perfilManual:vaPerfil,trechos:[],socAtual:socI,kmInicio:kmInicio,modo:modoInicio};
   document.getElementById('va-inicio-panel').style.display='none';
   document.getElementById('va-ativa').style.display='block';
   const cards=document.getElementById('va-summary-cards');
@@ -854,10 +860,16 @@ function addTrecho(){
   if(isNaN(sn)||isNaN(km)||viagemAtiva.socAtual<=sn||km<=0){fb.textContent='Erro: verifique os dados.';fb.style.color='var(--danger)';return;}
   const vel=parseFloat(document.getElementById('va-vel-hidden').value)||null;
   const hora=document.getElementById('va-hora-trecho').value;
-  viagemAtiva.trechos.push({n:viagemAtiva.trechos.length+1,socI:viagemAtiva.socAtual,socF:sn,km,autPanel:parseFloat(document.getElementById('va-aut-panel').value)||null,vel,destRestante:parseFloat(document.getElementById('va-dest-restante').value)||null,tipo:document.getElementById('va-tipo').value,tarifa:parseFloat(document.getElementById('va-tarifa').value)||null,total:parseFloat(document.getElementById('va-total-pago').value)||null,posto:document.getElementById('va-posto').value.trim(),oper:document.getElementById('va-oper').value.trim(),hora});
+  // km real = Trajeto lido - km inicial (se não zerou)
+  const kmInicioDa = viagemAtiva.kmInicio||0;
+  const kmAcum = viagemAtiva.trechos.reduce((s,t)=>s+t.km,0);
+  const kmReal = Math.max(0.1, km - kmInicioDa - kmAcum);
+  const modoTrecho = document.getElementById('va-modo-trecho').value;
+  viagemAtiva.trechos.push({n:viagemAtiva.trechos.length+1,socI:viagemAtiva.socAtual,socF:sn,km:parseFloat(kmReal.toFixed(1)),autPanel:parseFloat(document.getElementById('va-aut-panel').value)||null,vel,destRestante:parseFloat(document.getElementById('va-dest-restante').value)||null,tipo:document.getElementById('va-tipo').value,tarifa:parseFloat(document.getElementById('va-tarifa').value)||null,total:parseFloat(document.getElementById('va-total-pago').value)||null,posto:document.getElementById('va-posto').value.trim(),oper:document.getElementById('va-oper').value.trim(),hora,modo:modoTrecho});
   viagemAtiva.socAtual=sn;
   if(hora)viagemAtiva.horaUltimaPartida=hora;
   ['va-soc-now','va-km','va-aut-panel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('va-modo-trecho').value='padrao';
   document.getElementById('va-trecho-titulo').textContent='Trecho '+(viagemAtiva.trechos.length+1)+' — em andamento';
   document.getElementById('va-trecho-result').style.display='none';
   document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
@@ -913,7 +925,9 @@ function encerrarViagem(){
   let tc=0,hc=false;
   t.forEach(x=>{const k=(x.socI-x.socF)*BATT/100;const tar=x.tarifa||(x.total&&k>0?x.total/k:null);if(tar){tc+=k*tar;hc=true;}});
   const postos=t.filter(x=>x.posto).map(x=>x.posto).join(' → ');
-  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:avgVel,temp:25,ac:0.8,traf:0,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
+  const modos=t.map(x=>x.modo||'padrao');
+  const modoFinal=modos.length===1?modos[0]:(modos.every(m=>m===modos[0])?modos[0]:'misto');
+  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:avgVel,temp:25,ac:0.8,traf:0,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   viagemAtiva=null;vaPerfil='auto';resetVaUI();updateCalc();
   alert('Viagem salva!\nPerfil: '+perfilFinal+fonte);
@@ -923,7 +937,9 @@ function encerrarViagem(){
 function resetVaUI(){
   document.getElementById('va-inicio-panel').style.display='block';
   document.getElementById('va-ativa').style.display='none';
-  ['va-soc-inicio','va-hora-inicio','va-destino'].forEach(id=>document.getElementById(id).value='');
+  ['va-soc-inicio','va-hora-inicio','va-destino','va-km-inicio'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('va-km-inicio').value=0;
+  document.getElementById('va-modo-inicio').value='padrao';
   document.getElementById('va-soc-inicio').value=100;
   document.getElementById('va-perfil-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.getElementById('va-perfil-hint').innerHTML=HINTS['auto'];
@@ -963,8 +979,25 @@ function renderStats(){
 
   document.getElementById('log-tbody').innerHTML=filtered.slice().reverse().map(t=>{
     const kwh=((t.socI-t.socF)*BATT/100),ef=(t.km/kwh).toFixed(2),cpm=tripCostPerKm(t);
-    const local=[t.posto,t.mun].filter(Boolean).join(', ')||t.obs||'—';
-    return`<tr><td>${t.data}</td><td><span class="tag tag-${t.perfil}">${t.perfil}</span></td><td>${t.socI}→${t.socF}%</td><td>${t.km}</td><td>${kwh.toFixed(1)}</td><td>${ef}</td><td>${t.vel?t.vel.toFixed(0):'—'}</td><td>${cpm?'R$'+cpm.toFixed(3):'—'}</td><td>${local}</td><td><button class="btn-sm" onclick="removeTrip(${t.id})">✕</button></td></tr>`;
+    const local=[t.posto,t.mun].filter(Boolean).join(', ')||t.obs||'';
+    const mL={'eco':'Eco','padrao':'Padrão','esportivo':'Esportivo'};
+    const mTag=t.modo&&t.modo!=='padrao'?`<span style="font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:20px;background:var(--bg3);color:var(--text3);border:1px solid var(--border)">${mL[t.modo]||t.modo}</span>`:'';
+    return`<div style="border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span class="tag tag-${t.perfil}">${t.perfil}</span>
+        ${mTag}
+        <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">${t.data}</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${t.socI}%→${t.socF}%</span>
+        ${local?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${local}</span>`:''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${t.km}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${t.vel?t.vel.toFixed(0):'—'}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
+      </div>
+      <button onclick="removeTrip(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
+    </div>`;
   }).join('');
 }
 
