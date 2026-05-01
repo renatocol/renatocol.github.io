@@ -304,6 +304,14 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 
 <!-- REGISTRAR VIAGEM -->
 <div id="pane-log" class="pane">
+  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
+    <span style="color:var(--text2);font-weight:500">Como usar</span><br>
+    Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, de ponta a ponta — por exemplo, ao chegar em casa após uma saída.<br>
+    <span style="color:var(--green-light)">1.</span> Informe o SoC antes de sair e ao chegar, lidos no painel do Spark<br>
+    <span style="color:var(--green-light)">2.</span> Informe a distância (campo <strong style="color:var(--text2)">Trajeto</strong> no painel) e os horários<br>
+    <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado — a velocidade média será calculada sobre o tempo efetivo em movimento<br>
+    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar</em> — os dados entram no Histórico e calibram o modelo
+  </div>
   <div class="panel">
     <p class="sl">Dados da viagem</p>
     <div class="g2">
@@ -632,7 +640,25 @@ function velFromTimes(km,t1min,chegId,displayId,hiddenId){
   box.textContent='Informe km + horários para calcular velocidade média.';
   return null;
 }
-function calcLogVel(){velFromTimes('f-km',timeToMin(document.getElementById('f-thora').value),'f-tcheg','f-vel-calc','f-vel');previewLog();}
+function calcLogVel(){
+  const km=parseFloat(document.getElementById('f-km').value);
+  const t1=timeToMin(document.getElementById('f-thora').value);
+  const t2=timeToMin(document.getElementById('f-tcheg').value);
+  const paradas=parseFloat(document.getElementById('f-paradas').value)||0;
+  const box=document.getElementById('f-vel-calc');
+  if(!isNaN(km)&&km>0&&t1!==null&&t2!==null){
+    let durTotal=t2-t1;if(durTotal<=0)durTotal+=1440;
+    const durLiq=Math.max(1,durTotal-paradas);
+    const vel=km/(durLiq/60);
+    document.getElementById('f-vel').value=vel.toFixed(1);
+    const paStr=paradas>0?` (${Math.floor(paradas/60)?Math.floor(paradas/60)+'h':''}${paradas%60?paradas%60+'min':''} de paradas)`:'';
+    box.innerHTML='Tempo total: <strong>'+(Math.floor(durTotal/60)?Math.floor(durTotal/60)+'h':'')+String(durTotal%60).padStart(2,'0')+'min</strong>'+paStr+' → tempo em movimento: <strong>'+(Math.floor(durLiq/60)?Math.floor(durLiq/60)+'h':'')+String(durLiq%60).padStart(2,'0')+'min</strong> → vel. média: <strong>'+vel.toFixed(1)+' km/h</strong>';
+  } else {
+    document.getElementById('f-vel').value=90;
+    box.textContent='Informe km + horários para calcular velocidade média.';
+  }
+  previewLog();
+}
 function calcTrechoVel(){if(viagemAtiva)velFromTimes('va-km',timeToMin(viagemAtiva.horaUltimaPartida),'va-hora-trecho','va-vel-calc','va-vel-hidden');calcTrecho();}
 
 const profiles={
@@ -785,6 +811,7 @@ function addTrip(){
   trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||90,temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   ['f-sf','f-km','f-aut','f-thora','f-tcheg','f-temp','f-tarifa','f-total','f-posto','f-mun','f-oper','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-paradas').value=0;
   document.getElementById('f-modo').value='padrao';
   document.getElementById('f-si').value=100;document.getElementById('f-vel-calc').textContent='Informe km + horários para calcular velocidade média.';
   fb.textContent='Registrado!';fb.style.color='var(--green-light)';setTimeout(()=>fb.textContent='',3000);
@@ -869,6 +896,7 @@ function addTrecho(){
   viagemAtiva.socAtual=sn;
   if(hora)viagemAtiva.horaUltimaPartida=hora;
   ['va-soc-now','va-km','va-aut-panel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('va-paradas').value=0;
   document.getElementById('va-modo-trecho').value='padrao';
   document.getElementById('va-trecho-titulo').textContent='Trecho '+(viagemAtiva.trechos.length+1)+' — em andamento';
   document.getElementById('va-trecho-result').style.display='none';
