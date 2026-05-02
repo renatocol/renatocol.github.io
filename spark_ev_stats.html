@@ -1235,7 +1235,7 @@ function calcPlan(){
   document.getElementById('pl-need-sub').textContent = kwhNeed.toFixed(1)+' kwh percurso + '+kwhMarg.toFixed(1)+' kWh margem ('+plMargem+'%)';
   document.getElementById('pl-tempo').textContent = hStr(hViagem);
   document.getElementById('pl-tempo-sub').textContent = 'a '+vMed+' km/h médios · sem paradas';
-  document.getElementById('pl-ef').textContent = ef.toFixed(2);
+  document.getElementById('pl-ef').innerHTML = ef.toFixed(2)+'<span class="metric-unit"> km/kWh</span>';
   document.getElementById('pl-ef-sub').textContent = efSource;
   document.getElementById('pl-marg-show').innerHTML = plMargem+'<span class="metric-unit"> %</span>';
   document.getElementById('pl-marg-sub').textContent = 'aplicada no destino e nas paradas';
