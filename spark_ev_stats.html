@@ -631,9 +631,13 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 
   <div class="panel">
     <p class="sl">Dados da viagem</p>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="fg"><label>Local de partida</label><input type="text" id="pl-orig" placeholder="ex: Vinhedo-SP" oninput="calcPlan()"></div>
+      <div class="fg"><label>Destino</label><input type="text" id="pl-dest" placeholder="ex: Santa Rita do Passa Quatro-SP" oninput="calcPlan()"></div>
+    </div>
     <div class="g2">
       <div class="fg"><label>SoC atual (%)</label><input type="number" id="pl-soc" min="1" max="100" placeholder="ex: 85" oninput="calcPlan()"></div>
-      <div class="fg"><label>Distância total (km)</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 420" oninput="calcPlan()"></div>
+      <div class="fg"><label>Distância total (km) — via Google Maps</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 420" oninput="calcPlan()"></div>
     </div>
     <div class="g2">
       <div class="fg"><label>Perfil predominante</label>
@@ -666,8 +670,10 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="g2" style="margin-bottom:12px">
       <div class="metric"><p class="metric-label">Energia disponível</p><p class="metric-value" id="pl-disp">—<span class="metric-unit"> kWh</span></p><p class="metric-sub" id="pl-disp-km"></p></div>
       <div class="metric"><p class="metric-label">Energia necessária</p><p class="metric-value" id="pl-need">—<span class="metric-unit"> kWh</span></p><p class="metric-sub" id="pl-need-sub"></p></div>
-      <div class="metric"><p class="metric-label">Tempo estimado</p><p class="metric-value" id="pl-tempo">—</p><p class="metric-sub" id="pl-tempo-sub"></p></div>
+      <div class="metric"><p class="metric-label">Tempo de deslocamento</p><p class="metric-value" id="pl-tempo">—</p><p class="metric-sub" id="pl-tempo-sub"></p></div>
+      <div class="metric"><p class="metric-label">Tempo total com recarga</p><p class="metric-value" id="pl-tempo-total">—</p><p class="metric-sub" id="pl-tempo-total-sub"></p></div>
       <div class="metric"><p class="metric-label">Eficiência usada</p><p class="metric-value" id="pl-ef">—<span class="metric-unit"> km/kWh</span></p><p class="metric-sub" id="pl-ef-sub"></p></div>
+      <div class="metric"><p class="metric-label">Margem aplicada</p><p class="metric-value" id="pl-marg-show">—<span class="metric-unit"> %</span></p><p class="metric-sub" id="pl-marg-sub"></p></div>
     </div>
 
     <div class="panel" id="pl-etapas-panel">
@@ -1220,14 +1226,19 @@ function calcPlan(){
   // Charging power and efficiency
   const kWcharger = tipo==='dc' ? 50*0.90 : 6.6*0.90;
 
+  const orig = document.getElementById('pl-orig').value.trim();
+  const dest = document.getElementById('pl-dest').value.trim();
+
   document.getElementById('pl-disp').innerHTML = kwhDisp.toFixed(1)+'<span class="metric-unit"> kWh</span>';
   document.getElementById('pl-disp-km').textContent = '≈ '+(kwhDisp*ef).toFixed(0)+' km de autonomia';
   document.getElementById('pl-need').innerHTML = kwhTotal.toFixed(1)+'<span class="metric-unit"> kWh</span>';
-  document.getElementById('pl-need-sub').textContent = kwhNeed.toFixed(1)+' km + '+kwhMarg.toFixed(1)+' margem';
+  document.getElementById('pl-need-sub').textContent = kwhNeed.toFixed(1)+' kwh percurso + '+kwhMarg.toFixed(1)+' kWh margem ('+plMargem+'%)';
   document.getElementById('pl-tempo').textContent = hStr(hViagem);
-  document.getElementById('pl-tempo-sub').textContent = 'a '+vMed+' km/h médios ('+perf+')';
+  document.getElementById('pl-tempo-sub').textContent = 'a '+vMed+' km/h médios · sem paradas';
   document.getElementById('pl-ef').textContent = ef.toFixed(2);
   document.getElementById('pl-ef-sub').textContent = efSource;
+  document.getElementById('pl-marg-show').innerHTML = plMargem+'<span class="metric-unit"> %</span>';
+  document.getElementById('pl-marg-sub').textContent = 'aplicada no destino e nas paradas';
 
   const al = document.getElementById('pl-alert');
   const etapas = document.getElementById('pl-etapas');
@@ -1236,7 +1247,10 @@ function calcPlan(){
     // No recharge needed
     const socCheg = ((kwhDisp - kwhNeed) / BATT * 100);
     al.className = 'alert a-ok';
-    al.innerHTML = 'A carga atual é suficiente para os '+km+' km. Chegada estimada com <strong>'+Math.round(socCheg)+'%</strong> de bateria.';
+    const chegLabel = (orig&&dest)?orig+' → '+dest:'';
+    al.innerHTML = 'A carga atual é suficiente para os '+km+' km'+(chegLabel?' ('+chegLabel+')':'')+'. Chegada estimada com <strong>'+Math.round(socCheg)+'%</strong> de bateria — acima da margem de '+plMargem+'% definida.';
+    document.getElementById('pl-tempo-total').textContent = hStr(hViagem);
+    document.getElementById('pl-tempo-total-sub').textContent = 'sem paradas de recarga';
     etapas.innerHTML = buildEtapa(0, soc, Math.round(socCheg), km, 0, hStr(hViagem), null, true);
   } else {
     // Calculate minimum stops needed
@@ -1256,8 +1270,16 @@ function calcPlan(){
       if(nStops > 10) break; // safety
     }
 
+    // Total recharge time
+    const kwhPerStop = (0.95 - plMargem/100) * BATT * UTIL;
+    const hRecargaTotal = (kwhPerStop * nStops) / kWcharger;
+    const hTotal = hViagem + hRecargaTotal;
+    document.getElementById('pl-tempo-total').textContent = hStr(hTotal);
+    document.getElementById('pl-tempo-total-sub').textContent = hStr(hViagem)+' deslocamento + '+hStr(hRecargaTotal)+' recarga';
+
+    const chegLabel2 = (orig&&dest)?orig+' → '+dest:'';
     al.className = 'alert a-info';
-    al.innerHTML = 'São necessárias <strong>'+nStops+' parada'+(nStops>1?'s':'')+' de recarga</strong> para completar os '+km+' km com '+plMargem+'% de margem.';
+    al.innerHTML = 'São necessárias <strong>'+nStops+' parada'+(nStops>1?'s':'')+' de recarga</strong> para completar os '+km+' km'+(chegLabel2?' ('+chegLabel2+')':'')+' com <strong>'+plMargem+'%</strong> de margem ao chegar. A margem define também o SoC mínimo de cada trecho antes da recarga.';
 
     // Build itinerary
     const segKm = km / (nStops + 1); // roughly equal segments
@@ -1278,7 +1300,8 @@ function calcPlan(){
       const hRecarg = kwhAdd / kWcharger;
       const hTrecho = segKm / vMed;
 
-      html += buildEtapa(i, Math.round(socApos), Math.round(socRecarg), Math.round(segKm), Math.round(hTrecho*60), hStr(hRecarg), tipo, false, 'Parada '+i+' — km '+kmSeg, 'Recarga '+tipo.toUpperCase());
+      const kmPos = Math.round(segKm * i);
+      html += buildEtapa(i, Math.round(socApos), Math.round(socRecarg), Math.round(segKm), Math.round(hTrecho*60), hStr(hRecarg), tipo, false, 'Parada '+i+' — km '+kmPos+' de '+km, 'Carregar até '+Math.round(socRecarg)+'% · margem '+plMargem+'% usada no trecho');
       socAtual = socRecarg;
     }
 
@@ -1308,7 +1331,7 @@ function buildEtapa(n, socAntes, socDepois, kmTrecho, minTrecho, tempoRecarga, t
 
   if(!isPartida && kmTrecho>0){
     html += `<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">
-      Trecho: ${kmTrecho} km · ${minTrecho} min · SoC ao chegar: <span style="color:var(--warn)">${socAntes}%</span>
+      Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min · SoC ao chegar: <span style="color:var(--warn)">${socAntes}% → próximo da margem de segurança</span>
     </div>`;
   }
 
