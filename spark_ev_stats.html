@@ -1355,15 +1355,27 @@ function buildEtapa(n, socAntes, socDepois, kmTrecho, minTrecho, tempoRecarga, t
     const routeUrl = mapsRouteUrl(orig||'minha localização', dest||'destino');
     if(routeUrl) html += mapsBtn(routeUrl, 'Ver rota no Google Maps');
   } else if(!isFinal){
-    // Stop: search for EV chargers along the route
-    const kmPos = titulo ? titulo.match(/km (\d+) de/)?.[1] : null;
-    let searchCtx = 'carregadores veículos elétricos';
-    if(orig && dest) searchCtx += ' entre '+orig+' e '+dest;
-    else if(kmPos) searchCtx += ' rodovia km '+kmPos;
+    // Stop: two Maps links - route + chargers near midpoint
     html += `<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">
       Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min · SoC ao chegar: <span style="color:var(--warn)">${socAntes}% → próximo da margem de segurança</span>
     </div>`;
-    html += mapsBtn(mapsUrl(searchCtx), 'Buscar carregadores neste trecho');
+    // Estimate midpoint fraction along route for charger search
+    const kmPosTot = titulo ? parseInt(titulo.match(/km (\d+) de/)?.[1]||'0') : 0;
+    const fracMid = km>0 ? Math.max(0.05, Math.min(0.95,(kmPosTot - kmTrecho/2)/km)) : 0.5;
+    // Build route link
+    const stopRouteUrl = mapsRouteUrl(orig||null, dest||null);
+    // Build charger search near midpoint of this segment
+    let chargerQuery = 'carregadores veículos elétricos EV';
+    if(orig && dest) chargerQuery += ' entre '+orig+' e '+dest;
+    const chargerUrl = 'https://www.google.com/maps/search/'+encodeURIComponent(chargerQuery)+(orig&&dest?'/@'+encodeURIComponent(orig+' '+dest):'');
+    html += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">`;
+    if(stopRouteUrl) html += mapsBtn(stopRouteUrl, 'Ver rota completa');
+    // Charger search: open Maps route with charger layer hint
+    const chargerSearchUrl = orig && dest
+      ? 'https://www.google.com/maps/dir/'+encodeURIComponent(orig)+'/'+encodeURIComponent(dest)+'/@,12z/data=!4m2!4m1!3e0'
+      : 'https://www.google.com/maps/search/'+encodeURIComponent('carregadores elétricos veículos elétricos');
+    html += mapsBtn(chargerSearchUrl, 'Carregadores ao longo da rota');
+    html += `</div>`;
   } else {
     // Arrival
     if(!isPartida && kmTrecho>0){
