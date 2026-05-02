@@ -1251,7 +1251,9 @@ function calcPlan(){
     al.innerHTML = 'A carga atual é suficiente para os '+km+' km'+(chegLabel?' ('+chegLabel+')':'')+'. Chegada estimada com <strong>'+Math.round(socCheg)+'%</strong> de bateria — acima da margem de '+plMargem+'% definida.';
     document.getElementById('pl-tempo-total').textContent = hStr(hViagem);
     document.getElementById('pl-tempo-total-sub').textContent = 'sem paradas de recarga';
-    etapas.innerHTML = buildEtapa(0, soc, Math.round(socCheg), km, 0, hStr(hViagem), null, true);
+    const routeUrl0 = mapsRouteUrl(orig||null, dest||null);
+    etapas.innerHTML = buildEtapa(0, soc, Math.round(socCheg), km, Math.round(hViagem*60), null, null, true, orig&&dest?orig+' → '+dest:'Chegada ao destino', orig&&dest?'':'');
+    if(routeUrl0) etapas.innerHTML += mapsBtn(routeUrl0, 'Ver rota completa no Google Maps');
   } else {
     // Calculate minimum stops needed
     // Max range per charge (from 95% to margin%)
@@ -1315,11 +1317,30 @@ function calcPlan(){
   }
 }
 
+function mapsUrl(query){
+  return 'https://www.google.com/maps/search/'+encodeURIComponent(query);
+}
+function mapsRouteUrl(orig, dest){
+  if(orig && dest)
+    return 'https://www.google.com/maps/dir/'+encodeURIComponent(orig)+'/'+encodeURIComponent(dest);
+  return null;
+}
+function mapsBtn(url, label){
+  return `<a href="${url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--info);border:1px solid var(--info);border-radius:20px;padding:3px 9px;text-decoration:none;margin-top:6px;background:var(--info-bg)">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    ${label}
+  </a>`;
+}
+
 function buildEtapa(n, socAntes, socDepois, kmTrecho, minTrecho, tempoRecarga, tipoRecarga, isFinal, titulo, sub){
   const isPartida = n===0;
   const dotColor = isFinal ? 'var(--green)' : isPartida ? 'var(--green)' : 'var(--warn)';
   const label = titulo || (isFinal ? 'Chegada' : isPartida ? 'Partida' : 'Parada '+n);
-  let html = `<div style="display:flex;gap:10px;margin-bottom:${isFinal?'0':'14px'}">
+  const orig = document.getElementById('pl-orig').value.trim();
+  const dest = document.getElementById('pl-dest').value.trim();
+  const km   = parseFloat(document.getElementById('pl-km').value)||0;
+
+  let html = `<div style="display:flex;gap:10px;margin-bottom:${isFinal?'0':'16px'}">
     <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
       <div style="width:12px;height:12px;border-radius:50%;background:${dotColor};border:2px solid var(--bg);margin-top:2px"></div>
       ${!isFinal?'<div style="width:2px;flex:1;background:var(--border);margin:4px 0"></div>':''}
@@ -1329,15 +1350,39 @@ function buildEtapa(n, socAntes, socDepois, kmTrecho, minTrecho, tempoRecarga, t
 
   if(sub) html += `<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${sub}</div>`;
 
-  if(!isPartida && kmTrecho>0){
+  // Maps links per step type
+  if(isPartida){
+    const routeUrl = mapsRouteUrl(orig||'minha localização', dest||'destino');
+    if(routeUrl) html += mapsBtn(routeUrl, 'Ver rota no Google Maps');
+  } else if(!isFinal){
+    // Stop: search for EV chargers along the route
+    const kmPos = titulo ? titulo.match(/km (\d+) de/)?.[1] : null;
+    let searchCtx = 'carregadores veículos elétricos';
+    if(orig && dest) searchCtx += ' entre '+orig+' e '+dest;
+    else if(kmPos) searchCtx += ' rodovia km '+kmPos;
     html += `<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">
       Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min · SoC ao chegar: <span style="color:var(--warn)">${socAntes}% → próximo da margem de segurança</span>
     </div>`;
+    html += mapsBtn(mapsUrl(searchCtx), 'Buscar carregadores neste trecho');
+  } else {
+    // Arrival
+    if(!isPartida && kmTrecho>0){
+      html += `<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">
+        Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min
+      </div>`;
+    }
+    if(dest) html += mapsBtn(mapsUrl(dest), 'Ver destino no Google Maps');
+  }
+
+  if(!isPartida && !isFinal && kmTrecho>0){
+    // already added trecho above for stops
+  } else if(!isPartida && isFinal && kmTrecho<=0){
+    // no trecho for direct arrival
   }
 
   if(tempoRecarga && socDepois){
     const tipoLabel = tipoRecarga==='dc'?'DC fast 50kW':'AC 6,6kW';
-    html += `<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:3px">
+    html += `<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:4px">
       Recarregar até ${socDepois}% · tempo estimado: ${tempoRecarga} · ${tipoLabel}
     </div>`;
   }
