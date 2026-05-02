@@ -224,6 +224,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <button class="tab" id="tab-rota" onclick="switchTab('recarga')">Viagem ativa</button>
   <button class="tab" onclick="switchTab('stats')">Histórico</button>
   <button class="tab" onclick="switchTab('config')">Config.</button>
+  <button class="tab" onclick="switchTab('plan')">Planejar</button>
 </div>
 
 <div class="content">
@@ -612,6 +613,76 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       Para instalar como app: menu do navegador → "Adicionar à tela inicial"
     </div>
   </div>
+</div>
+
+<!-- PLANEJAR VIAGEM -->
+<div id="pane-plan" class="pane">
+
+  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
+    <span style="color:var(--text2);font-weight:500">O que é esta aba</span><br>
+    Use antes de uma viagem longa para estimar se a bateria atual é suficiente — e, se não for, quantas paradas de recarga serão necessárias e quanto carregar em cada uma.<br><br>
+    <span style="color:var(--green-light)">Como usar</span><br>
+    <span style="color:var(--green-light)">1.</span> Informe a carga atual da bateria (SoC)<br>
+    <span style="color:var(--green-light)">2.</span> Informe a distância total do trajeto — obtenha do Google Maps<br>
+    <span style="color:var(--green-light)">3.</span> Escolha o perfil predominante da viagem e a margem de chegada desejada<br>
+    <span style="color:var(--green-light)">4.</span> O app calcula autonomia disponível, necessidade de recargas e tempo estimado<br><br>
+    <span style="color:var(--text3)">O cálculo usa sua eficiência média real registrada no Histórico. Sem dados suficientes, usa o modelo padrão calibrado.</span>
+  </div>
+
+  <div class="panel">
+    <p class="sl">Dados da viagem</p>
+    <div class="g2">
+      <div class="fg"><label>SoC atual (%)</label><input type="number" id="pl-soc" min="1" max="100" placeholder="ex: 85" oninput="calcPlan()"></div>
+      <div class="fg"><label>Distância total (km)</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 420" oninput="calcPlan()"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Perfil predominante</label>
+        <select id="pl-perfil" onchange="calcPlan()">
+          <option value="estrada">Estrada</option>
+          <option value="misto">Misto</option>
+          <option value="urbano">Urbano</option>
+        </select>
+      </div>
+      <div class="fg"><label>Tipo de carregador disponível</label>
+        <select id="pl-tipo" onchange="calcPlan()">
+          <option value="dc">DC fast (50 kW)</option>
+          <option value="ac">AC rápido (6,6 kW)</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="seg-label">Margem de segurança ao chegar</div>
+      <div class="seg-ctrl" id="pl-margem-ctrl">
+        <button class="seg-btn" onclick="setPlMargem(10,this)">10%</button>
+        <button class="seg-btn active" onclick="setPlMargem(20,this)">20%</button>
+        <button class="seg-btn" onclick="setPlMargem(30,this)">30%</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pl-result" style="display:none">
+    <div id="pl-alert" class="alert a-info"></div>
+
+    <div class="g2" style="margin-bottom:12px">
+      <div class="metric"><p class="metric-label">Energia disponível</p><p class="metric-value" id="pl-disp">—<span class="metric-unit"> kWh</span></p><p class="metric-sub" id="pl-disp-km"></p></div>
+      <div class="metric"><p class="metric-label">Energia necessária</p><p class="metric-value" id="pl-need">—<span class="metric-unit"> kWh</span></p><p class="metric-sub" id="pl-need-sub"></p></div>
+      <div class="metric"><p class="metric-label">Tempo estimado</p><p class="metric-value" id="pl-tempo">—</p><p class="metric-sub" id="pl-tempo-sub"></p></div>
+      <div class="metric"><p class="metric-label">Eficiência usada</p><p class="metric-value" id="pl-ef">—<span class="metric-unit"> km/kWh</span></p><p class="metric-sub" id="pl-ef-sub"></p></div>
+    </div>
+
+    <div class="panel" id="pl-etapas-panel">
+      <p class="sl">Roteiro de viagem</p>
+      <div id="pl-etapas"></div>
+    </div>
+
+    <div class="panel" style="margin-top:0">
+      <p class="sl">Nota</p>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
+        Paradas distribuídas uniformemente ao longo do trajeto. Localize postos de recarga no trajeto via Google Maps, PlugShare ou similar. O tempo de recarga considera eficiência de 90% do carregador.
+      </div>
+    </div>
+  </div>
+
 </div>
 
 </div><!-- /content -->
@@ -1099,13 +1170,174 @@ function applyConfigUI(){
   document.getElementById('tog-desconto').classList.toggle('on',cfg.desconto!==false);
 }
 
+// ── PLANEJAR VIAGEM ──────────────────────────────────────────────────────────
+let plMargem = 20;
+
+function setPlMargem(v, btn){
+  plMargem = v;
+  document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  calcPlan();
+}
+
+function calcPlan(){
+  const soc  = parseFloat(document.getElementById('pl-soc').value);
+  const km   = parseFloat(document.getElementById('pl-km').value);
+  const perf = document.getElementById('pl-perfil').value;
+  const tipo = document.getElementById('pl-tipo').value;
+  const res  = document.getElementById('pl-result');
+
+  if(isNaN(soc)||isNaN(km)||soc<=0||km<=0){ res.style.display='none'; return; }
+  res.style.display='block';
+
+  // Get real efficiency for profile from trips, fallback to calibrated model
+  const perfTrips = trips.filter(t=>t.perfil===perf);
+  let ef;
+  if(perfTrips.length>=2){
+    const tk=perfTrips.reduce((s,t)=>s+t.km,0);
+    const tw=perfTrips.reduce((s,t)=>s+(t.socI-t.socF)*BATT/100,0);
+    ef = tk/tw;
+  } else {
+    // Use calibrated model at typical speed for profile
+    const vRef = perf==='estrada'?95:perf==='misto'?60:35;
+    const cRef = calcC(vRef, 25, 0.8, perf==='urbano'?25:perf==='misto'?12:0, true);
+    ef = 1/cRef;
+  }
+  const efSource = perfTrips.length>=2 ? 'média real ('+perfTrips.length+' viagens)' : 'modelo calibrado';
+
+  // Energy calculations
+  const kwhDisp   = soc * BATT / 100 * UTIL;
+  const kwhMarg   = plMargem / 100 * BATT;
+  const kwhNeed   = km / ef;           // energy to cover distance
+  const kwhTotal  = kwhNeed + kwhMarg; // total needed including margin
+  const kwhDef    = kwhTotal - kwhDisp; // deficit (negative = surplus)
+
+  // Time estimate (typical speed by profile)
+  const vMed = perf==='estrada'?90:perf==='misto'?60:35;
+  const hViagem = km / vMed;
+  const hStr = h => Math.floor(h)+'h'+(Math.round((h%1)*60)).toString().padStart(2,'0')+'min';
+
+  // Charging power and efficiency
+  const kWcharger = tipo==='dc' ? 50*0.90 : 6.6*0.90;
+
+  document.getElementById('pl-disp').innerHTML = kwhDisp.toFixed(1)+'<span class="metric-unit"> kWh</span>';
+  document.getElementById('pl-disp-km').textContent = '≈ '+(kwhDisp*ef).toFixed(0)+' km de autonomia';
+  document.getElementById('pl-need').innerHTML = kwhTotal.toFixed(1)+'<span class="metric-unit"> kWh</span>';
+  document.getElementById('pl-need-sub').textContent = kwhNeed.toFixed(1)+' km + '+kwhMarg.toFixed(1)+' margem';
+  document.getElementById('pl-tempo').textContent = hStr(hViagem);
+  document.getElementById('pl-tempo-sub').textContent = 'a '+vMed+' km/h médios ('+perf+')';
+  document.getElementById('pl-ef').textContent = ef.toFixed(2);
+  document.getElementById('pl-ef-sub').textContent = efSource;
+
+  const al = document.getElementById('pl-alert');
+  const etapas = document.getElementById('pl-etapas');
+
+  if(kwhDef <= 0){
+    // No recharge needed
+    const socCheg = ((kwhDisp - kwhNeed) / BATT * 100);
+    al.className = 'alert a-ok';
+    al.innerHTML = 'A carga atual é suficiente para os '+km+' km. Chegada estimada com <strong>'+Math.round(socCheg)+'%</strong> de bateria.';
+    etapas.innerHTML = buildEtapa(0, soc, Math.round(socCheg), km, 0, hStr(hViagem), null, true);
+  } else {
+    // Calculate minimum stops needed
+    // Max range per charge (from 95% to margin%)
+    const kwhPerCharge = (0.95 - plMargem/100) * BATT * UTIL;
+    const rangePerCharge = kwhPerCharge * ef;
+    const firstRange = kwhDisp * ef - kwhMarg * ef; // range from current charge to margin
+
+    // How many stops needed?
+    let nStops = 0;
+    let remaining = km;
+    let curKwh = kwhDisp;
+    while(curKwh * ef < remaining + kwhMarg){
+      nStops++;
+      curKwh += kwhPerCharge;
+      remaining = Math.max(0, remaining);
+      if(nStops > 10) break; // safety
+    }
+
+    al.className = 'alert a-info';
+    al.innerHTML = 'São necessárias <strong>'+nStops+' parada'+(nStops>1?'s':'')+' de recarga</strong> para completar os '+km+' km com '+plMargem+'% de margem.';
+
+    // Build itinerary
+    const segKm = km / (nStops + 1); // roughly equal segments
+    let html = '';
+    let socAtual = soc;
+    let kmAcum = 0;
+
+    // Departure
+    html += buildEtapa(0, socAtual, null, 0, 0, null, null, false, 'Partida', 'SoC: '+socAtual+'%');
+
+    for(let i=1; i<=nStops; i++){
+      const kmSeg = Math.round(segKm * i);
+      const kwhSeg = segKm / ef;
+      const socApos = socAtual - (kwhSeg / BATT * 100);
+      // Charge to 95% (or enough to reach next stop + margin)
+      const kwhAdd = (0.95 - plMargem/100) * BATT * UTIL;
+      const socRecarg = Math.min(95, socApos + kwhAdd/BATT*100);
+      const hRecarg = kwhAdd / kWcharger;
+      const hTrecho = segKm / vMed;
+
+      html += buildEtapa(i, Math.round(socApos), Math.round(socRecarg), Math.round(segKm), Math.round(hTrecho*60), hStr(hRecarg), tipo, false, 'Parada '+i+' — km '+kmSeg, 'Recarga '+tipo.toUpperCase());
+      socAtual = socRecarg;
+    }
+
+    // Arrival
+    const kwhUltSeg = segKm / ef;
+    const socCheg = Math.round(socAtual - kwhUltSeg/BATT*100);
+    const hUlt = segKm / vMed;
+    html += buildEtapa(nStops+1, socAtual, socCheg, Math.round(segKm), Math.round(hUlt*60), null, null, true, 'Chegada', 'SoC: '+Math.max(0,socCheg)+'%');
+
+    etapas.innerHTML = html;
+  }
+}
+
+function buildEtapa(n, socAntes, socDepois, kmTrecho, minTrecho, tempoRecarga, tipoRecarga, isFinal, titulo, sub){
+  const isPartida = n===0;
+  const dotColor = isFinal ? 'var(--green)' : isPartida ? 'var(--green)' : 'var(--warn)';
+  const label = titulo || (isFinal ? 'Chegada' : isPartida ? 'Partida' : 'Parada '+n);
+  let html = `<div style="display:flex;gap:10px;margin-bottom:${isFinal?'0':'14px'}">
+    <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+      <div style="width:12px;height:12px;border-radius:50%;background:${dotColor};border:2px solid var(--bg);margin-top:2px"></div>
+      ${!isFinal?'<div style="width:2px;flex:1;background:var(--border);margin:4px 0"></div>':''}
+    </div>
+    <div style="flex:1;padding-bottom:${isFinal?'0':'4px'}">
+      <div style="font-size:12px;font-weight:500;color:var(--text2);font-family:var(--mono)">${label}</div>`;
+
+  if(sub) html += `<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${sub}</div>`;
+
+  if(!isPartida && kmTrecho>0){
+    html += `<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">
+      Trecho: ${kmTrecho} km · ${minTrecho} min · SoC ao chegar: <span style="color:var(--warn)">${socAntes}%</span>
+    </div>`;
+  }
+
+  if(tempoRecarga && socDepois){
+    const tipoLabel = tipoRecarga==='dc'?'DC fast 50kW':'AC 6,6kW';
+    html += `<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:3px">
+      Recarregar até ${socDepois}% · tempo estimado: ${tempoRecarga} · ${tipoLabel}
+    </div>`;
+  }
+
+  if(isFinal && socDepois!==null){
+    html += `<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:4px">
+      Chegada com ~${Math.max(0,socDepois)}% de bateria ✓
+    </div>`;
+  }
+
+  html += `</div></div>`;
+  return html;
+}
+
 function switchTab(t){
-  const tabs=['calc','log','recarga','stats','config'];
+  const tabs=['calc','log','recarga','stats','config','plan'];
   document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('pane-'+t).classList.add('active');
   if(t==='stats')renderStats();
   if(t==='calc')requestAnimationFrame(()=>updateCalc());
+// Init plan margem
+document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
 }
 
 // Init
