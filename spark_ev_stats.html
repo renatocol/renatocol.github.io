@@ -289,6 +289,27 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green-light);margin-right:3px;vertical-align:middle"></span>Ponto atual</span>
       <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#d85a30;margin-right:3px;vertical-align:middle"></span>Reais</span>
     </div>
+    <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);line-height:1.7">
+      C(v) = 0,110 + 0,00007v + 0,000006v² kWh/km<br>
+      <span style="opacity:0.75">Cr=0,010 · Cd~0,38 · Área ~2,28m² · Massa 1.345kg · Pneus 205/60 R16</span>
+    </div>
+    <div style="margin-top:10px">
+      <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('▸')?'▾ Fechar explicação':'▸ Entender o modelo'" style="font-size:11px;font-family:var(--mono);color:var(--green-light);background:transparent;border:none;cursor:pointer;padding:0;letter-spacing:0.03em">▸ Entender o modelo</button>
+      <div style="display:none;margin-top:10px;font-size:11px;color:var(--text2);font-family:var(--mono);line-height:1.9;padding:12px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)">
+        <p style="color:var(--text2);font-weight:500;margin-bottom:8px">Como funciona a curva de consumo</p>
+        O consumo estimado em kWh/km é decomposto em três parcelas físicas:<br><br>
+        <span style="color:var(--green-light)">C(v) = 0,110 + 0,00007·v + 0,000006·v²</span><br><br>
+        <span style="color:var(--text2)">· 0,110</span> — perdas fixas: resistência ao rolamento (Cr=0,010, pneus 205/60 R16, massa 1.345 kg) mais auxiliares elétricos (BMS, luzes, ventilação)<br><br>
+        <span style="color:var(--text2)">· 0,00007·v</span> — perdas lineares com a velocidade: atrito interno do motor e transmissão<br><br>
+        <span style="color:var(--text2)">· 0,000006·v²</span> — arrasto aerodinâmico, que cresce com o quadrado da velocidade; o coeficiente reflete a carroceria box do Spark (Cd~0,38, área frontal ~2,28 m²) — maior que sedãs convencionais<br><br>
+        <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px">
+        <span style="color:var(--text2)">Curva padrão</span> (tracejada) — modelo teórico sem ajuste<br>
+        <span style="color:var(--text2)">Curva calibrada</span> (contínua) — ajustada pelo fator calculado a partir das suas viagens reais; quanto mais registros, mais precisa<br>
+        <span style="color:var(--text2)">Pontos laranjas</span> — eficiência observada em cada viagem, plotada na velocidade média do trecho<br><br>
+        A calibração funciona como um fator de escala global: se seus dados reais mostram consumo sistematicamente menor ou maior que o modelo padrão, o fator corrige a curva inteira proporcionalmente.
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="panel">
