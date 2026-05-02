@@ -577,8 +577,14 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       Bateria: <span style="color:var(--green-light)">42 kWh</span><br>
       Inmetro: <span style="color:var(--green-light)">258 km</span><br>
       WLTP est.: <span style="color:var(--green-light)">~298 km</span><br>
-      Fator utilizável: <span style="color:var(--green-light)">98%</span><br><br>
-      <span style="color:var(--text3)">Perfil automático pela vel. média:<br>&lt;50 → Urbano · 50–80 → Misto · &gt;80 → Estrada</span>
+      Fator utilizável: <span style="color:var(--green-light)">98%</span><br>
+      Motor: <span style="color:var(--green-light)">101 cv · 18,4 kgfm</span><br>
+      Massa: <span style="color:var(--green-light)">1.345 kg</span><br>
+      Pneus: <span style="color:var(--green-light)">205/60 R16</span><br><br>
+      <span style="color:var(--text3)">Modelo: C(v) = 0,110 + 0,00007v + 0,000006v²<br>
+      Cr=0,010 · Cd~0,38 · Área frontal ~2,28m²<br>
+      Calibrado pelos dados reais de cada usuário<br><br>
+      Perfil auto: &lt;50 → Urbano · 50–80 → Misto · &gt;80 → Estrada</span>
     </div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--mono)">
       Spark EV Dashboard · Faísca<br>
@@ -682,7 +688,13 @@ function applyProfile(k,btn){
   updateCalc();
 }
 
-function consumoBase(v){return 0.115+0.00008*v+0.000003*v*v;}
+function consumoBase(v){
+  // Parâmetros baseados em física real do Spark EV:
+  // Massa 1345kg · Pneus 205/60 R16 (Cr=0.010) · Área frontal ~2.28m² · Cd~0.38 (box)
+  // Coeficiente quadrático 2× maior que sedã, refletindo aerodinâmica box
+  // Calibrado pelos dados reais via fator de escala no Histórico
+  return 0.110 + 0.00007*v + 0.000006*v*v;
+}
 function tempF(t){if(t<0)return 1.35;if(t<10)return 1+(10-t)*0.025;if(t<30)return 1.0;return 1+(t-30)*0.008;}
 function calcC(v,t,ac,tr,cal){
   let r=(consumoBase(v)*tempF(t)+(v>0?ac/v:0))*(1+tr/100);
