@@ -684,7 +684,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="panel" style="margin-top:0">
       <p class="sl">Nota</p>
       <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
-        Paradas distribuídas uniformemente ao longo do trajeto. Localize postos de recarga no trajeto via Google Maps, PlugShare ou similar. O tempo de recarga considera eficiência de 90% do carregador.
+        Paradas distribuídas uniformemente ao longo do trajeto. O tempo de recarga considera eficiência de 90% do carregador.<br><br>
+        <span style="color:var(--green-light)">Faísca</span> calcula <strong style="color:var(--text2)">quanto</strong> carregar em cada parada com base no desempenho real do seu Spark. <span style="color:var(--green-light)">Carregados.com.br</span> mostra <strong style="color:var(--text2)">onde</strong> estão os eletropostos no trajeto. Use os dois em conjunto para um planejamento completo.
       </div>
     </div>
   </div>
@@ -1325,9 +1326,15 @@ function mapsRouteUrl(orig, dest){
     return 'https://www.google.com/maps/dir/'+encodeURIComponent(orig)+'/'+encodeURIComponent(dest);
   return null;
 }
-function mapsBtn(url, label){
-  return `<a href="${url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--info);border:1px solid var(--info);border-radius:20px;padding:3px 9px;text-decoration:none;margin-top:6px;background:var(--info-bg)">
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+function mapsBtn(url, label, isCarregados){
+  const color = isCarregados ? 'var(--green-light)' : 'var(--info)';
+  const bg    = isCarregados ? 'var(--green-dim)'   : 'var(--info-bg)';
+  const border= isCarregados ? 'var(--green-dim)'   : 'var(--info)';
+  const icon  = isCarregados
+    ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`
+    : `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+  return `<a href="${url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:${color};border:1px solid ${border};border-radius:20px;padding:3px 9px;text-decoration:none;margin-top:6px;background:${bg}">
+    ${icon}
     ${label}
   </a>`;
 }
@@ -1370,11 +1377,9 @@ function buildEtapa(n, socAntes, socDepois, kmTrecho, minTrecho, tempoRecarga, t
     const chargerUrl = 'https://www.google.com/maps/search/'+encodeURIComponent(chargerQuery)+(orig&&dest?'/@'+encodeURIComponent(orig+' '+dest):'');
     html += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">`;
     if(stopRouteUrl) html += mapsBtn(stopRouteUrl, 'Ver rota completa');
-    // Charger search: open Maps route with charger layer hint
-    const chargerSearchUrl = orig && dest
-      ? 'https://www.google.com/maps/dir/'+encodeURIComponent(orig)+'/'+encodeURIComponent(dest)+'/@,12z/data=!4m2!4m1!3e0'
-      : 'https://www.google.com/maps/search/'+encodeURIComponent('carregadores elétricos veículos elétricos');
-    html += mapsBtn(chargerSearchUrl, 'Carregadores ao longo da rota');
+    // Carregados: Brazil EV charger map with trip planning
+    const carregadosUrl = 'https://carregados.com.br/mapa?planejar=viagem';
+    html += mapsBtn(carregadosUrl, 'Carregadores no trajeto — Carregados.com.br', true);
     html += `</div>`;
   } else {
     // Arrival
