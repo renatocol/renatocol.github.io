@@ -618,7 +618,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <span style="color:var(--text3)">Modelo: C(v) = 0,110 + 0,00007v + 0,000006v²<br>
       Cr=0,010 · Cd~0,38 · Área frontal ~2,28m²<br>
       Calibrado pelos dados reais de cada usuário<br><br>
-      Perfil auto: &lt;50 → Urbano · 50–80 → Misto · &gt;80 → Estrada</span>
+      Perfil auto: &lt;50 → Urbano · 50–80 → Misto · &gt;80 → Estrada<br>
+      Vel. padrão s/ horário: Urbano 35 · Misto 60 · Estrada 70 km/h<br>
+      (ajustada automaticamente pela média real das suas viagens)</span>
     </div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--mono)">
       Spark EV Dashboard · Faísca<br>
@@ -837,6 +839,20 @@ function tripCostPerKm(t){
 }
 function inferirPerfil(v){return v<50?'urbano':v<80?'misto':'estrada';}
 
+// Default velocity by profile when no times recorded
+const VEL_DEFAULT = {urbano:35, misto:60, estrada:70};
+
+// Get smart velocity fallback: use real average from trips if available, else default
+function velFallback(perfil){
+  const perf = perfil || 'misto';
+  const perfilTrips = trips.filter(t => t.perfil===perf && t.velCalc && t.vel && Math.round(t.vel)!==VEL_DEFAULT[perf]);
+  if(perfilTrips.length >= 2){
+    const avg = perfilTrips.reduce((s,t)=>s+t.vel,0) / perfilTrips.length;
+    return Math.round(avg);
+  }
+  return VEL_DEFAULT[perf] || 60;
+}
+
 function updateCalc(){
   const vel=+document.getElementById('sl-vel').value;
   const soc=+document.getElementById('sl-soc').value;
@@ -945,7 +961,7 @@ function addTrip(){
   const km=parseFloat(document.getElementById('f-km').value);
   const fb=document.getElementById('f-fb');
   if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0){showToast('⚠ Verifique: SoC inicial deve ser maior que o final, e distância > 0.','err',5);return;}
-  trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,orig:document.getElementById('f-orig').value.trim(),dest:document.getElementById('f-dest').value.trim(),socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||90,velCalc:!!(document.getElementById('f-thora').value&&document.getElementById('f-tcheg').value),temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
+  trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,orig:document.getElementById('f-orig').value.trim(),dest:document.getElementById('f-dest').value.trim(),socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||velFallback(document.getElementById('f-perfil').value),velCalc:!!(document.getElementById('f-thora').value&&document.getElementById('f-tcheg').value),temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   ['f-orig','f-dest','f-sf','f-km','f-aut','f-thora','f-tcheg','f-temp','f-tarifa','f-total','f-posto','f-mun','f-oper','f-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-paradas').value='';
@@ -1084,16 +1100,18 @@ function encerrarViagem(){
   }
   const t=viagemAtiva.trechos;
   const tk=t.reduce((s,x)=>s+x.km,0),tw=t.reduce((s,x)=>s+(x.socI-x.socF)*BATT/100,0);
-  const vls=t.filter(x=>x.vel);
-  const avgVel=vls.length?vls.reduce((s,x)=>s+x.vel,0)/vls.length:90;
-  const perfilFinal=viagemAtiva.perfilManual==='auto'?inferirPerfil(avgVel):viagemAtiva.perfilManual;
+  const vls=t.filter(x=>x.vel&&x.hora);
+  const avgVel=vls.length?vls.reduce((s,x)=>s+x.vel,0)/vls.length:null;
+  const velCalcFinal=vls.length>0;
+  const perfilFinal=viagemAtiva.perfilManual==='auto'?(avgVel?inferirPerfil(avgVel):'misto'):viagemAtiva.perfilManual;
+  const velFinal=avgVel||velFallback(perfilFinal);
   const fonte=viagemAtiva.perfilManual==='auto'?' (inferido)':' (manual)';
   let tc=0,hc=false;
   t.forEach(x=>{const k=(x.socI-x.socF)*BATT/100;const tar=x.tarifa||(x.total&&k>0?x.total/k:null);if(tar){tc+=k*tar;hc=true;}});
   const postos=t.filter(x=>x.posto).map(x=>x.posto).join(' → ');
   const modos=t.map(x=>x.modo||'padrao');
   const modoFinal=modos.length===1?modos[0]:(modos.every(m=>m===modos[0])?modos[0]:'misto');
-  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:avgVel,velCalc:velCalcFinal,temp:25,ac:0.8,traf:0,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
+  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:velFinal,velCalc:velCalcFinal,temp:25,ac:0.8,traf:0,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   viagemAtiva=null;vaPerfil='auto';resetVaUI();updateCalc();
   showToast('✓ Viagem encerrada e salva! Perfil: '+perfilFinal+' '+fonte,'ok',5);
@@ -1159,7 +1177,7 @@ function renderStats(){
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p></div>
-        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${t.velCalc&&t.vel?t.vel.toFixed(0):'—'}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${(t.velCalc||(t.vel&&t.vel!==90&&t.vel!==70&&t.vel!==60&&t.vel!==35))?t.vel.toFixed(0):'—'}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
       </div>
       <button onclick="removeTrip(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
@@ -1244,7 +1262,7 @@ function calcPlan(){
   const kwhDef    = kwhTotal - kwhDisp; // deficit (negative = surplus)
 
   // Time estimate (typical speed by profile)
-  const vMed = perf==='estrada'?90:perf==='misto'?60:35;
+  const vMed = velFallback(perf);
   const hViagem = km / vMed;
   const hStr = h => Math.floor(h)+'h'+(Math.round((h%1)*60)).toString().padStart(2,'0')+'min';
 
