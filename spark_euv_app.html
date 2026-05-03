@@ -201,6 +201,11 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 .chart-wrap { position: relative; width: 100%; height: 180px; margin-bottom: 8px; }
 
 /* STATUS BAR */
+.toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 200; font-size: 13px; font-family: var(--mono); padding: 10px 18px; border-radius: var(--radius); border-left: 3px solid; max-width: 90vw; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+.toast.show { opacity: 1; }
+.toast-ok { background: var(--bg2); border-color: var(--green); color: var(--green-light); }
+.toast-info { background: var(--bg2); border-color: var(--info); color: var(--info); }
+.toast-err { background: var(--bg2); border-color: var(--danger); color: var(--danger); }
 .status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--border); backdrop-filter: blur(4px); padding: 6px 14px 10px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text3); font-family: var(--mono); z-index: 99; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
 .status-dot.active { background: var(--green); animation: pulse 2s infinite; }
@@ -218,6 +223,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   </div>
 </div>
 
+<div id="toast" class="toast toast-ok" role="alert" aria-live="polite"></div>
 <div class="tabs">
   <button class="tab active" onclick="switchTab('calc')">Calc.</button>
   <button class="tab" onclick="switchTab('log')">Registrar viagem</button>
@@ -362,8 +368,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="vel-calc" id="f-vel-calc">Informe km + horários para calcular velocidade média.</div>
     <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:4px 0 8px">A velocidade é calculada sobre o tempo <strong style="color:var(--text2)">em movimento</strong> (total − paradas).</p>
     <input type="hidden" id="f-vel" value="90">
-    <div class="g2" style="margin-top:10px">
+    <div class="g3" style="margin-top:10px">
       <div class="fg"><label>Temperatura (°C)</label><input type="number" id="f-temp" min="-10" max="50" placeholder="ex: 28"></div>
+      <div class="fg"><label>Modo de condução</label><select id="f-modo"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
     </div>
     <div style="margin-bottom:10px;margin-top:4px">
       <div class="seg-label">Ar-condicionado</div>
@@ -723,6 +730,16 @@ let viagemAtiva=null;
 let vaPerfil='auto';
 let calibration={active:false,scale:1};
 
+function showToast(msg, type, duration){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.className = 'toast toast-' + (type||'ok');
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), (duration||5)*1000);
+}
+
 function setStatus(txt,active){
   document.getElementById('status-text').textContent=txt;
   document.getElementById('status-dot').classList.toggle('active',!!active);
@@ -927,14 +944,14 @@ function addTrip(){
   const sf=parseFloat(document.getElementById('f-sf').value);
   const km=parseFloat(document.getElementById('f-km').value);
   const fb=document.getElementById('f-fb');
-  if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0){fb.textContent='Erro: verifique SoC e km.';fb.style.color='var(--danger)';return;}
+  if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0){showToast('⚠ Verifique: SoC inicial deve ser maior que o final, e distância > 0.','err',5);return;}
   trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,orig:document.getElementById('f-orig').value.trim(),dest:document.getElementById('f-dest').value.trim(),socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||90,temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   ['f-orig','f-dest','f-sf','f-km','f-aut','f-thora','f-tcheg','f-temp','f-tarifa','f-total','f-posto','f-mun','f-oper','f-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-paradas').value='';
   document.getElementById('f-modo').value='padrao';
   document.getElementById('f-si').value=100;document.getElementById('f-vel-calc').textContent='Informe km + horários para calcular velocidade média.';
-  fb.textContent='Registrado!';fb.style.color='var(--green-light)';setTimeout(()=>fb.textContent='',3000);
+  fb.textContent=''; showToast('✓ Viagem registrada com sucesso!', 'ok', 5);
   previewLog();updateCalc();setStatus(trips.length+' viagem(ns) registrada(s)');
 }
 function removeTrip(id){trips=trips.filter(t=>t.id!==id);localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();renderStats();updateCalc();}
@@ -958,6 +975,7 @@ function iniciarViagem(){
   badge.innerHTML=vaPerfil==='auto'?'<span class="tag tag-auto">perfil auto</span>':'<span class="tag tag-'+vaPerfil+'">'+vaPerfil+'</span>';
   document.getElementById('va-trecho-titulo').textContent='Trecho 1 — em andamento';
   updateTabBadge();setStatus('viagem ativa',true);
+  showToast('● Viagem iniciada! SoC: '+socI+'%. Preencha os dados ao chegar ou parar.','ok',5);
 }
 
 function calcTrecho(){
@@ -1004,7 +1022,7 @@ function addTrecho(){
   const sn=parseFloat(document.getElementById('va-soc-now').value);
   const km=parseFloat(document.getElementById('va-km').value);
   const fb=document.getElementById('va-fb');
-  if(isNaN(sn)||isNaN(km)||viagemAtiva.socAtual<=sn||km<=0){fb.textContent='Erro: verifique os dados.';fb.style.color='var(--danger)';return;}
+  if(isNaN(sn)||isNaN(km)||viagemAtiva.socAtual<=sn||km<=0){showToast('⚠ Verifique: SoC atual deve ser menor que o inicial do trecho, e km > 0.','err',5);return;}
   const vel=parseFloat(document.getElementById('va-vel-hidden').value)||null;
   const hora=document.getElementById('va-hora-trecho').value;
   // km real = Trajeto lido - km inicial (se não zerou)
@@ -1022,8 +1040,8 @@ function addTrecho(){
   document.getElementById('va-trecho-result').style.display='none';
   document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
   document.getElementById('va-vel-hidden').value=90;
-  fb.textContent='Trecho '+viagemAtiva.trechos.length+' registrado!';fb.style.color='var(--green-light)';
-  setTimeout(()=>fb.textContent='',3000);
+  fb.textContent='';
+  showToast('✓ Trecho '+viagemAtiva.trechos.length+' registrado! Preencha os dados do próximo trecho ao chegar ou parar.','ok',5);
   updateViagemStats();renderTrechos();
 }
 
@@ -1078,7 +1096,7 @@ function encerrarViagem(){
   trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:avgVel,temp:25,ac:0.8,traf:0,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   viagemAtiva=null;vaPerfil='auto';resetVaUI();updateCalc();
-  alert('Viagem salva!\nPerfil: '+perfilFinal+fonte);
+  showToast('✓ Viagem encerrada e salva! Perfil: '+perfilFinal+' '+fonte,'ok',5);
   setStatus(trips.length+' viagem(ns) registrada(s)');
 }
 
@@ -1172,7 +1190,8 @@ function importData(e){
       if(d.trips){trips=d.trips;localStorage.setItem('faisca_trips',JSON.stringify(trips));}
       if(d.cfg){cfg=d.cfg;localStorage.setItem('faisca_cfg',JSON.stringify(cfg));applyConfigUI();}
       computeCalib();updateCalc();
-      document.getElementById('imp-fb').textContent='Importado: '+trips.length+' viagens.';
+      document.getElementById('imp-fb').textContent='';
+      showToast('✓ Importado: '+trips.length+' viagem(ns) carregada(s).','ok',5);
       setStatus(trips.length+' viagens importadas');
     }catch{document.getElementById('imp-fb').textContent='Erro ao importar o arquivo.';}
   };r.readAsText(file);
