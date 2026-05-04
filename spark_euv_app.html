@@ -367,7 +367,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     </div>
     <div class="vel-calc" id="f-vel-calc">Informe km + horários para calcular velocidade média.</div>
     <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:4px 0 8px">A velocidade é calculada sobre o tempo <strong style="color:var(--text2)">em movimento</strong> (total − paradas).</p>
-    <input type="hidden" id="f-vel" value="90">
+    <input type="hidden" id="f-vel" value="0">
     <div class="g3" style="margin-top:10px">
       <div class="fg"><label>Temperatura (°C)</label><input type="number" id="f-temp" min="-10" max="50" placeholder="ex: 28"></div>
       <div class="fg"><label>Modo de condução</label><select id="f-modo"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
@@ -495,7 +495,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       </div>
       <div class="vel-calc" id="va-vel-calc">Informe km + horário para calcular velocidade.</div>
           <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:4px 0 8px">Leia o campo <strong style="color:var(--text2)">Trajeto</strong> no painel do Spark. Dica: zere-o ao sair para leitura direta a cada parada.</p>
-      <input type="hidden" id="va-vel-hidden" value="90">
+      <input type="hidden" id="va-vel-hidden" value="0">
       <p class="sdiv">Recarga nesta parada (opcional)</p>
       <div class="g3">
         <div class="fg"><label>Tipo</label><select id="va-tipo"><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC fast</option></select></div>
@@ -787,7 +787,7 @@ function calcLogVel(){
     const paStr=paradas>0?` (${Math.floor(paradas/60)?Math.floor(paradas/60)+'h':''}${paradas%60?paradas%60+'min':''} de paradas)`:'';
     box.innerHTML='Tempo total: <strong>'+(Math.floor(durTotal/60)?Math.floor(durTotal/60)+'h':'')+String(durTotal%60).padStart(2,'0')+'min</strong>'+paStr+' → tempo em movimento: <strong>'+(Math.floor(durLiq/60)?Math.floor(durLiq/60)+'h':'')+String(durLiq%60).padStart(2,'0')+'min</strong> → vel. média: <strong>'+vel.toFixed(1)+' km/h</strong>';
   } else {
-    document.getElementById('f-vel').value=90;
+    document.getElementById('f-vel').value=0;
     box.textContent='Informe km + horários para calcular velocidade média.';
   }
   previewLog();
@@ -1055,7 +1055,7 @@ function addTrecho(){
   document.getElementById('va-trecho-titulo').textContent='Trecho '+(viagemAtiva.trechos.length+1)+' — em andamento';
   document.getElementById('va-trecho-result').style.display='none';
   document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
-  document.getElementById('va-vel-hidden').value=90;
+  document.getElementById('va-vel-hidden').value=0;
   fb.textContent='';
   showToast('✓ Trecho '+viagemAtiva.trechos.length+' registrado! Preencha os dados do próximo trecho ao chegar ou parar.','ok',5);
   updateViagemStats();renderTrechos();
