@@ -1174,10 +1174,11 @@ function renderStats(){
         <span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${t.socI}%→${t.socF}%</span>
         ${local?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${local}</span>`:''}
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${(t.velCalc||(t.vel&&t.vel!==90&&t.vel!==70&&t.vel!==60&&t.vel!==35))?t.vel.toFixed(0):'—'}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km/(t.socI-t.socF)*100)}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
       </div>
       <button onclick="removeTrip(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
