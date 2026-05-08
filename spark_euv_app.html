@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="version" content="36">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -569,6 +570,40 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div id="calib-txt" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;font-family:var(--mono)"></div>
       <div class="chart-wrap" id="chartCalibWrap" style="position:relative;width:100%;height:160px;overflow:hidden"></div>
     </div>
+    <div class="panel">
+      <p class="sl">Eficiência por viagem</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="display:flex;border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;font-size:10px;font-family:var(--mono)">
+          <button id="ch1-bars" onclick="setChartMode('bars')" style="padding:4px 10px;border:none;background:var(--green-dim);color:var(--green-light);cursor:pointer;font-family:var(--mono);font-size:10px">Barras</button>
+          <button id="ch1-line" onclick="setChartMode('line')" style="padding:4px 10px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">Linha</button>
+        </div>
+        <div style="display:flex;border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;font-size:10px;font-family:var(--mono)">
+          <button onclick="setChartWindow(10,this)" style="padding:4px 8px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">10</button>
+          <button onclick="setChartWindow(15,this)" style="padding:4px 8px;border:none;background:var(--green-dim);color:var(--green-light);cursor:pointer;font-family:var(--mono);font-size:10px">15</button>
+          <button onclick="setChartWindow(20,this)" style="padding:4px 8px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">20</button>
+          <button onclick="setChartWindow(999,this)" style="padding:4px 8px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">Todas</button>
+        </div>
+      </div>
+      <div id="chart-ef-viagem" style="width:100%;height:180px"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:6px">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#854F0B;margin-right:3px;vertical-align:middle"></span>Estrada</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#185FA5;margin-right:3px;vertical-align:middle"></span>Misto</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#0F6E56;margin-right:3px;vertical-align:middle"></span>Urbano</span>
+        <span><span style="display:inline-block;width:16px;height:0;border-top:2px dashed var(--text3);margin-right:3px;vertical-align:middle"></span>Média</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="sl">Eficiência ao longo dos km acumulados</p>
+      <div id="chart-ef-km" style="width:100%;height:180px"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:6px">
+        <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#854F0B;margin-right:3px;vertical-align:middle"></span>Estrada</span>
+        <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#185FA5;margin-right:3px;vertical-align:middle"></span>Misto</span>
+        <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#0F6E56;margin-right:3px;vertical-align:middle"></span>Urbano</span>
+        <span><span style="display:inline-block;width:16px;height:2px;background:var(--green);margin-right:3px;vertical-align:middle"></span>Tendência</span>
+      </div>
+    </div>
+
     <div class="panel">
       <p class="sl">Custo por tipo de recarga</p>
       <div id="custo-tipos" style="font-size:12px;color:var(--text2);line-height:1.9;font-family:var(--mono)"></div>
@@ -1155,6 +1190,8 @@ function renderStats(){
   if(calibration.active){const p=((calibration.scale-1)*100).toFixed(1),d=calibration.scale>1?'acima':'abaixo';cd.textContent=`Fator: ${calibration.scale.toFixed(3)}× — consumo real ${Math.abs(p)}% ${d} do padrão (${trips.length} viagens).`;}
   else cd.textContent='Registre ao menos 2 viagens para ativar a calibração. ('+trips.length+'/2)';
   buildCalibChart();
+  drawEfViagemChart();
+  drawEfKmChart();
 
   const tipoMap={};
   trips.forEach(t=>{const kwh=(t.socI-t.socF)*BATT/100;let tar=t.tarifa||(!isNaN(t.total)&&t.total>0?t.total/kwh:null);if(t.tipo==='casa'&&!tar)tar=cfg.tarifa;if(!tar)return;if(!tipoMap[t.tipo])tipoMap[t.tipo]={sum:0,n:0};tipoMap[t.tipo].sum+=tar;tipoMap[t.tipo].n++;});
@@ -1218,6 +1255,167 @@ function importData(e){
 function applyConfigUI(){
   document.getElementById('cfg-tarifa').value=cfg.tarifa||'';
   document.getElementById('tog-desconto').classList.toggle('on',cfg.desconto!==false);
+}
+
+// ── EFICIÊNCIA CHARTS ────────────────────────────────────────────────────────
+let chartMode = 'bars';
+let chartWindow = 15;
+
+function setChartMode(mode){
+  chartMode = mode;
+  document.getElementById('ch1-bars').style.background = mode==='bars'?'var(--green-dim)':'transparent';
+  document.getElementById('ch1-bars').style.color = mode==='bars'?'var(--green-light)':'var(--text3)';
+  document.getElementById('ch1-line').style.background = mode==='line'?'var(--green-dim)':'transparent';
+  document.getElementById('ch1-line').style.color = mode==='line'?'var(--green-light)':'var(--text3)';
+  drawEfViagemChart();
+}
+
+function setChartWindow(n, btn){
+  chartWindow = n;
+  btn.closest('div').querySelectorAll('button').forEach(b=>{
+    b.style.background='transparent';b.style.color='var(--text3)';
+  });
+  btn.style.background='var(--green-dim)';btn.style.color='var(--green-light)';
+  drawEfViagemChart();
+}
+
+const PERFIL_COLORS = {estrada:'#c4904a', misto:'#5a9ada', urbano:'#4dbb8a'};
+
+function drawEfViagemChart(){
+  const wrap = document.getElementById('chart-ef-viagem');
+  if(!wrap) return;
+  const isLight = document.body.classList.contains('light');
+  const sorted = trips.slice().sort((a,b)=>a.id-b.id);
+  const shown  = chartWindow >= 999 ? sorted : sorted.slice(-chartWindow);
+  if(!shown.length){ wrap.innerHTML='<p style="font-size:11px;color:var(--text3);font-family:var(--mono);padding:16px">Sem viagens registradas.</p>'; return; }
+
+  const W=300, H=180, pad={l:36,r:8,t:10,b:28};
+  const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+  const efs = shown.map(t=>t.km/((t.socI-t.socF)*BATT/100));
+  const avgEf = efs.reduce((s,v)=>s+v,0)/efs.length;
+  const yMin = Math.max(0, Math.min(...efs)*0.9);
+  const yMax = Math.max(...efs)*1.1;
+  const py = v => pad.t + ph*(1-(v-yMin)/(yMax-yMin));
+  const gc = isLight?'#d4ddd2':'#2a3d28';
+  const tc = isLight?'#7a9a78':'#5a7a58';
+
+  let out = '';
+  // Y grid
+  [0,.25,.5,.75,1].forEach(t=>{
+    const v=yMin+(yMax-yMin)*t, y=py(v);
+    out+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${W-pad.r}" y2="${y.toFixed(1)}" stroke="${gc}" stroke-width="0.5"/>`;
+    out+=`<text x="${pad.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${tc}" font-family="monospace">${v.toFixed(1)}</text>`;
+  });
+  // Y label
+  out+=`<text x="8" y="${(H/2).toFixed(0)}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace" transform="rotate(-90 8 ${(H/2).toFixed(0)})">km/kWh</text>`;
+  // Average line
+  const avgY = py(avgEf);
+  out+=`<line x1="${pad.l}" y1="${avgY.toFixed(1)}" x2="${W-pad.r}" y2="${avgY.toFixed(1)}" stroke="${tc}" stroke-width="1" stroke-dasharray="4,3"/>`;
+
+  const n = shown.length;
+  const barW = Math.max(4, Math.min(20, pw/n*0.7));
+  const step = pw/n;
+
+  if(chartMode==='bars'){
+    shown.forEach((t,i)=>{
+      const ef = efs[i];
+      const x = pad.l + step*(i+0.5);
+      const yTop = py(ef);
+      const yBase = py(yMin);
+      const col = PERFIL_COLORS[t.perfil]||'#888';
+      const label = t.data?t.data.slice(5):'';
+      out+=`<rect x="${(x-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${(yBase-yTop).toFixed(1)}" fill="${col}" opacity="0.85" rx="2"/>`;
+      if(n<=15) out+=`<text x="${x.toFixed(1)}" y="${H-pad.b+12}" text-anchor="middle" font-size="6.5" fill="${tc}" font-family="monospace">${label}</text>`;
+    });
+  } else {
+    // Line mode
+    let pathD = '';
+    shown.forEach((t,i)=>{
+      const ef = efs[i];
+      const x = pad.l + step*(i+0.5);
+      const y = py(ef);
+      pathD += (i===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+      const col = PERFIL_COLORS[t.perfil]||'#888';
+      out+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${col}" opacity="0.9"/>`;
+      if(n<=15){
+        const label = t.data?t.data.slice(5):'';
+        out+=`<text x="${x.toFixed(1)}" y="${H-pad.b+12}" text-anchor="middle" font-size="6.5" fill="${tc}" font-family="monospace">${label}</text>`;
+      }
+    });
+    out=`<path d="${pathD}" stroke="var(--green)" stroke-width="1.5" fill="none" opacity="0.6"/>`+out;
+  }
+
+  wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+}
+
+function drawEfKmChart(){
+  const wrap = document.getElementById('chart-ef-km');
+  if(!wrap) return;
+  const isLight = document.body.classList.contains('light');
+  const sorted = trips.slice().sort((a,b)=>a.id-b.id);
+  if(!sorted.length){ wrap.innerHTML='<p style="font-size:11px;color:var(--text3);font-family:var(--mono);padding:16px">Sem viagens registradas.</p>'; return; }
+
+  const W=300, H=180, pad={l:36,r:8,t:10,b:28};
+  const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+
+  // Build cumulative km points
+  let kmAcum = 0;
+  const points = sorted.map(t=>{
+    kmAcum += t.km;
+    const ef = t.km/((t.socI-t.socF)*BATT/100);
+    return {km:kmAcum, ef, perfil:t.perfil};
+  });
+
+  const xMin=0, xMax=kmAcum;
+  const efs = points.map(p=>p.ef);
+  const yMin = Math.max(0,Math.min(...efs)*0.9);
+  const yMax = Math.max(...efs)*1.1;
+  const px = v => pad.l + pw*(v-xMin)/(xMax-xMin||1);
+  const py = v => pad.t + ph*(1-(v-yMin)/(yMax-yMin||1));
+  const gc = isLight?'#d4ddd2':'#2a3d28';
+  const tc = isLight?'#7a9a78':'#5a7a58';
+
+  let out = '';
+  // Grid
+  [0,.25,.5,.75,1].forEach(t=>{
+    const v=yMin+(yMax-yMin)*t, y=py(v);
+    out+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${W-pad.r}" y2="${y.toFixed(1)}" stroke="${gc}" stroke-width="0.5"/>`;
+    out+=`<text x="${pad.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${tc}" font-family="monospace">${v.toFixed(1)}</text>`;
+  });
+  // X axis labels
+  const xTicks = 4;
+  for(let i=0;i<=xTicks;i++){
+    const v=xMin+(xMax-xMin)*i/xTicks;
+    const x=px(v);
+    out+=`<text x="${x.toFixed(1)}" y="${H-pad.b+12}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace">${Math.round(v)}</text>`;
+  }
+  out+=`<text x="${(W/2).toFixed(0)}" y="${H-2}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace">km acumulados</text>`;
+  out+=`<text x="8" y="${(H/2).toFixed(0)}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace" transform="rotate(-90 8 ${(H/2).toFixed(0)})">km/kWh</text>`;
+
+  // Trend line (simple linear regression)
+  if(points.length>=2){
+    const n=points.length;
+    const sx=points.reduce((s,p)=>s+p.km,0), sy=points.reduce((s,p)=>s+p.ef,0);
+    const sxy=points.reduce((s,p)=>s+p.km*p.ef,0), sxx=points.reduce((s,p)=>s+p.km*p.km,0);
+    const slope=(n*sxy-sx*sy)/(n*sxx-sx*sx||1);
+    const intercept=(sy-slope*sx)/n;
+    const x0=xMin, x1=xMax;
+    const y0=intercept+slope*x0, y1=intercept+slope*x1;
+    out+=`<line x1="${px(x0).toFixed(1)}" y1="${py(y0).toFixed(1)}" x2="${px(x1).toFixed(1)}" y2="${py(y1).toFixed(1)}" stroke="var(--green)" stroke-width="1.5" opacity="0.7"/>`;
+  }
+
+  // Line connecting points
+  let pathD='';
+  points.forEach((p,i)=>{ pathD+=(i===0?'M':'L')+px(p.km).toFixed(1)+' '+py(p.ef).toFixed(1)+' '; });
+  out+=`<path d="${pathD}" stroke="${tc}" stroke-width="1" fill="none" opacity="0.5" stroke-dasharray="3,2"/>`;
+
+  // Points colored by profile
+  points.forEach(p=>{
+    const col = PERFIL_COLORS[p.perfil]||'#888';
+    out+=`<circle cx="${px(p.km).toFixed(1)}" cy="${py(p.ef).toFixed(1)}" r="4.5" fill="${col}" opacity="0.9"/>`;
+  });
+
+  wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
 }
 
 // ── PLANEJAR VIAGEM ──────────────────────────────────────────────────────────
@@ -1487,7 +1685,7 @@ function toggleTheme(){
   localStorage.setItem('faisca_theme',isLight?'light':'dark');
   document.getElementById('theme-toggle').textContent=isLight?'◑ escuro':'☀ claro';
   requestAnimationFrame(()=>updateCalc());
-  if(document.getElementById('pane-stats').classList.contains('active'))renderStats();
+  if(document.getElementById('pane-stats').classList.contains('active')){renderStats();}
 }
 // Service Worker para PWA offline
 if('serviceWorker' in navigator){
