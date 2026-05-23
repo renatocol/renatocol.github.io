@@ -13,7 +13,7 @@ Simulador que compara o custo mensal de abastecimento entre um carro elétrico e
 
 **Como usar:**
 
-Acesse diretamente pelo navegador: renatocol.github.io/simulador_abast_eletrico.html
+Acesse diretamente pelo navegador: [renatocol.github.io/simulador_abast_eletrico.html](https://renatocol.github.io/simulador_abast_eletrico.html)
 
 Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela inicial. 
 
@@ -41,7 +41,8 @@ Suporte a tema claro/escuro, exportação/importação de dados em JSON e funcio
 
 **Como usar:**
 
-Acesse diretamente pelo navegador: renatocol.github.io/spark_ev.html
+Acesse diretamente pelo navegador: [renatocol.github.io/spark_euv_app.html](https://renatocol.github.io/spark_euv_app.html)
+
 Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela inicial. O app funciona offline após a primeira visita e salva todos os dados localmente no dispositivo.
 
 **Tecnologia:** HTML · CSS · JavaScript puro · SVG · localStorage
