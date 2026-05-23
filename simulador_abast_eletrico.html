@@ -459,7 +459,7 @@
   }
 
   function loadTheme() {
-    try { return localStorage.getItem(THEME_KEY) || 'dark'; } catch(e) { return 'dark'; }
+    try { return localStorage.getItem(THEME_KEY) || 'light'; } catch(e) { return 'light'; }
   }
 
   function fmt(n, d) {
