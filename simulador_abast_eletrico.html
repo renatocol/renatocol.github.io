@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Abastecimento Elétrico</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #181c26;
+    --surface2:  #1f2433;
+    --border:    #2a3045;
+    --text:      #e8eaf0;
+    --muted:     #7a8099;
+    --faint:     #3a4055;
+    --blue:      #4a9eff;
+    --green:     #5ecf7a;
+    --amber:     #f5a623;
+    --red:       #f05555;
+    --mono:      'DM Mono', monospace;
+    --sans:      'DM Sans', sans-serif;
+  }
+
+  :root.light {
+    --bg:       #f5f6f8;
+    --surface:  #ffffff;
+    --surface2: #eaecf0;
+    --border:   #d4d8e2;
+    --text:     #1a1e2e;
+    --muted:    #6b7280;
+    --faint:    #b0b8cc;
+    --blue:     #1a6fd4;
+    --green:    #2a8a48;
+    --amber:    #b87010;
+    --red:      #c0392b;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 3rem;
+    transition: background .25s, color .25s;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .header-titles { flex: 1; }
+
+  /* Botão tema */
+  .btn-theme {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: .35rem .75rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color .2s, color .2s, background .25s;
+    margin-top: 2px;
+  }
+  .btn-theme:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-theme .icon { font-size: 13px; line-height: 1; }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .15em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  h1 {
+    font-size: clamp(1.3rem, 4vw, 1.75rem);
+    font-weight: 300;
+    letter-spacing: -.01em;
+    line-height: 1.25;
+    color: var(--text);
+    margin-bottom: .5rem;
+  }
+  h1 strong { font-weight: 500; }
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Section labels */
+  .sec {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin: 2rem 0 .9rem;
+  }
+
+  /* Sliders */
+  .slider-block { margin-bottom: .65rem; }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: .35rem;
+  }
+  .slider-name {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .slider-val {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .slider-range {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    margin-top: .2rem;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--surface2);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--blue);
+    transition: transform .15s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type=range]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+  }
+
+  hr.div {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.75rem 0;
+  }
+
+  /* Metric cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: .5rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .8rem 1rem;
+  }
+  .card-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .04em;
+    margin-bottom: 5px;
+    line-height: 1.4;
+  }
+  .card-value {
+    font-family: var(--mono);
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  .card-sub {
+    font-size: 10px;
+    color: var(--faint);
+    margin-top: 4px;
+    font-family: var(--mono);
+    line-height: 1.4;
+  }
+  .c-blue  { color: var(--blue); }
+  .c-green { color: var(--green); }
+  .c-amber { color: var(--amber); }
+  .c-red   { color: var(--red); }
+
+  /* Chart */
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin-top: 1rem;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Reset button */
+  .btn-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1.75rem;
+    padding: .45rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .05em;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-reset:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* Footer */
+  footer {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--faint);
+    line-height: 1.7;
+    font-family: var(--mono);
+  }
+  footer span { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-top">
+      <div class="header-titles">
+        <p class="header-tag">Simulador de custo</p>
+        <h1>Elétrico vs <strong>Combustão</strong></h1>
+        <p class="subtitle">Compare o custo mensal de abastecimento entre um carro elétrico (eletroposto público ou carregador doméstico) e um carro a gasolina. Ajuste os sliders para o seu cenário.</p>
+      </div>
+      <button class="btn-theme" id="btn-theme" title="Alternar tema">
+        <span class="icon" id="theme-icon">☀️</span>
+        <span id="theme-label">claro</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- SLIDERS: ENERGIA -->
+  <p class="sec">Custo de energia</p>
+
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">kWh no eletroposto (R$)</span>
+      <span class="slider-val" id="v-ep">R$ 2,40</span>
+    </div>
+    <input type="range" id="s-ep" min="1.50" max="2.90" step="0.05" value="2.40">
+    <div class="slider-range"><span>R$ 1,50</span><span>R$ 2,90</span></div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">kWh doméstico — referência (R$)</span>
+      <span class="slider-val" id="v-dom">R$ 0,96</span>
+    </div>
+    <input type="range" id="s-dom" min="0.60" max="1.40" step="0.05" value="0.95">
+    <div class="slider-range"><span>R$ 0,60</span><span>R$ 1,40</span></div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Gasolina (R$/litro)</span>
+      <span class="slider-val" id="v-gas">R$ 6,50</span>
+    </div>
+    <input type="range" id="s-gas" min="5.50" max="7.50" step="0.05" value="6.50">
+    <div class="slider-range"><span>R$ 5,50</span><span>R$ 7,50</span></div>
+  </div>
+
+  <!-- SLIDERS: EFICIÊNCIA -->
+  <p class="sec">Eficiência dos veículos</p>
+
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Carro elétrico (km/kWh)</span>
+      <span class="slider-val" id="v-efel">8,0 km/kWh</span>
+    </div>
+    <input type="range" id="s-efel" min="5" max="9" step="0.5" value="8">
+    <div class="slider-range"><span>5 km/kWh</span><span>9 km/kWh</span></div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Carro a combustão (km/L)</span>
+      <span class="slider-val" id="v-efgas">16 km/L</span>
+    </div>
+    <input type="range" id="s-efgas" min="10" max="18" step="1" value="16">
+    <div class="slider-range"><span>10 km/L</span><span>18 km/L</span></div>
+  </div>
+
+  <!-- SLIDERS: USO -->
+  <p class="sec">Uso mensal</p>
+
+  <div class="slider-block">
+    <div class="slider-header">
+      <span class="slider-name">Quilometragem mensal (km)</span>
+      <span class="slider-val" id="v-km">400 km</span>
+    </div>
+    <input type="range" id="s-km" min="100" max="1500" step="10" value="400">
+    <div class="slider-range"><span>100 km</span><span>1.500 km</span></div>
+  </div>
+
+  <hr class="div">
+
+  <!-- RESULTADOS -->
+  <p class="sec">Custo por km</p>
+  <div class="cards">
+    <div class="card">
+      <p class="card-label">Elétrico — eletroposto</p>
+      <p class="card-value c-blue" id="m-cpkm-ep">—</p>
+      <p class="card-sub" id="m-sub-ep">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Elétrico — doméstico</p>
+      <p class="card-value c-green" id="m-cpkm-dom">—</p>
+      <p class="card-sub" id="m-sub-dom">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Combustão — gasolina</p>
+      <p class="card-value c-amber" id="m-cpkm-gas">—</p>
+      <p class="card-sub" id="m-sub-gas">—</p>
+    </div>
+  </div>
+
+  <p class="sec" style="margin-top:1.5rem">Custo mensal</p>
+  <div class="cards">
+    <div class="card">
+      <p class="card-label">Elétrico — eletroposto</p>
+      <p class="card-value c-blue" id="m-mes-ep">—</p>
+      <p class="card-sub" id="m-eco-ep">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Elétrico — doméstico</p>
+      <p class="card-value c-green" id="m-mes-dom">—</p>
+      <p class="card-sub" id="m-eco-dom">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Combustão — gasolina</p>
+      <p class="card-value c-amber" id="m-mes-gas">—</p>
+      <p class="card-sub">referência</p>
+    </div>
+    <div class="card">
+      <p class="card-label" id="lbl-anual">Economia anual</p>
+      <p class="card-value" id="m-anual" style="color:var(--green)">—</p>
+      <p class="card-sub">eletroposto vs combustão</p>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- GRÁFICO -->
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Elétrico — eletroposto</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Elétrico — doméstico</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>Combustão — gasolina</span>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <!-- RESET -->
+  <button class="btn-reset" id="btn-reset">
+    ↺ restaurar valores iniciais
+  </button>
+
+  <footer>
+    <span>Valores de referência iniciais:</span> CPFL Piratininga R$ 0,956/kWh · RM Ecocargas (Butantã) R$ 2,40/kWh · Gasolina R$ 6,50/L · Carro elétrico 8 km/kWh · Carro combustão 16 km/L · 400 km/mês<br>
+    Os valores dos sliders são salvos automaticamente no navegador.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  // Valores padrão
+  var DEFAULTS = {
+    'ep': 2.40, 'dom': 0.95, 'gas': 6.50,
+    'efel': 8, 'efgas': 16, 'km': 400
+  };
+
+  var STORAGE_KEY = 'sim-abast-v1';
+  var THEME_KEY   = 'sim-abast-theme';
+
+  function g(id) { return document.getElementById(id); }
+
+  // Tema
+  function applyTheme(theme) {
+    var isLight = theme === 'light';
+    document.documentElement.classList.toggle('light', isLight);
+    g('theme-icon').textContent  = isLight ? '🌙' : '☀️';
+    g('theme-label').textContent = isLight ? 'escuro' : 'claro';
+    // Atualiza cores do gráfico
+    var tickColor = isLight ? '#6b7280' : '#7a8099';
+    var gridColor = isLight ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.05)';
+    if (chart) {
+      chart.options.scales.y.ticks.color = tickColor;
+      chart.options.scales.x.ticks.color = tickColor;
+      chart.options.scales.y.grid.color  = gridColor;
+      chart.update('none');
+    }
+    try { localStorage.setItem(THEME_KEY, theme); } catch(e) {}
+  }
+
+  function loadTheme() {
+    try { return localStorage.getItem(THEME_KEY) || 'dark'; } catch(e) { return 'dark'; }
+  }
+
+  function fmt(n, d) {
+    return n.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function fmtR(n, d) {
+    return 'R$ ' + fmt(n, d !== undefined ? d : 2);
+  }
+
+  // Carrega valores salvos ou usa defaults
+  function loadValues() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (saved) return saved;
+    } catch(e) {}
+    return Object.assign({}, DEFAULTS);
+  }
+
+  function saveValues(vals) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(vals)); } catch(e) {}
+  }
+
+  function getSliderValues() {
+    return {
+      ep:    parseFloat(g('s-ep').value),
+      dom:   parseFloat(g('s-dom').value),
+      gas:   parseFloat(g('s-gas').value),
+      efel:  parseFloat(g('s-efel').value),
+      efgas: parseFloat(g('s-efgas').value),
+      km:    parseFloat(g('s-km').value)
+    };
+  }
+
+  function applyValues(vals) {
+    g('s-ep').value    = vals.ep;
+    g('s-dom').value   = vals.dom;
+    g('s-gas').value   = vals.gas;
+    g('s-efel').value  = vals.efel;
+    g('s-efgas').value = vals.efgas;
+    g('s-km').value    = vals.km;
+  }
+
+  var chart = null;
+
+  function calc() {
+    var vals = getSliderValues();
+    saveValues(vals);
+
+    var ep = vals.ep, dom = vals.dom, gas = vals.gas;
+    var efel = vals.efel, efgas = vals.efgas, km = vals.km;
+
+    // Labels sliders
+    g('v-ep').textContent    = fmtR(ep);
+    g('v-dom').textContent   = fmtR(dom);
+    g('v-gas').textContent   = fmtR(gas);
+    g('v-efel').textContent  = fmt(efel, 1) + ' km/kWh';
+    g('v-efgas').textContent = fmt(efgas, 0) + ' km/L';
+    g('v-km').textContent    = fmt(km, 0) + ' km';
+
+    // Custo por km
+    var cpEp  = ep  / efel;
+    var cpDom = dom / efel;
+    var cpGas = gas / efgas;
+
+    g('m-cpkm-ep').textContent  = fmtR(cpEp);
+    g('m-sub-ep').textContent   = fmtR(ep)  + ' ÷ ' + fmt(efel, 1) + ' km/kWh';
+    g('m-cpkm-dom').textContent = fmtR(cpDom);
+    g('m-sub-dom').textContent  = fmtR(dom) + ' ÷ ' + fmt(efel, 1) + ' km/kWh';
+    g('m-cpkm-gas').textContent = fmtR(cpGas);
+    g('m-sub-gas').textContent  = fmtR(gas) + ' ÷ ' + fmt(efgas, 0) + ' km/L';
+
+    // Custo mensal
+    var mesEp  = cpEp  * km;
+    var mesDom = cpDom * km;
+    var mesGas = cpGas * km;
+
+    g('m-mes-ep').textContent  = fmtR(mesEp, 0);
+    g('m-mes-dom').textContent = fmtR(mesDom, 0);
+    g('m-mes-gas').textContent = fmtR(mesGas, 0);
+
+    var ecoEp  = mesGas - mesEp;
+    var ecoDom = mesGas - mesDom;
+    var pctEp  = Math.round(ecoEp  / mesGas * 100);
+    var pctDom = Math.round(ecoDom / mesGas * 100);
+
+    g('m-eco-ep').textContent  = ecoEp  >= 0
+      ? 'economia de ' + fmtR(ecoEp, 0)  + '/mês (' + pctEp  + '%)'
+      : 'custo ' + fmtR(-ecoEp, 0)  + ' a mais/mês';
+    g('m-eco-dom').textContent = ecoDom >= 0
+      ? 'economia de ' + fmtR(ecoDom, 0) + '/mês (' + pctDom + '%)'
+      : 'custo ' + fmtR(-ecoDom, 0) + ' a mais/mês';
+
+    // Economia anual
+    var anual = ecoEp * 12;
+    var anualEl = g('m-anual');
+    anualEl.textContent       = fmtR(Math.abs(anual), 0);
+    anualEl.style.color       = anual >= 0 ? 'var(--green)' : 'var(--red)';
+    g('lbl-anual').textContent = anual >= 0 ? 'Economia anual' : 'Custo extra anual';
+
+    // Gráfico
+    if (chart) {
+      chart.data.datasets[0].data = [
+        Math.round(mesEp), Math.round(mesDom), Math.round(mesGas)
+      ];
+      chart.options.scales.y.max = Math.ceil(Math.max(mesEp, mesDom, mesGas) * 1.25 / 50) * 50;
+      chart.update('none');
+    }
+  }
+
+  function initChart() {
+    chart = new Chart(g('barChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Elétrico — eletroposto', 'Elétrico — doméstico', 'Combustão — gasolina'],
+        datasets: [{
+          label: 'Custo mensal (R$)',
+          data: [0, 0, 0],
+          backgroundColor: ['#4a9eff', '#5ecf7a', '#f5a623'],
+          borderRadius: 5,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function (c) {
+                return ' R$ ' + c.parsed.y.toLocaleString('pt-BR');
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: function (v) { return 'R$ ' + v; }, color: '#7a8099' },
+            grid: { color: 'rgba(255,255,255,.05)' },
+            border: { color: 'transparent' }
+          },
+          x: {
+            ticks: { color: '#7a8099', maxRotation: 0 },
+            grid: { display: false },
+            border: { color: 'transparent' }
+          }
+        }
+      }
+    });
+  }
+
+  function init() {
+    if (typeof Chart === 'undefined') { setTimeout(init, 50); return; }
+
+    // Restaura valores salvos
+    applyValues(loadValues());
+    initChart();
+    applyTheme(loadTheme());
+
+    // Eventos sliders
+    ['s-ep','s-dom','s-gas','s-efel','s-efgas','s-km'].forEach(function (id) {
+      g(id).addEventListener('input', calc);
+    });
+
+    // Botão reset
+    g('btn-reset').addEventListener('click', function () {
+      applyValues(DEFAULTS);
+      saveValues(DEFAULTS);
+      calc();
+    });
+
+    // Botão tema
+    g('btn-theme').addEventListener('click', function () {
+      var isLight = document.documentElement.classList.contains('light');
+      applyTheme(isLight ? 'dark' : 'light');
+    });
+
+    calc();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
