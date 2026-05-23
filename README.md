@@ -28,7 +28,7 @@ Configure as variáveis diretamente por meio dos sliders de acordo com os parâm
 ### 🚗 Spark EV App
 [`spark_euv_app.html`](./spark_euv_app.html)
 
-Aplicativo web progressivo (PWA) para monitoramento de consumo e planejamento de viagens do Chevrolet Spark EV (2026). O app é desenvolvido como arquivo HTML único, sem dependências externas, instalável na tela inicial do celular.
+Aplicativo web progressivo (PWA) para monitoramento de consumo e planejamento de viagens do Chevrolet Spark EUV (2026). O app é desenvolvido como arquivo HTML único, sem dependências externas, instalável na tela inicial do celular.
 
 **Funcionalidades:**
 
