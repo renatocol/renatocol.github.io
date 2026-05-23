@@ -9,7 +9,7 @@ Repositório de aplicativos e simuladores desenvolvidos com HTML, CSS e JavaScri
 ### ⚡ Simulador Abastecimento Elétrico
 [`simulador_abast_eletrico.html`](./simulador_abast_eletrico.html)
 
-Compara o custo mensal de abastecimento entre um carro elétrico e um carro a gasolina, com sliders interativos para ajustar tarifas de energia (eletroposto público e carregador doméstico), preço da gasolina, eficiência dos veículos e quilometragem mensal. Inclui modo claro/escuro e salva automaticamente as configurações no navegador.
+Simulador que compara o custo mensal de abastecimento entre um carro elétrico e um carro a gasolina, considerando tanto o uso de carregador elétrico em casa quanto a situação de usuários sem acesso a carregador doméstico —  isto é, que dependam de carregadores públicos e pagos. O app utiliza sliders interativos para ajustar tarifas de energia (eletroposto público e carregador doméstico), preço da gasolina, eficiência dos veículos, quilometragem mensal, além de ncluir modo claro/escuro, salvando automaticamente as configurações no navegador.
 
 **Como usar:**
 
@@ -26,7 +26,7 @@ Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela
 ### 🚗 Spark EV App
 [`spark_euv_app.html`](./spark_euv_app.html)
 
-Spark EV Dashboard. Aplicativo web progressivo (PWA) para monitoramento de consumo e planejamento de viagens do Chevrolet Spark EV (2026). Desenvolvido como arquivo HTML único, sem dependências externas, instalável na tela inicial do celular.
+Aplicativo web progressivo (PWA) para monitoramento de consumo e planejamento de viagens do Chevrolet Spark EV (2026). O app é desenvolvido como arquivo HTML único, sem dependências externas, instalável na tela inicial do celular.
 
 **Funcionalidades:**
 
