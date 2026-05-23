@@ -11,6 +11,8 @@ Repositório de aplicativos e simuladores desenvolvidos com HTML, CSS e JavaScri
 
 Compara o custo mensal de abastecimento entre um carro elétrico e um carro a gasolina, com sliders interativos para ajustar tarifas de energia (eletroposto público e carregador doméstico), preço da gasolina, eficiência dos veículos e quilometragem mensal. Inclui modo claro e escuro, e salva automaticamente as configurações no navegador.
 
+© 2026 Renato Perim Colistete · desenvolvido com assistência de Claude (Anthropic)
+
 ---
 
 ### 🚗 Spark EV App
@@ -27,6 +29,7 @@ Planejamento de viagem com cálculo de paradas de recarga, tempo estimado e link
 Suporte a tema claro/escuro, exportação/importação de dados em JSON e funcionamento 100% offline
 
 Tecnologia: HTML · CSS · JavaScript puro · SVG · localStorage
+
 © 2026 Renato Perim Colistete · desenvolvido com assistência de Claude (Anthropic)
 
 ---
@@ -35,4 +38,4 @@ Tecnologia: HTML · CSS · JavaScript puro · SVG · localStorage
 
 Distribuído sob a licença MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais informações.
 
-© 2026 Renato Col
+© 2026 Renato Perim Colistete
