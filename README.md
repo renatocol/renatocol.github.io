@@ -15,7 +15,9 @@ Simulador que compara o custo mensal de abastecimento entre um carro elétrico e
 
 Acesse diretamente pelo navegador: renatocol.github.io/simulador_abast_eletrico.html
 
-Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela inicial. O app funciona offline após a primeira visita e salva todos os dados localmente no dispositivo.
+Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela inicial. 
+
+Configure as variáveis diretamente por meio dos sliders de acordo com os parâmetros desejados. O app funciona offline após a primeira visita e salva todos os dados localmente no dispositivo.
 
 **Tecnologia:** HTML · CSS · JavaScript puro · SVG · localStorage
 
@@ -36,6 +38,11 @@ Registro de viagens ponta a ponta ou trecho a trecho (Viagem ativa), com cálcul
 Histórico com calibração automática do modelo, gráficos de eficiência por viagem e ao longo dos km acumulados.
 Planejamento de viagem com cálculo de paradas de recarga, tempo estimado e links para Google Maps e Carregados.com.br.
 Suporte a tema claro/escuro, exportação/importação de dados em JSON e funcionamento 100% offline.
+
+**Como usar:**
+
+Acesse diretamente pelo navegador: renatocol.github.io/spark_ev.html
+Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela inicial. O app funciona offline após a primeira visita e salva todos os dados localmente no dispositivo.
 
 **Tecnologia:** HTML · CSS · JavaScript puro · SVG · localStorage
 
