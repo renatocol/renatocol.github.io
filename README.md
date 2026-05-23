@@ -17,7 +17,7 @@ Acesse diretamente pelo navegador: [renatocol.github.io/simulador_abast_eletrico
 
 Para instalar como app no celular: menu do navegador (⋮) → Adicionar à tela inicial. 
 
-Configure as variáveis diretamente por meio dos sliders de acordo com os parâmetros desejados. O app funciona offline após a primeira visita e salva todos os dados localmente no dispositivo.
+Configure tarifas, preços e quilometragem diretamente pelos sliders. O app funciona offline após a primeira visita e salva todos os dados localmente no dispositivo.
 
 **Tecnologia:** HTML · CSS · JavaScript puro · SVG · localStorage
 
