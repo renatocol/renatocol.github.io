@@ -19,6 +19,7 @@ Compara o custo mensal de abastecimento entre um carro elétrico e um carro a ga
 [`spark_euv_app.html`](./spark_euv_app.html)
 
 Spark EV Dashboard. Aplicativo web progressivo (PWA) para monitoramento de consumo e planejamento de viagens do Chevrolet Spark EV (2026). Desenvolvido como arquivo HTML único, sem dependências externas, instalável na tela inicial do celular.
+
 Funcionalidades:
 
 Calculadora de autonomia com modelo de consumo calibrado pelos dados reais do veículo (Cr=0,010 · Cd~0,38 · massa 1.345 kg · pneus 205/60 R16), ajustável por velocidade, temperatura, A/C e tráfego.
