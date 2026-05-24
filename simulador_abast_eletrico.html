@@ -342,8 +342,8 @@
       <span class="slider-name">Carro a combustão (km/L)</span>
       <span class="slider-val" id="v-efgas">16 km/L</span>
     </div>
-    <input type="range" id="s-efgas" min="10" max="18" step="1" value="16">
-    <div class="slider-range"><span>10 km/L</span><span>18 km/L</span></div>
+    <input type="range" id="s-efgas" min="5" max="25" step="1" value="16">
+    <div class="slider-range"><span>5 km/L</span><span>25 km/L</span></div>
   </div>
 
   <!-- SLIDERS: USO -->
@@ -397,11 +397,6 @@
       <p class="card-value c-amber" id="m-mes-gas">—</p>
       <p class="card-sub">referência</p>
     </div>
-    <div class="card">
-      <p class="card-label" id="lbl-anual">Economia anual</p>
-      <p class="card-value" id="m-anual" style="color:var(--green)">—</p>
-      <p class="card-sub">eletroposto vs combustão</p>
-    </div>
   </div>
 
   <hr class="div">
@@ -416,6 +411,21 @@
     <canvas id="barChart"></canvas>
   </div>
 
+  <!-- ECONOMIA ANUAL -->
+  <p class="sec" style="margin-top:1.5rem">Economia anual vs combustão</p>
+  <div class="cards" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="card" style="border-color: var(--blue); border-width: 2px;">
+      <p class="card-label">Eletroposto <span style="font-size:9px; color:var(--blue);">● cenário principal</span></p>
+      <p class="card-value" id="m-anual-ep" style="color:var(--green)">—</p>
+      <p class="card-sub" id="lbl-anual-ep">eletroposto vs combustão</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Doméstico <span style="font-size:9px; color:var(--muted);">referência alternativa</span></p>
+      <p class="card-value" id="m-anual-dom" style="color:var(--green)">—</p>
+      <p class="card-sub" id="lbl-anual-dom">doméstico vs combustão</p>
+    </div>
+  </div>
+
   <!-- RESET -->
   <button class="btn-reset" id="btn-reset">
     ↺ restaurar valores iniciais
@@ -424,7 +434,8 @@
   <footer>
     <span>Valores de referência iniciais:</span> CPFL Piratininga R$ 0,956/kWh · RM Ecocargas (Butantã) R$ 2,40/kWh · Gasolina R$ 6,50/L · Carro elétrico 8 km/kWh · Carro combustão 16 km/L · 400 km/mês<br>
     Os valores dos sliders são salvos automaticamente no navegador.<br><br>
-    © 2026 Renato Perim Colistete · desenvolvido com assistência de Claude (Anthropic)
+    © 2026 Renato Perim Colistete · desenvolvido com assistência de Claude (Anthropic)<br>
+    Distribuído sob a licença MIT. Consulte o <a href="https://github.com/renatocol/renatocol.github.io/blob/main/LICENSE" target="_blank" style="color:var(--muted); text-decoration:underline;">LICENSE</a> para mais informações.
   </footer>
 
 </div>
@@ -555,11 +566,18 @@
       : 'custo ' + fmtR(-ecoDom, 0) + ' a mais/mês';
 
     // Economia anual
-    var anual = ecoEp * 12;
-    var anualEl = g('m-anual');
-    anualEl.textContent       = fmtR(Math.abs(anual), 0);
-    anualEl.style.color       = anual >= 0 ? 'var(--green)' : 'var(--red)';
-    g('lbl-anual').textContent = anual >= 0 ? 'Economia anual' : 'Custo extra anual';
+    var anualEp  = ecoEp  * 12;
+    var anualDom = ecoDom * 12;
+
+    var elAep = g('m-anual-ep');
+    elAep.textContent     = fmtR(Math.abs(anualEp), 0);
+    elAep.style.color     = anualEp >= 0 ? 'var(--green)' : 'var(--red)';
+    g('lbl-anual-ep').textContent = anualEp >= 0 ? 'eletroposto vs combustão' : 'custo extra vs combustão';
+
+    var elAdom = g('m-anual-dom');
+    elAdom.textContent     = fmtR(Math.abs(anualDom), 0);
+    elAdom.style.color     = anualDom >= 0 ? 'var(--green)' : 'var(--red)';
+    g('lbl-anual-dom').textContent = anualDom >= 0 ? 'doméstico vs combustão' : 'custo extra vs combustão';
 
     // Gráfico
     if (chart) {
