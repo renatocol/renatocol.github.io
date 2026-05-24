@@ -9,7 +9,7 @@ Repositório de aplicativos e simuladores desenvolvidos com HTML, CSS e JavaScri
 ### ⚡ Simulador Abastecimento Elétrico
 [`simulador_abast_eletrico.html`](./simulador_abast_eletrico.html)
 
-Simulador que compara o custo mensal de abastecimento de um carro elétrico e um carro a gasolina, considerando tanto a possibilidade de uso de carregador elétrico em casa quanto a situação de usuários sem acesso a carregador doméstico —  isto é, que dependam de carregadores públicos e pagos. O app utiliza sliders interativos para ajustar tarifas de energia (eletroposto público e carregador doméstico), preço da gasolina, eficiência dos veículos, quilometragem mensal, salvando automaticamente as configurações no navegador e com suporte de modo claro/escuro.
+Simulador que compara o custo mensal de abastecimento de um carro elétrico e um carro a gasolina, considerando tanto a disponibilidade de carregador elétrico em casa quanto a situação de proprietários sem acesso a carregador doméstico —  isto é, que dependam de carregadores públicos e pagos. O app utiliza sliders interativos para ajustar tarifas de energia (eletroposto público e carregador doméstico), preço da gasolina, eficiência dos veículos, quilometragem mensal, salvando automaticamente as configurações no navegador e com suporte de modo claro/escuro.
 
 **Como usar:**
 
