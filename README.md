@@ -1,6 +1,6 @@
 # renatocol.github.io
 
-Repositório de aplicativos e simuladores desenvolvidos com HTML, CSS e JavaScript puro — sem dependências de servidor ou frameworks. Todos os apps rodam diretamente no navegador.
+Repositório de aplicativos e simuladores desenvolvidos com HTML, CSS e JavaScript puro, sem dependências de servidor ou frameworks. Todos os apps rodam diretamente no navegador.
 
 ---
 
