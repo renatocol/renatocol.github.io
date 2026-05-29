@@ -1005,6 +1005,23 @@ function addTrip(){
   fb.textContent=''; showToast('✓ Viagem registrada com sucesso!', 'ok', 5);
   previewLog();updateCalc();setStatus(trips.length+' viagem(ns) registrada(s)');
 }
+function confirmDel(id){
+  const wrap = document.getElementById('del-'+id);
+  if(!wrap) return;
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--danger-bg);border:1px solid #5a2020;border-radius:var(--radius)">
+      <span style="font-size:11px;color:var(--danger);font-family:var(--mono);flex:1">Confirmar exclusão?</span>
+      <button onclick="removeTrip(${id})" style="font-size:11px;padding:4px 12px;border:none;border-radius:var(--radius);background:var(--danger);color:#fff;cursor:pointer;font-family:var(--mono)">Sim, excluir</button>
+      <button onclick="cancelDel(${id})" style="font-size:11px;padding:4px 10px;border:1px solid var(--border2);border-radius:var(--radius);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--mono)">Cancelar</button>
+    </div>`;
+}
+
+function cancelDel(id){
+  const wrap = document.getElementById('del-'+id);
+  if(!wrap) return;
+  wrap.innerHTML = `<button onclick="confirmDel(${id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>`;
+}
+
 function removeTrip(id){trips=trips.filter(t=>t.id!==id);localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();renderStats();updateCalc();}
 
 // ---- VIAGEM ATIVA ----
@@ -1218,7 +1235,9 @@ function renderStats(){
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km/(t.socI-t.socF)*100)}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
       </div>
-      <button onclick="removeTrip(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
+      <div id="del-${t.id}" style="width:100%">
+        <button onclick="confirmDel(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1498,20 +1517,20 @@ function calcPlan(){
     if(routeUrl0) etapas.innerHTML += mapsBtn(routeUrl0, 'Ver rota completa no Google Maps');
   } else {
     // Calculate minimum stops needed
-    // Max range per charge (from 95% to margin%)
+    // Each segment: drain from current SoC to margin%, then recharge to 95%
     const kwhPerCharge = (0.95 - plMargem/100) * BATT * UTIL;
+    // Range available per segment: from 95% down to margin%
     const rangePerCharge = kwhPerCharge * ef;
-    const firstRange = kwhDisp * ef - kwhMarg * ef; // range from current charge to margin
+    // Range from current charge down to margin%
+    const firstRange = (kwhDisp - kwhMarg) * ef;
 
-    // How many stops needed?
+    // Simulate trip segment by segment
     let nStops = 0;
-    let remaining = km;
-    let curKwh = kwhDisp;
-    while(curKwh * ef < remaining + kwhMarg){
+    let distCovered = firstRange; // how far we can go before first stop
+    while(distCovered < km){
       nStops++;
-      curKwh += kwhPerCharge;
-      remaining = Math.max(0, remaining);
-      if(nStops > 10) break; // safety
+      distCovered += rangePerCharge;
+      if(nStops > 10) break;
     }
 
     // Total recharge time
@@ -1526,34 +1545,37 @@ function calcPlan(){
     al.innerHTML = 'São necessárias <strong>'+nStops+' parada'+(nStops>1?'s':'')+' de recarga</strong> para completar os '+km+' km'+(chegLabel2?' ('+chegLabel2+')':'')+' com <strong>'+plMargem+'%</strong> de margem ao chegar. A margem define também o SoC mínimo de cada trecho antes da recarga.';
 
     // Build itinerary
-    const segKm = km / (nStops + 1); // roughly equal segments
+    // segKm computed below as segKmReal
     let html = '';
     let socAtual = soc;
     let kmAcum = 0;
 
+    // Build itinerary with correct SoC tracking
+    // Segment lengths: divide km equally among (nStops+1) segments
+    const nSegs = nStops + 1;
+    const segKmReal = km / nSegs;
+    const kwhPerSeg = segKmReal / ef;
+    const hTrechoReal = segKmReal / vMed;
+
     // Departure
     html += buildEtapa(0, socAtual, null, 0, 0, null, null, false, 'Partida', 'SoC: '+socAtual+'%');
 
+    let kmAcumPlan = 0;
     for(let i=1; i<=nStops; i++){
-      const kmSeg = Math.round(segKm * i);
-      const kwhSeg = segKm / ef;
-      const socApos = socAtual - (kwhSeg / BATT * 100);
-      // Charge to 95% (or enough to reach next stop + margin)
+      kmAcumPlan += segKmReal;
+      const socApos = socAtual - (kwhPerSeg / BATT * 100);
+      // Recharge to 95%
       const kwhAdd = (0.95 - plMargem/100) * BATT * UTIL;
       const socRecarg = Math.min(95, socApos + kwhAdd/BATT*100);
       const hRecarg = kwhAdd / kWcharger;
-      const hTrecho = segKm / vMed;
-
-      const kmPos = Math.round(segKm * i);
-      html += buildEtapa(i, Math.round(socApos), Math.round(socRecarg), Math.round(segKm), Math.round(hTrecho*60), hStr(hRecarg), tipo, false, 'Parada '+i+' — km '+kmPos+' de '+km, 'Carregar até '+Math.round(socRecarg)+'% · margem '+plMargem+'% usada no trecho');
+      const kmPos = Math.round(kmAcumPlan);
+      html += buildEtapa(i, Math.round(socApos), Math.round(socRecarg), Math.round(segKmReal), Math.round(hTrechoReal*60), hStr(hRecarg), tipo, false, 'Parada '+i+' — km '+kmPos+' de '+km, 'Carregar até '+Math.round(socRecarg)+'% · margem '+plMargem+'% usada no trecho');
       socAtual = socRecarg;
     }
 
-    // Arrival
-    const kwhUltSeg = segKm / ef;
-    const socCheg = Math.round(socAtual - kwhUltSeg/BATT*100);
-    const hUlt = segKm / vMed;
-    html += buildEtapa(nStops+1, socAtual, socCheg, Math.round(segKm), Math.round(hUlt*60), null, null, true, 'Chegada', 'SoC: '+Math.max(0,socCheg)+'%');
+    // Arrival: last segment
+    const socCheg = Math.round(socAtual - (kwhPerSeg / BATT * 100));
+    html += buildEtapa(nStops+1, socAtual, Math.max(0,socCheg), Math.round(segKmReal), Math.round(hTrechoReal*60), null, null, true, 'Chegada', 'SoC: '+Math.max(0,socCheg)+'%');
 
     etapas.innerHTML = html;
   }
