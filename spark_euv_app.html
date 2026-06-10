@@ -267,6 +267,20 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <button class="seg-btn" onclick="setCalcTraf(25,this)">Mod.</button>
         <button class="seg-btn" onclick="setCalcTraf(40,this)">Int.</button>
       </div>
+      <div class="seg-label">Ocupantes</div>
+      <div class="seg-ctrl" id="ctrl-ocup">
+        <button class="seg-btn active" onclick="setCalcOcup(1,this)">1</button>
+        <button class="seg-btn" onclick="setCalcOcup(2,this)">2</button>
+        <button class="seg-btn" onclick="setCalcOcup(3,this)">3</button>
+        <button class="seg-btn" onclick="setCalcOcup(4,this)">4</button>
+      </div>
+      <div class="seg-label">Topografia</div>
+      <div class="seg-ctrl" id="ctrl-topo">
+        <button class="seg-btn active" onclick="setCalcTopo(0,this)">Plano</button>
+        <button class="seg-btn" onclick="setCalcTopo(1,this)">Subida</button>
+        <button class="seg-btn" onclick="setCalcTopo(-1,this)">Descida</button>
+        <button class="seg-btn" onclick="setCalcTopo(0.5,this)">Misto</button>
+      </div>
     </div>
   </div>
 
@@ -389,6 +403,34 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <button class="seg-btn" onclick="setLogTraf(12,this)">Ocas.</button>
         <button class="seg-btn" onclick="setLogTraf(25,this)">Mod.</button>
         <button class="seg-btn" onclick="setLogTraf(40,this)">Int.</button>
+      </div>
+      <div class="seg-label">Ocupantes</div>
+      <div class="seg-ctrl" id="va-ctrl-ocup">
+        <button class="seg-btn active" onclick="setLogOcup(1,this)">1</button>
+        <button class="seg-btn" onclick="setLogOcup(2,this)">2</button>
+        <button class="seg-btn" onclick="setLogOcup(3,this)">3</button>
+        <button class="seg-btn" onclick="setLogOcup(4,this)">4</button>
+      </div>
+      <div class="seg-label">Topografia</div>
+      <div class="seg-ctrl" id="va-ctrl-topo">
+        <button class="seg-btn active" onclick="setLogTopo(0,this)">Plano</button>
+        <button class="seg-btn" onclick="setLogTopo(1,this)">Subida</button>
+        <button class="seg-btn" onclick="setLogTopo(-1,this)">Descida</button>
+        <button class="seg-btn" onclick="setLogTopo(0.5,this)">Misto</button>
+      </div>
+      <div class="seg-label">Ocupantes</div>
+      <div class="seg-ctrl" id="log-ctrl-ocup">
+        <button class="seg-btn active" onclick="setLogOcup(1,this)">1</button>
+        <button class="seg-btn" onclick="setLogOcup(2,this)">2</button>
+        <button class="seg-btn" onclick="setLogOcup(3,this)">3</button>
+        <button class="seg-btn" onclick="setLogOcup(4,this)">4</button>
+      </div>
+      <div class="seg-label">Topografia</div>
+      <div class="seg-ctrl" id="log-ctrl-topo">
+        <button class="seg-btn active" onclick="setLogTopo(0,this)">Plano</button>
+        <button class="seg-btn" onclick="setLogTopo(1,this)">Subida</button>
+        <button class="seg-btn" onclick="setLogTopo(-1,this)">Descida</button>
+        <button class="seg-btn" onclick="setLogTopo(0.5,this)">Misto</button>
       </div>
     </div>
     <p class="sdiv">Custo</p>
@@ -704,6 +746,22 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       </div>
     </div>
     <div style="margin-bottom:10px">
+      <div class="seg-label">Ocupantes</div>
+      <div class="seg-ctrl" id="pl-ctrl-ocup">
+        <button class="seg-btn active" onclick="setPlOcup(1,this)">1</button>
+        <button class="seg-btn" onclick="setPlOcup(2,this)">2</button>
+        <button class="seg-btn" onclick="setPlOcup(3,this)">3</button>
+        <button class="seg-btn" onclick="setPlOcup(4,this)">4</button>
+      </div>
+      <div class="seg-label">Topografia</div>
+      <div class="seg-ctrl" id="pl-ctrl-topo">
+        <button class="seg-btn active" onclick="setPlTopo(0,this)">Plano</button>
+        <button class="seg-btn" onclick="setPlTopo(1,this)">Subida</button>
+        <button class="seg-btn" onclick="setPlTopo(-1,this)">Descida</button>
+        <button class="seg-btn" onclick="setPlTopo(0.5,this)">Misto</button>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
       <div class="seg-label">Margem de segurança ao chegar</div>
       <div class="seg-ctrl" id="pl-margem-ctrl">
         <button class="seg-btn" onclick="setPlMargem(10,this)">10%</button>
@@ -734,7 +792,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <p class="sl">Nota</p>
       <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
         Paradas distribuídas uniformemente ao longo do trajeto. O tempo de recarga considera eficiência de 90% do carregador.<br><br>
-        <span style="color:var(--green-light)">Faísca</span> calcula <strong style="color:var(--text2)">quanto</strong> carregar em cada parada com base no desempenho real do seu Spark. <span style="color:var(--green-light)">Carregados.com.br</span> mostra <strong style="color:var(--text2)">onde</strong> estão os eletropostos no trajeto. Use os dois em conjunto para um planejamento completo.
+        <span style="color:var(--green-light)">Faísca</span> calcula <strong style="color:var(--text2)">quanto</strong> carregar em cada parada com base no desempenho real do seu Spark. <span style="color:var(--green-light)">Carregados.com.br</span> mostra <strong style="color:var(--text2)">onde</strong> estão os eletropostos no trajeto. Use os dois em conjunto para um planejamento completo.<br><br>
+        <span style="color:var(--text3);opacity:0.85"><strong style="color:var(--text2)">Ocupantes:</strong> cada passageiro adicional (75 kg) aumenta o consumo proporcionalmente pela massa total. <strong style="color:var(--text2)">Topografia:</strong> Subida estima +300m de altitude (+6% de energia); Descida estima −300m com regeneração a 65% (−4%); Misto aplica correção neutra (+1%).</span>
       </div>
     </div>
   </div>
@@ -785,6 +844,12 @@ function setStatus(txt,active){
 function saveConfig(){cfg.tarifa=parseFloat(document.getElementById('cfg-tarifa').value)||0.85;localStorage.setItem('faisca_cfg',JSON.stringify(cfg));}
 function toggleDesconto(){cfg.desconto=!cfg.desconto;document.getElementById('tog-desconto').classList.toggle('on',cfg.desconto);localStorage.setItem('faisca_cfg',JSON.stringify(cfg));}
 function setFilter(f,btn){statsFilter=f;document.querySelectorAll('.filter-btns .pb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStats();}
+let calcOcup=1, calcTopo=0;
+function setCalcOcup(v,btn){calcOcup=v;document.getElementById('ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
+function setCalcTopo(v,btn){calcTopo=v;document.getElementById('ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
+let logOcupVal=1, logTopoVal=0;
+function setLogOcup(v,btn){logOcupVal=v;['log-ctrl-ocup','va-ctrl-ocup'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));});btn.classList.add('active');}
+function setLogTopo(v,btn){logTopoVal=v;['log-ctrl-topo','va-ctrl-topo'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));});btn.classList.add('active');}
 function setCalcAc(v,btn){calcAcVal=v;document.getElementById('ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 function setCalcTraf(v,btn){calcTrafVal=v;document.getElementById('ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 function setLogAc(v,btn){logAcVal=v;document.getElementById('log-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
@@ -846,12 +911,14 @@ function applyProfile(k,btn){
   updateCalc();
 }
 
-function consumoBase(v){
-  // Parâmetros baseados em física real do Spark EV:
-  // Massa 1345kg · Pneus 205/60 R16 (Cr=0.010) · Área frontal ~2.28m² · Cd~0.38 (box)
-  // Coeficiente quadrático 2× maior que sedã, refletindo aerodinâmica box
-  // Calibrado pelos dados reais via fator de escala no Histórico
-  return 0.110 + 0.00007*v + 0.000006*v*v;
+const MASSA_BASE=1345,PESO_OCUP=75;
+function consumoBase(v,nOcup,topo){
+  // Parâmetros físicos do Spark EV: Massa 1345kg · Cr=0.010 · Área ~2.28m² · Cd~0.38
+  nOcup=nOcup||1; topo=topo||0;
+  const fatorMassa=(MASSA_BASE+(nOcup-1)*PESO_OCUP)/MASSA_BASE;
+  const a=0.110*fatorMassa, b=0.00007, c=0.000006;
+  const topoF=topo===1?1.06:topo===-1?0.96:topo===0.5?1.01:1.00;
+  return (a+b*v+c*v*v)*topoF;
 }
 function tempF(t){if(t<0)return 1.35;if(t<10)return 1+(10-t)*0.025;if(t<30)return 1.0;return 1+(t-30)*0.008;}
 function calcC(v,t,ac,tr,cal){
@@ -960,7 +1027,7 @@ function svgChart(wrId,H,curves,points,curPt){
 function buildVelChart(cv,ct,ca,ctr){
   const isLight=document.body.classList.contains('light');
   const base=[],cal=[];
-  for(let v=10;v<=130;v+=5){base.push(calcC(v,ct,ca,ctr,false));cal.push(calcC(v,ct,ca,ctr,true));}
+  for(let v=10;v<=130;v+=5){base.push(calcC(v,ct,ca,ctr,false,calcOcup,calcTopo));cal.push(calcC(v,ct,ca,ctr,true,calcOcup,calcTopo));}
   const curC=calcC(cv,ct,ca,ctr,true);
   const realPts=trips.map(t=>({x:t.vel||90,y:(t.socI-t.socF)*BATT/100/t.km,color:'#d85a30'}));
   const bC=isLight?'#b8c9b5':'#3d5a3a',cC=isLight?'#1a8a63':'#1d9e75',dC=isLight?'#156e4f':'#2dc98f';
@@ -996,11 +1063,13 @@ function addTrip(){
   const km=parseFloat(document.getElementById('f-km').value);
   const fb=document.getElementById('f-fb');
   if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0){showToast('⚠ Verifique: SoC inicial deve ser maior que o final, e distância > 0.','err',5);return;}
-  trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,orig:document.getElementById('f-orig').value.trim(),dest:document.getElementById('f-dest').value.trim(),socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||velFallback(document.getElementById('f-perfil').value),velCalc:!!(document.getElementById('f-thora').value&&document.getElementById('f-tcheg').value),temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
+  trips.push({id:Date.now(),data:document.getElementById('f-data').value,perfil:document.getElementById('f-perfil').value,modo:document.getElementById('f-modo').value,orig:document.getElementById('f-orig').value.trim(),dest:document.getElementById('f-dest').value.trim(),socI:si,socF:sf,km,autR:parseFloat(document.getElementById('f-aut').value)||null,vel:parseFloat(document.getElementById('f-vel').value)||velFallback(document.getElementById('f-perfil').value),velCalc:!!(document.getElementById('f-thora').value&&document.getElementById('f-tcheg').value),temp:parseFloat(document.getElementById('f-temp').value)||25,ac:logAcVal,traf:logTrafVal,ocup:logOcupVal,topo:logTopoVal,tipo:document.getElementById('f-tipo').value,tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,total:parseFloat(document.getElementById('f-total').value)||null,posto:document.getElementById('f-posto').value.trim(),mun:document.getElementById('f-mun').value.trim(),oper:document.getElementById('f-oper').value.trim(),obs:document.getElementById('f-obs').value.trim()});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   ['f-orig','f-dest','f-sf','f-km','f-aut','f-thora','f-tcheg','f-temp','f-tarifa','f-total','f-posto','f-mun','f-oper','f-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-paradas').value='';
   document.getElementById('f-modo').value='padrao';
+  logOcupVal=1;logTopoVal=0;
+  ['log-ctrl-ocup','log-ctrl-topo'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));});
   document.getElementById('f-si').value=100;document.getElementById('f-vel-calc').textContent='Informe km + horários para calcular velocidade média.';
   fb.textContent=''; showToast('✓ Viagem registrada com sucesso!', 'ok', 5);
   previewLog();updateCalc();setStatus(trips.length+' viagem(ns) registrada(s)');
@@ -1218,6 +1287,11 @@ function renderStats(){
   document.getElementById('log-tbody').innerHTML=filtered.slice().reverse().map(t=>{
     const kwh=((t.socI-t.socF)*BATT/100),ef=(t.km/kwh).toFixed(2),cpm=tripCostPerKm(t),kmDisp=parseFloat(t.km.toFixed(1));
     const local=(t.orig&&t.dest)?t.orig+' → '+t.dest:([t.posto,t.mun].filter(Boolean).join(', ')||t.obs||'');
+    const topoLabel={0:'Plano',1:'Subida','-1':'Descida',0.5:'Misto'};
+    const ctxParts=[];
+    if(t.ocup&&t.ocup>1)ctxParts.push(t.ocup+' ocup.');
+    if(t.topo&&t.topo!==0)ctxParts.push(topoLabel[t.topo]||'');
+    const ctxStr=ctxParts.join(' · ');
     const mL={'eco':'Eco','padrao':'Padrão','esportivo':'Esportivo'};
     const mTag=t.modo&&t.modo!=='padrao'?`<span style="font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:20px;background:var(--bg3);color:var(--text3);border:1px solid var(--border)">${mL[t.modo]||t.modo}</span>`:'';
     return`<div style="border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px">
@@ -1227,6 +1301,7 @@ function renderStats(){
         <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">${t.data}</span>
         <span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${t.socI}%→${t.socF}%</span>
         ${local?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${local}</span>`:''}
+        ${ctxStr?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3);opacity:0.75">${ctxStr}</span>`:''}
       </div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
@@ -1437,6 +1512,9 @@ function drawEfKmChart(){
   wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
 }
 
+let plOcup=1, plTopo=0;
+function setPlOcup(v,btn){plOcup=v;document.getElementById('pl-ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calcPlan();}
+function setPlTopo(v,btn){plTopo=v;document.getElementById('pl-ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calcPlan();}
 // ── PLANEJAR VIAGEM ──────────────────────────────────────────────────────────
 let plMargem = 20;
 
@@ -1459,18 +1537,26 @@ function calcPlan(){
 
   // Get real efficiency for profile from trips, fallback to calibrated model
   const perfTrips = trips.filter(t=>t.perfil===perf);
-  let ef;
+  // Base efficiency from real trips or model
+  let efBase;
   if(perfTrips.length>=2){
     const tk=perfTrips.reduce((s,t)=>s+t.km,0);
     const tw=perfTrips.reduce((s,t)=>s+(t.socI-t.socF)*BATT/100,0);
-    ef = tk/tw;
+    efBase = tk/tw;
   } else {
-    // Use calibrated model at typical speed for profile
     const vRef = perf==='estrada'?95:perf==='misto'?60:35;
-    const cRef = calcC(vRef, 25, 0.8, perf==='urbano'?25:perf==='misto'?12:0, true);
-    ef = 1/cRef;
+    const cRef = calcC(vRef, 25, 0.8, perf==='urbano'?25:perf==='misto'?12:0, true, 1, 0);
+    efBase = 1/cRef;
   }
-  const efSource = perfTrips.length>=2 ? 'média real ('+perfTrips.length+' viagens)' : 'modelo calibrado';
+  // Apply occupant and topography correction factors
+  const massaTotal = MASSA_BASE + (plOcup-1)*PESO_OCUP;
+  const fatorOcup = MASSA_BASE / massaTotal; // more mass → less efficiency
+  const topoF = plTopo===1?1.06:plTopo===-1?0.96:plTopo===0.5?1.01:1.00;
+  const ef = efBase * fatorOcup / topoF;
+  const topoLabel = {0:'plano',1:'subida','-1':'descida',0.5:'misto'}[plTopo]||'plano';
+  const ocupAdj = plOcup>1?' · '+plOcup+' ocup.':'';
+  const topoAdj = plTopo!==0?' · '+topoLabel:'';
+  const efSource = (perfTrips.length>=2?'média real ('+perfTrips.length+' viagens)':'modelo calibrado')+ocupAdj+topoAdj;
 
   // Energy calculations
   const kwhDisp   = soc * BATT / 100 * UTIL;
