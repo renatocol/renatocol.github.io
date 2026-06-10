@@ -405,20 +405,6 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <button class="seg-btn" onclick="setLogTraf(40,this)">Int.</button>
       </div>
       <div class="seg-label">Ocupantes</div>
-      <div class="seg-ctrl" id="va-ctrl-ocup">
-        <button class="seg-btn active" onclick="setLogOcup(1,this)">1</button>
-        <button class="seg-btn" onclick="setLogOcup(2,this)">2</button>
-        <button class="seg-btn" onclick="setLogOcup(3,this)">3</button>
-        <button class="seg-btn" onclick="setLogOcup(4,this)">4</button>
-      </div>
-      <div class="seg-label">Topografia</div>
-      <div class="seg-ctrl" id="va-ctrl-topo">
-        <button class="seg-btn active" onclick="setLogTopo(0,this)">Plano</button>
-        <button class="seg-btn" onclick="setLogTopo(1,this)">Subida</button>
-        <button class="seg-btn" onclick="setLogTopo(-1,this)">Descida</button>
-        <button class="seg-btn" onclick="setLogTopo(0.5,this)">Misto</button>
-      </div>
-      <div class="seg-label">Ocupantes</div>
       <div class="seg-ctrl" id="log-ctrl-ocup">
         <button class="seg-btn active" onclick="setLogOcup(1,this)">1</button>
         <button class="seg-btn" onclick="setLogOcup(2,this)">2</button>
@@ -848,8 +834,8 @@ let calcOcup=1, calcTopo=0;
 function setCalcOcup(v,btn){calcOcup=v;document.getElementById('ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 function setCalcTopo(v,btn){calcTopo=v;document.getElementById('ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 let logOcupVal=1, logTopoVal=0;
-function setLogOcup(v,btn){logOcupVal=v;['log-ctrl-ocup','va-ctrl-ocup'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));});btn.classList.add('active');}
-function setLogTopo(v,btn){logTopoVal=v;['log-ctrl-topo','va-ctrl-topo'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));});btn.classList.add('active');}
+function setLogOcup(v,btn){logOcupVal=v;const el=document.getElementById('log-ctrl-ocup');if(el)el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setLogTopo(v,btn){logTopoVal=v;const el=document.getElementById('log-ctrl-topo');if(el)el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function setCalcAc(v,btn){calcAcVal=v;document.getElementById('ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 function setCalcTraf(v,btn){calcTrafVal=v;document.getElementById('ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 function setLogAc(v,btn){logAcVal=v;document.getElementById('log-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
