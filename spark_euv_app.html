@@ -351,7 +351,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
     Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, de ponta a ponta — por exemplo, ao chegar em casa após uma saída. Alternativamente, use a aba <strong style="color:var(--text2)">Viagem ativa</strong> se preferir registrar mais de um trecho durante o trajeto.<br><br>
     <span style="color:var(--green-light)">1.</span> Informe o SoC antes de sair e ao chegar, lidos no painel do Spark<br>
-    <span style="color:var(--green-light)">2.</span> Informe a distância (campo <strong style="color:var(--text2)">Trajeto</strong> no painel) e os horários<br>
+    <span style="color:var(--green-light)">2.</span> Informe a distância (campo <strong style="color:var(--text2)">Trajeto</strong> no painel), os horários e as demais informações solicitadas<br>
     <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado — a velocidade média será calculada sobre o tempo efetivo em movimento<br>
     <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em> — os dados entram no Histórico e calibram o modelo
   </div>
@@ -459,7 +459,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
     <span style="color:var(--text3)">Use esta aba para registrar a viagem em tempo real, trecho a trecho, com cálculo de recarga em cada parada. Se preferir registrar de forma simplificada após a conclusão da viagem, use a aba <strong style="color:var(--text2)">Registrar viagem</strong>.</span><br><br>
     <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial e toque em <em>Iniciar viagem ativa</em><br>
-    <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e toque em <em>Registrar trecho</em><br>
+    <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e as demais informações solicitadas; toque em <em>Registrar trecho</em><br>
     <span style="color:var(--green-light)">3. Ao final</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
   </div>
   <div id="va-inicio-panel" class="panel">
@@ -482,7 +482,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <button class="seg-btn" onclick="setVaPerfil('misto',this)">Misto</button>
         <button class="seg-btn" onclick="setVaPerfil('estrada',this)">Estrada</button>
       </div>
-      <div class="hint" id="va-perfil-hint"><strong>Automático:</strong> perfil inferido pela velocidade média ao encerrar — &lt;50 → Urbano · 50–80 → Misto · &gt;80 → Estrada.</div>
+      <div class="hint" id="va-perfil-hint"><strong>Automático:</strong> perfil inferido pela velocidade média ao encerrar — &lt;40 → Urbano · 40–60 → Misto · &gt;60 → Estrada.</div>
     </div>
     <button class="btn btn-green" style="width:100%;padding:12px" onclick="iniciarViagem()">▶ Iniciar viagem ativa</button>
   </div>
@@ -681,7 +681,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <span style="color:var(--text3)">Modelo: C(v) = 0,110 + 0,00007v + 0,000006v²<br>
       Cr=0,010 · Cd~0,38 · Área frontal ~2,28m²<br>
       Calibrado pelos dados reais de cada usuário<br><br>
-      Perfil auto: &lt;50 → Urbano · 50–80 → Misto · &gt;80 → Estrada<br>
+      Perfil auto: &lt;40 → Urbano · 40–60 → Misto · &gt;60 → Estrada<br>
       Vel. padrão s/ horário: Urbano 35 · Misto 60 · Estrada 70 km/h<br>
       (ajustada automaticamente pela média real das suas viagens)</span>
     </div>
@@ -925,10 +925,10 @@ function tripCostPerKm(t){
   if(!tar)return null;
   return kwh*tar/t.km;
 }
-function inferirPerfil(v){return v<50?'urbano':v<80?'misto':'estrada';}
+function inferirPerfil(v){return v<40?'urbano':v<=60?'misto':'estrada';}
 
 // Default velocity by profile when no times recorded
-const VEL_DEFAULT = {urbano:35, misto:60, estrada:70};
+const VEL_DEFAULT = {urbano:30, misto:50, estrada:70};
 
 // Get smart velocity fallback: use real average from trips if available, else default
 function velFallback(perfil){
