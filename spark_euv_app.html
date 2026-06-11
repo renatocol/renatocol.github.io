@@ -298,7 +298,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <p class="sl">Bateria</p>
     <div class="bar-wrap"><div class="bar-label"><span>SoC atual</span><span id="soc-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" id="bar-soc" style="background:var(--green);width:80%"></div></div></div>
     <div class="bar-wrap"><div class="bar-label"><span>vs. Inmetro 258 km</span><span id="vi">—</span></div><div class="bar-bg"><div class="bar-fill" id="bar-i" style="background:#378add;width:0%"></div></div></div>
-    <div class="bar-wrap"><div class="bar-label"><span>vs. WLTP est. 298 km</span><span id="vw">—</span></div><div class="bar-bg"><div class="bar-fill" id="bar-w" style="background:#7f77dd;width:0%"></div></div></div>
+    <div class="bar-wrap"><div class="bar-label"><span>vs. WLTP est. 329 km</span><span id="vw">—</span></div><div class="bar-bg"><div class="bar-fill" id="bar-w" style="background:#7f77dd;width:0%"></div></div></div>
     <div class="bar-wrap" id="bar-real-wrap" style="display:none"><div class="bar-label"><span>vs. média real</span><span id="vr">—</span></div><div class="bar-bg"><div class="bar-fill" id="bar-r" style="background:#d85a30;width:0%"></div></div></div>
   </div>
 
@@ -339,7 +339,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div style="font-size:12px;color:var(--text2);line-height:2;font-family:var(--mono)">
       Bateria: <span style="color:var(--green-light)">42 kWh</span> &nbsp;·&nbsp;
       Inmetro: <span style="color:var(--green-light)">258 km</span><br>
-      WLTP est.: <span style="color:var(--green-light)">~298 km</span>
+      WLTP est.: <span style="color:var(--green-light)">329 km</span>
       <span id="real-ref" style="display:none"><br>Real obs.: <span id="real-ref-val" style="color:var(--green-light)">—</span></span>
     </div>
   </div>
@@ -350,10 +350,10 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
     Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, de ponta a ponta — por exemplo, ao chegar em casa após uma saída. Alternativamente, use a aba <strong style="color:var(--text2)">Viagem ativa</strong> se preferir registrar mais de um trecho durante o trajeto.<br><br>
-    <span style="color:var(--green-light)">1.</span> Informe o SoC antes de sair e ao chegar, lidos no painel do Spark<br>
+    <span style="color:var(--green-light)">1.</span> Informe o SoC (State of Charge — nível de carga da bateria) antes de sair e ao chegar, lidos no painel do Spark<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância (campo <strong style="color:var(--text2)">Trajeto</strong> no painel), os horários e as demais informações solicitadas<br>
-    <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado — a velocidade média será calculada sobre o tempo efetivo em movimento<br>
-    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em> — os dados entram no Histórico e calibram o modelo
+    <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
+    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em>; os dados entram no Histórico e calibram o modelo
   </div>
   <div class="panel">
     <p class="sl">Dados da viagem</p>
@@ -422,8 +422,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <p class="sdiv">Custo</p>
     <div class="g3">
       <div class="fg"><label>Tipo de carga</label><select id="f-tipo"><option value="casa">Casa</option><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC fast</option></select></div>
-      <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="f-tarifa" min="0" step="0.01" placeholder="0.85" oninput="previewLog()"></div>
-      <div class="fg"><label>Total pago (R$)</label><input type="number" id="f-total" min="0" step="0.01" placeholder="27.50" oninput="previewLog()"></div>
+      <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="f-tarifa" min="0" step="0.01" placeholder="0,85" oninput="previewLog()"></div>
+      <div class="fg"><label>Total pago (R$)</label><input type="number" id="f-total" min="0" step="0.01" placeholder="27,50" oninput="previewLog()"></div>
     </div>
     <p class="sdiv">Local de recarga</p>
     <div class="g2">
@@ -673,7 +673,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div style="font-size:12px;color:var(--text2);line-height:2;font-family:var(--mono)">
       Bateria: <span style="color:var(--green-light)">42 kWh</span><br>
       Inmetro: <span style="color:var(--green-light)">258 km</span><br>
-      WLTP est.: <span style="color:var(--green-light)">~298 km</span><br>
+      WLTP est.: <span style="color:var(--green-light)">329 km</span><br>
       Fator utilizável: <span style="color:var(--green-light)">98%</span><br>
       Motor: <span style="color:var(--green-light)">101 cv · 18,4 kgfm</span><br>
       Massa: <span style="color:var(--green-light)">1.345 kg</span><br>
@@ -687,7 +687,10 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     </div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--mono)">
       Spark EV Dashboard · Faísca<br>
-      Para instalar como app: menu do navegador → "Adicionar à tela inicial"
+      Para instalar como app: menu do navegador → "Adicionar à tela inicial"<br><br>
+      © 2026 Renato Perim Colistete<br>
+      Desenvolvido com assistência de Claude (Anthropic)<br>
+      Distribuído sob a licença MIT
     </div>
   </div>
 </div>
@@ -710,11 +713,11 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <p class="sl">Dados da viagem</p>
     <div class="g2" style="margin-bottom:10px">
       <div class="fg"><label>Local de partida</label><input type="text" id="pl-orig" placeholder="ex: Vinhedo-SP" oninput="calcPlan()"></div>
-      <div class="fg"><label>Destino</label><input type="text" id="pl-dest" placeholder="ex: Santa Rita do Passa Quatro-SP" oninput="calcPlan()"></div>
+      <div class="fg"><label>Destino</label><input type="text" id="pl-dest" placeholder="ex: S. J. do Rio Preto-SP" oninput="calcPlan()"></div>
     </div>
     <div class="g2">
       <div class="fg"><label>SoC atual (%)</label><input type="number" id="pl-soc" min="1" max="100" placeholder="ex: 85" oninput="calcPlan()"></div>
-      <div class="fg"><label>Distância total (km) — via Google Maps</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 420" oninput="calcPlan()"></div>
+      <div class="fg"><label>Distância total (km) — via Google Maps</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 379" oninput="calcPlan()"></div>
     </div>
     <div class="g2">
       <div class="fg"><label>Perfil predominante</label>
@@ -963,7 +966,7 @@ function updateCalc(){
   document.getElementById('bar-soc').style.cssText='width:'+soc+'%;background:'+sc;
   const pi=Math.min(100,Math.round(range/INMETRO*100)),pw=Math.min(100,Math.round(range/WLTP*100));
   document.getElementById('vi').textContent=range+'/258 km ('+pi+'%)';
-  document.getElementById('vw').textContent=range+'/298 km ('+pw+'%)';
+  document.getElementById('vw').textContent=range+'/329 km ('+pw+'%)';
   document.getElementById('bar-i').style.width=pi+'%';document.getElementById('bar-w').style.width=pw+'%';
   const avg=realAvgEf(trips);
   if(avg){const rr=Math.round(kwh*avg);const pr=Math.min(100,Math.round(range/rr*100));document.getElementById('vr').textContent=range+'/'+rr+' km ('+pr+'%)';document.getElementById('bar-r').style.width=pr+'%';document.getElementById('bar-real-wrap').style.display='block';document.getElementById('real-ref').style.display='inline';document.getElementById('real-ref-val').textContent=avg.toFixed(2)+' km/kWh — '+Math.round(BATT*UTIL*avg)+' km';}
