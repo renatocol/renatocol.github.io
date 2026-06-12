@@ -34,10 +34,13 @@ Aplicativo web progressivo (PWA) para monitoramento de consumo e planejamento de
 
 Calculadora de autonomia com modelo de consumo calibrado pelos dados reais do veículo (Cr=0,010 · Cd~0,38 · massa 1.345 kg · pneus 205/60 R16), ajustável por velocidade, temperatura, A/C, tráfego, número de ocupantes e topografia.
 
-- Registro de viagens ponta a ponta ou trecho a trecho (Viagem ativa), com cálculo automático de eficiência, velocidade média e custo por km.
-- Histórico com calibração automática do modelo, gráficos de eficiência por viagem e ao longo dos km acumulados.
-- Planejamento de viagem com cálculo de paradas de recarga, tempo estimado e links para Google Maps e Carregados.com.br.
-- Suporte a tema claro/escuro, exportação/importação de dados em JSON e funcionamento 100% offline.
+Registro de viagens ponta a ponta ou trecho a trecho (Viagem ativa), com cálculo automático de eficiência, velocidade média e custo por km.
+
+Histórico com calibração automática do modelo, gráficos de eficiência por viagem e ao longo dos km acumulados.
+
+Planejamento de viagem com cálculo de paradas de recarga, tempo estimado e links para Google Maps e Carregados.com.br.
+
+Suporte a tema claro/escuro, exportação/importação de dados em JSON e funcionamento 100% offline.
 
 **Como usar:**
 
