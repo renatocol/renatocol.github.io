@@ -2,6 +2,14 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X991T8YQ7T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-X991T8YQ7T');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Simulador Abastecimento Elétrico | Autor: Renato Perim Colistete, 2026 | Elaborado com assistência de Claude (Anthropic) | Licença: MIT -->
 <title>Simulador Abastecimento Elétrico</title>
@@ -442,7 +450,6 @@
 
 <script>
 (function () {
-  // Valores padrão
   var DEFAULTS = {
     'ep': 2.40, 'dom': 0.95, 'gas': 6.50,
     'efel': 8, 'efgas': 16, 'km': 400
@@ -453,13 +460,11 @@
 
   function g(id) { return document.getElementById(id); }
 
-  // Tema
   function applyTheme(theme) {
     var isLight = theme === 'light';
     document.documentElement.classList.toggle('light', isLight);
     g('theme-icon').textContent  = isLight ? '🌙' : '☀️';
     g('theme-label').textContent = isLight ? 'escuro' : 'claro';
-    // Atualiza cores do gráfico
     var tickColor = isLight ? '#6b7280' : '#7a8099';
     var gridColor = isLight ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.05)';
     if (chart) {
@@ -482,7 +487,6 @@
     return 'R$ ' + fmt(n, d !== undefined ? d : 2);
   }
 
-  // Carrega valores salvos ou usa defaults
   function loadValues() {
     try {
       var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -524,7 +528,6 @@
     var ep = vals.ep, dom = vals.dom, gas = vals.gas;
     var efel = vals.efel, efgas = vals.efgas, km = vals.km;
 
-    // Labels sliders
     g('v-ep').textContent    = fmtR(ep);
     g('v-dom').textContent   = fmtR(dom);
     g('v-gas').textContent   = fmtR(gas);
@@ -532,7 +535,6 @@
     g('v-efgas').textContent = fmt(efgas, 0) + ' km/L';
     g('v-km').textContent    = fmt(km, 0) + ' km';
 
-    // Custo por km
     var cpEp  = ep  / efel;
     var cpDom = dom / efel;
     var cpGas = gas / efgas;
@@ -544,7 +546,6 @@
     g('m-cpkm-gas').textContent = fmtR(cpGas);
     g('m-sub-gas').textContent  = fmtR(gas) + ' ÷ ' + fmt(efgas, 0) + ' km/L';
 
-    // Custo mensal
     var mesEp  = cpEp  * km;
     var mesDom = cpDom * km;
     var mesGas = cpGas * km;
@@ -565,7 +566,6 @@
       ? 'economia de ' + fmtR(ecoDom, 0) + '/mês (' + pctDom + '%)'
       : 'custo ' + fmtR(-ecoDom, 0) + ' a mais/mês';
 
-    // Economia anual
     var anualEp  = ecoEp  * 12;
     var anualDom = ecoDom * 12;
 
@@ -579,7 +579,6 @@
     elAdom.style.color     = anualDom >= 0 ? 'var(--green)' : 'var(--red)';
     g('lbl-anual-dom').textContent = anualDom >= 0 ? 'doméstico vs combustão' : 'custo extra vs combustão';
 
-    // Gráfico
     if (chart) {
       chart.data.datasets[0].data = [
         Math.round(mesEp), Math.round(mesDom), Math.round(mesGas)
@@ -634,25 +633,20 @@
 
   function init() {
     if (typeof Chart === 'undefined') { setTimeout(init, 50); return; }
-
-    // Restaura valores salvos
     applyValues(loadValues());
     initChart();
     applyTheme(loadTheme());
 
-    // Eventos sliders
     ['s-ep','s-dom','s-gas','s-efel','s-efgas','s-km'].forEach(function (id) {
       g(id).addEventListener('input', calc);
     });
 
-    // Botão reset
     g('btn-reset').addEventListener('click', function () {
       applyValues(DEFAULTS);
       saveValues(DEFAULTS);
       calc();
     });
 
-    // Botão tema
     g('btn-theme').addEventListener('click', function () {
       var isLight = document.documentElement.classList.contains('light');
       applyTheme(isLight ? 'dark' : 'light');
