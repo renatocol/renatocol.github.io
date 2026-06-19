@@ -525,9 +525,42 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <div class="fg"><label>Trajeto indicado no painel (km)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()"></div>
         <div class="fg"><label>Aut. indicada (km)</label><input type="number" id="va-aut-panel" min="0" placeholder="ex: 78" oninput="calcTrecho()"></div>
       </div>
-      <div class="g2" style="margin-bottom:8px">
+      <div class="g3" style="margin-bottom:8px">
+        <div class="fg"><label>Temperatura (°C) neste trecho</label><input type="number" id="va-temp-trecho" min="-10" max="50" placeholder="ex: 28"></div>
         <div class="fg"><label>Modo de condução neste trecho</label><select id="va-modo-trecho"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
         <div class="fg"><label>Regeneração neste trecho</label><select id="va-regen-trecho"><option value="padrao">Padrão</option><option value="alto">Alto</option><option value="baixo">Baixo</option></select></div>
+      </div>
+      <div style="margin-bottom:10px;margin-top:4px">
+        <div class="seg-label">Ar-condicionado neste trecho</div>
+        <div class="seg-ctrl" id="va-ctrl-ac">
+          <button class="seg-btn" onclick="setVaAc(0,this)">Desl.</button>
+          <button class="seg-btn active" onclick="setVaAc(0.8,this)">Fraco</button>
+          <button class="seg-btn" onclick="setVaAc(1.5,this)">Mod.</button>
+          <button class="seg-btn" onclick="setVaAc(2,this)">Forte</button>
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div class="seg-label">Tráfego neste trecho</div>
+        <div class="seg-ctrl" id="va-ctrl-traf">
+          <button class="seg-btn active" onclick="setVaTraf(0,this)">Livre</button>
+          <button class="seg-btn" onclick="setVaTraf(12,this)">Ocas.</button>
+          <button class="seg-btn" onclick="setVaTraf(25,this)">Mod.</button>
+          <button class="seg-btn" onclick="setVaTraf(40,this)">Int.</button>
+        </div>
+        <div class="seg-label">Ocupantes neste trecho</div>
+        <div class="seg-ctrl" id="va-ctrl-ocup">
+          <button class="seg-btn active" onclick="setVaOcup(1,this)">1</button>
+          <button class="seg-btn" onclick="setVaOcup(2,this)">2</button>
+          <button class="seg-btn" onclick="setVaOcup(3,this)">3</button>
+          <button class="seg-btn" onclick="setVaOcup(4,this)">4</button>
+        </div>
+        <div class="seg-label">Topografia neste trecho</div>
+        <div class="seg-ctrl" id="va-ctrl-topo">
+          <button class="seg-btn active" onclick="setVaTopo(0,this)">Plano</button>
+          <button class="seg-btn" onclick="setVaTopo(1,this)">Subida</button>
+          <button class="seg-btn" onclick="setVaTopo(-1,this)">Descida</button>
+          <button class="seg-btn" onclick="setVaTopo(0.5,this)">Misto</button>
+        </div>
       </div>
       <div class="g2">
         <div class="fg"><label>Horário de chegada / parada</label><input type="time" id="va-hora-trecho" oninput="calcTrechoVel()"></div>
@@ -854,6 +887,11 @@ function setCalcAc(v,btn){calcAcVal=v;document.getElementById('ctrl-ac').querySe
 function setCalcTraf(v,btn){calcTrafVal=v;document.getElementById('ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCalc();}
 function setLogAc(v,btn){logAcVal=v;document.getElementById('log-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function setLogTraf(v,btn){logTrafVal=v;document.getElementById('log-ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+let vaAcVal=0.8, vaTrafVal=0, vaOcupVal=1, vaTopoVal=0;
+function setVaAc(v,btn){vaAcVal=v;document.getElementById('va-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setVaTraf(v,btn){vaTrafVal=v;document.getElementById('va-ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setVaOcup(v,btn){vaOcupVal=v;document.getElementById('va-ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setVaTopo(v,btn){vaTopoVal=v;document.getElementById('va-ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function setMargin(v,btn){margin=v;document.querySelectorAll('#pane-recarga .fl .pb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calcTrecho();}
 function setVaPerfil(v,btn){vaPerfil=v;document.getElementById('va-perfil-ctrl').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('va-perfil-hint').innerHTML=HINTS[v];}
 
@@ -1169,13 +1207,19 @@ function addTrecho(){
   const kmReal = Math.max(0.1, km - kmInicioDa - kmAcum);
   const modoTrecho = document.getElementById('va-modo-trecho').value;
   const regenTrecho = document.getElementById('va-regen-trecho').value;
-  viagemAtiva.trechos.push({n:viagemAtiva.trechos.length+1,socI:viagemAtiva.socAtual,socF:sn,km:parseFloat(kmReal.toFixed(1)),autPanel:parseFloat(document.getElementById('va-aut-panel').value)||null,vel,destRestante:parseFloat(document.getElementById('va-dest-restante').value)||null,tipo:document.getElementById('va-tipo').value,tarifa:parseFloat(document.getElementById('va-tarifa').value)||null,total:parseFloat(document.getElementById('va-total-pago').value)||null,posto:document.getElementById('va-posto').value.trim(),oper:document.getElementById('va-oper').value.trim(),hora,modo:modoTrecho,regen:regenTrecho});
+  const tempTrecho = parseFloat(document.getElementById('va-temp-trecho').value)||null;
+  viagemAtiva.trechos.push({n:viagemAtiva.trechos.length+1,socI:viagemAtiva.socAtual,socF:sn,km:parseFloat(kmReal.toFixed(1)),autPanel:parseFloat(document.getElementById('va-aut-panel').value)||null,vel,destRestante:parseFloat(document.getElementById('va-dest-restante').value)||null,tipo:document.getElementById('va-tipo').value,tarifa:parseFloat(document.getElementById('va-tarifa').value)||null,total:parseFloat(document.getElementById('va-total-pago').value)||null,posto:document.getElementById('va-posto').value.trim(),oper:document.getElementById('va-oper').value.trim(),hora,modo:modoTrecho,regen:regenTrecho,temp:tempTrecho,ac:vaAcVal,traf:vaTrafVal,ocup:vaOcupVal,topo:vaTopoVal});
   viagemAtiva.socAtual=sn;
   if(hora)viagemAtiva.horaUltimaPartida=hora;
-  ['va-soc-now','va-km','va-aut-panel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper'].forEach(id=>document.getElementById(id).value='');
+  ['va-soc-now','va-km','va-aut-panel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper','va-temp-trecho'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('va-paradas').value='';
   document.getElementById('va-modo-trecho').value='padrao';
   document.getElementById('va-regen-trecho').value='padrao';
+  vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
+  document.getElementById('va-ctrl-ac').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
+  document.getElementById('va-ctrl-traf').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('va-ctrl-ocup').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('va-ctrl-topo').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.getElementById('va-trecho-titulo').textContent='Trecho '+(viagemAtiva.trechos.length+1)+' — em andamento';
   document.getElementById('va-trecho-result').style.display='none';
   document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
@@ -1210,10 +1254,19 @@ function renderTrechos(){
   const list=document.getElementById('va-trechos-list');
   if(!viagemAtiva||!viagemAtiva.trechos.length){panel.style.display='none';return;}
   panel.style.display='block';
+  const topoLabelMap={0:'Plano',1:'Subida','-1':'Descida',0.5:'Misto'};
+  const acLabelMap={0:'AC Desl.',0.8:'AC Fraco',1.5:'AC Mod.',2:'AC Forte'};
   list.innerHTML=viagemAtiva.trechos.map(t=>{
     const kwh=(t.socI-t.socF)*BATT/100,ef=(t.km/kwh).toFixed(2);
     const tar=t.tarifa||(t.total&&kwh>0?t.total/kwh:null);
-    return`<div class="trecho-card"><div class="trecho-hdr"><span class="trecho-title">Trecho ${t.n}</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${t.socI}%→${t.socF}%</span></div><div class="trecho-meta"><span>${t.km}km</span><span>${kwh.toFixed(1)}kWh</span><span>${ef}km/kWh</span>${t.vel?'<span>'+t.vel.toFixed(0)+'km/h</span>':''}${tar?'<span>R$'+(kwh*tar).toFixed(2)+'</span>':''}${t.posto?'<span>'+t.posto+'</span>':''}</div></div>`;
+    const condParts=[];
+    if(t.ocup&&t.ocup>1)condParts.push(t.ocup+' ocup.');
+    if(t.topo!=null&&t.topo!==0)condParts.push(topoLabelMap[t.topo]||'');
+    if(t.ac!=null&&t.ac!==0.8)condParts.push(acLabelMap[t.ac]||'');
+    if(t.traf!=null&&t.traf>0)condParts.push('Tráf. '+t.traf+'%');
+    if(t.temp!=null)condParts.push(t.temp+'°C');
+    const condStr=condParts.length?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);opacity:0.8;margin-top:2px">${condParts.join(' · ')}</div>`:'';
+    return`<div class="trecho-card"><div class="trecho-hdr"><span class="trecho-title">Trecho ${t.n}</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${t.socI}%→${t.socF}%</span></div><div class="trecho-meta"><span>${t.km}km</span><span>${kwh.toFixed(1)}kWh</span><span>${ef}km/kWh</span>${t.vel?'<span>'+t.vel.toFixed(0)+'km/h</span>':''}${tar?'<span>R$'+(kwh*tar).toFixed(2)+'</span>':''}${t.posto?'<span>'+t.posto+'</span>':''}</div>${condStr}</div>`;
   }).join('');
 }
 
@@ -1237,7 +1290,20 @@ function encerrarViagem(){
   const regens=t.map(x=>x.regen||'padrao');
   const regenFinal=regens.length===1?regens[0]:(regens.every(r=>r===regens[0])?regens[0]:'misto');
   const modoFinal=modos.length===1?modos[0]:(modos.every(m=>m===modos[0])?modos[0]:'misto');
-  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,regen:regenFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:velFinal,velCalc:velCalcFinal,temp:25,ac:0.8,traf:0,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
+  // Agregação de AC e Tráfego: média ponderada pela energia (kWh) de cada trecho
+  let acSum=0,trafSum=0,kwhTotalAgg=0;
+  t.forEach(x=>{const k=(x.socI-x.socF)*BATT/100;acSum+=(x.ac!=null?x.ac:0.8)*k;trafSum+=(x.traf!=null?x.traf:0)*k;kwhTotalAgg+=k;});
+  const acFinal=kwhTotalAgg>0?+(acSum/kwhTotalAgg).toFixed(2):0.8;
+  const trafFinal=kwhTotalAgg>0?+(trafSum/kwhTotalAgg).toFixed(1):0;
+  // Ocupantes: valor máximo observado (conservador)
+  const ocupFinal=Math.max(...t.map(x=>x.ocup||1));
+  // Topografia: se todos iguais, usa; senão, marca como misto (0.5)
+  const topos=t.map(x=>x.topo!=null?x.topo:0);
+  const topoFinal=topos.every(tp=>tp===topos[0])?topos[0]:0.5;
+  // Temperatura: média simples dos trechos que informaram (ignora ausências)
+  const temps=t.map(x=>x.temp).filter(tp=>tp!=null&&!isNaN(tp));
+  const tempFinal=temps.length?+(temps.reduce((s,v)=>s+v,0)/temps.length).toFixed(1):25;
+  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,regen:regenFinal,socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:velFinal,velCalc:velCalcFinal,temp:tempFinal,ac:acFinal,traf:trafFinal,ocup:ocupFinal,topo:topoFinal,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
   localStorage.setItem('faisca_trips',JSON.stringify(trips));computeCalib();
   viagemAtiva=null;vaPerfil='auto';resetVaUI();updateCalc();
   showToast('✓ Viagem encerrada e salva! Perfil: '+perfilFinal+' '+fonte,'ok',5);
@@ -1253,6 +1319,13 @@ function resetVaUI(){
   document.getElementById('va-soc-inicio').value=100;
   document.getElementById('va-perfil-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.getElementById('va-perfil-hint').innerHTML=HINTS['auto'];
+  // Reset condições por trecho para evitar vazamento entre viagens
+  vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
+  const elTemp=document.getElementById('va-temp-trecho'); if(elTemp)elTemp.value='';
+  const elAc=document.getElementById('va-ctrl-ac'); if(elAc)elAc.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
+  const elTraf=document.getElementById('va-ctrl-traf'); if(elTraf)elTraf.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  const elOcup=document.getElementById('va-ctrl-ocup'); if(elOcup)elOcup.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  const elTopo=document.getElementById('va-ctrl-topo'); if(elTopo)elTopo.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   updateTabBadge();setStatus('pronto');
 }
 
