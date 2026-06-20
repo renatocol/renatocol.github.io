@@ -2,14 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-X991T8YQ7T"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-X991T8YQ7T');
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Simulador Abastecimento Elétrico | Autor: Renato Perim Colistete, 2026 | Elaborado com assistência de Claude (Anthropic) | Licença: MIT -->
 <title>Simulador Abastecimento Elétrico</title>
@@ -318,9 +310,9 @@
   <div class="slider-block">
     <div class="slider-header">
       <span class="slider-name">kWh doméstico — referência (R$)</span>
-      <span class="slider-val" id="v-dom">R$ 0,96</span>
+      <span class="slider-val" id="v-dom">R$ 1,00</span>
     </div>
-    <input type="range" id="s-dom" min="0.60" max="1.50" step="0.05" value="0.95">
+    <input type="range" id="s-dom" min="0.60" max="1.50" step="0.05" value="1.00">
     <div class="slider-range"><span>R$ 0,60</span><span>R$ 1,50</span></div>
   </div>
 
@@ -339,18 +331,18 @@
   <div class="slider-block">
     <div class="slider-header">
       <span class="slider-name">Carro elétrico (km/kWh)</span>
-      <span class="slider-val" id="v-efel">8,0 km/kWh</span>
+      <span class="slider-val" id="v-efel">7,5 km/kWh</span>
     </div>
-    <input type="range" id="s-efel" min="4" max="12" step="0.5" value="8">
+    <input type="range" id="s-efel" min="4" max="12" step="0.5" value="7.5">
     <div class="slider-range"><span>4 km/kWh</span><span>12 km/kWh</span></div>
   </div>
 
   <div class="slider-block">
     <div class="slider-header">
       <span class="slider-name">Carro a combustão (km/L)</span>
-      <span class="slider-val" id="v-efgas">16 km/L</span>
+      <span class="slider-val" id="v-efgas">12 km/L</span>
     </div>
-    <input type="range" id="s-efgas" min="5" max="25" step="1" value="16">
+    <input type="range" id="s-efgas" min="5" max="25" step="1" value="12">
     <div class="slider-range"><span>5 km/L</span><span>25 km/L</span></div>
   </div>
 
@@ -360,9 +352,9 @@
   <div class="slider-block">
     <div class="slider-header">
       <span class="slider-name">Quilometragem mensal (km)</span>
-      <span class="slider-val" id="v-km">400 km</span>
+      <span class="slider-val" id="v-km">850 km</span>
     </div>
-    <input type="range" id="s-km" min="100" max="2500" step="10" value="400">
+    <input type="range" id="s-km" min="100" max="2500" step="10" value="850">
     <div class="slider-range"><span>100 km</span><span>2.500 km</span></div>
   </div>
 
@@ -440,7 +432,7 @@
   </button>
 
   <footer>
-    <span>Valores de referência iniciais:</span> CPFL Piratininga R$ 0,956/kWh · RM Ecocargas (Butantã) R$ 2,40/kWh · Gasolina R$ 6,50/L · Carro elétrico 8 km/kWh · Carro combustão 16 km/L · 400 km/mês<br>
+    <span>Valores de referência iniciais:</span> RM Ecocargas (Butantã) R$ 2,40/kWh · kWh doméstico R$ 1,00/kWh · Gasolina R$ 6,50/L · Carro elétrico 7,5 km/kWh · Carro combustão 12 km/L · 850 km/mês<br>
     Os valores dos sliders são salvos automaticamente no navegador.<br><br>
     © 2026 Renato Perim Colistete · desenvolvido com assistência de Claude (Anthropic)<br>
     Distribuído sob a licença MIT.
@@ -450,9 +442,10 @@
 
 <script>
 (function () {
+  // Valores padrão
   var DEFAULTS = {
-    'ep': 2.40, 'dom': 0.95, 'gas': 6.50,
-    'efel': 8, 'efgas': 16, 'km': 400
+    'ep': 2.40, 'dom': 1.00, 'gas': 6.50,
+    'efel': 7.5, 'efgas': 12, 'km': 850
   };
 
   var STORAGE_KEY = 'sim-abast-v1';
@@ -460,11 +453,13 @@
 
   function g(id) { return document.getElementById(id); }
 
+  // Tema
   function applyTheme(theme) {
     var isLight = theme === 'light';
     document.documentElement.classList.toggle('light', isLight);
     g('theme-icon').textContent  = isLight ? '🌙' : '☀️';
     g('theme-label').textContent = isLight ? 'escuro' : 'claro';
+    // Atualiza cores do gráfico
     var tickColor = isLight ? '#6b7280' : '#7a8099';
     var gridColor = isLight ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.05)';
     if (chart) {
@@ -487,6 +482,7 @@
     return 'R$ ' + fmt(n, d !== undefined ? d : 2);
   }
 
+  // Carrega valores salvos ou usa defaults
   function loadValues() {
     try {
       var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -528,6 +524,7 @@
     var ep = vals.ep, dom = vals.dom, gas = vals.gas;
     var efel = vals.efel, efgas = vals.efgas, km = vals.km;
 
+    // Labels sliders
     g('v-ep').textContent    = fmtR(ep);
     g('v-dom').textContent   = fmtR(dom);
     g('v-gas').textContent   = fmtR(gas);
@@ -535,6 +532,7 @@
     g('v-efgas').textContent = fmt(efgas, 0) + ' km/L';
     g('v-km').textContent    = fmt(km, 0) + ' km';
 
+    // Custo por km
     var cpEp  = ep  / efel;
     var cpDom = dom / efel;
     var cpGas = gas / efgas;
@@ -546,6 +544,7 @@
     g('m-cpkm-gas').textContent = fmtR(cpGas);
     g('m-sub-gas').textContent  = fmtR(gas) + ' ÷ ' + fmt(efgas, 0) + ' km/L';
 
+    // Custo mensal
     var mesEp  = cpEp  * km;
     var mesDom = cpDom * km;
     var mesGas = cpGas * km;
@@ -566,6 +565,7 @@
       ? 'economia de ' + fmtR(ecoDom, 0) + '/mês (' + pctDom + '%)'
       : 'custo ' + fmtR(-ecoDom, 0) + ' a mais/mês';
 
+    // Economia anual
     var anualEp  = ecoEp  * 12;
     var anualDom = ecoDom * 12;
 
@@ -579,6 +579,7 @@
     elAdom.style.color     = anualDom >= 0 ? 'var(--green)' : 'var(--red)';
     g('lbl-anual-dom').textContent = anualDom >= 0 ? 'doméstico vs combustão' : 'custo extra vs combustão';
 
+    // Gráfico
     if (chart) {
       chart.data.datasets[0].data = [
         Math.round(mesEp), Math.round(mesDom), Math.round(mesGas)
@@ -633,20 +634,25 @@
 
   function init() {
     if (typeof Chart === 'undefined') { setTimeout(init, 50); return; }
+
+    // Restaura valores salvos
     applyValues(loadValues());
     initChart();
     applyTheme(loadTheme());
 
+    // Eventos sliders
     ['s-ep','s-dom','s-gas','s-efel','s-efgas','s-km'].forEach(function (id) {
       g(id).addEventListener('input', calc);
     });
 
+    // Botão reset
     g('btn-reset').addEventListener('click', function () {
       applyValues(DEFAULTS);
       saveValues(DEFAULTS);
       calc();
     });
 
+    // Botão tema
     g('btn-theme').addEventListener('click', function () {
       var isLight = document.documentElement.classList.contains('light');
       applyTheme(isLight ? 'dark' : 'light');
