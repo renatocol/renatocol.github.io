@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="version" content="17">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f1a14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Autonomia EV">
+<title>Autonomia EV</title>
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%20%22Autonomia%20EV%22%2C%20%22short_name%22%3A%20%22Autonomia%20EV%22%2C%20%22start_url%22%3A%20%22/autonomia_ev.html%22%2C%20%22scope%22%3A%20%22/%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22background_color%22%3A%20%22%231d9e75%22%2C%20%22theme_color%22%3A%20%22%231d9e75%22%2C%20%22icons%22%3A%20%5B%7B%22src%22%3A%20%22data%3Aimage/svg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%253A//www.w3.org/2000/svg%2522%2520viewBox%253D%25220%25200%2520680%2520680%2522%253E%253Crect%2520x%253D%252290%2522%2520y%253D%252290%2522%2520width%253D%2522500%2522%2520height%253D%2522500%2522%2520rx%253D%2522112%2522%2520ry%253D%2522112%2522%2520fill%253D%2522%25231d9e75%2522/%253E%253Crect%2520x%253D%252290%2522%2520y%253D%252290%2522%2520width%253D%2522500%2522%2520height%253D%2522500%2522%2520rx%253D%2522112%2522%2520ry%253D%2522112%2522%2520fill%253D%2522none%2522%2520stroke%253D%2522%252314734f%2522%2520stroke-width%253D%25226%2522/%253E%253Crect%2520x%253D%2522168%2522%2520y%253D%2522370%2522%2520width%253D%2522344%2522%2520height%253D%252290%2522%2520rx%253D%252218%2522%2520ry%253D%252218%2522%2520fill%253D%2522%2523ffffff%2522/%253E%253Cpath%2520d%253D%2522M230%2520370%2520L270%2520295%2520L415%2520295%2520L455%2520370%2520Z%2522%2520fill%253D%2522%2523ffffff%2522/%253E%253Cpath%2520d%253D%2522M278%2520370%2520L308%2520312%2520L388%2520312%2520L408%2520370%2520Z%2522%2520fill%253D%2522%25231d9e75%2522/%253E%253Ccircle%2520cx%253D%2522235%2522%2520cy%253D%2522465%2522%2520r%253D%252252%2522%2520fill%253D%2522%25231d9e75%2522/%253E%253Ccircle%2520cx%253D%2522235%2522%2520cy%253D%2522465%2522%2520r%253D%252238%2522%2520fill%253D%2522%25230d2010%2522/%253E%253Ccircle%2520cx%253D%2522235%2522%2520cy%253D%2522465%2522%2520r%253D%252222%2522%2520fill%253D%2522%2523d0e8d8%2522/%253E%253Ccircle%2520cx%253D%2522448%2522%2520cy%253D%2522465%2522%2520r%253D%252252%2522%2520fill%253D%2522%25231d9e75%2522/%253E%253Ccircle%2520cx%253D%2522448%2522%2520cy%253D%2522465%2522%2520r%253D%252238%2522%2520fill%253D%2522%25230d2010%2522/%253E%253Ccircle%2520cx%253D%2522448%2522%2520cy%253D%2522465%2522%2520r%253D%252222%2522%2520fill%253D%2522%2523d0e8d8%2522/%253E%253Crect%2520x%253D%2522164%2522%2520y%253D%2522385%2522%2520width%253D%252228%2522%2520height%253D%252216%2522%2520rx%253D%25225%2522%2520ry%253D%25225%2522%2520fill%253D%2522%2523e8f8f0%2522/%253E%253Crect%2520x%253D%2522488%2522%2520y%253D%2522385%2522%2520width%253D%252224%2522%2520height%253D%252216%2522%2520rx%253D%25225%2522%2520ry%253D%25225%2522%2520fill%253D%2522%2523c94040%2522/%253E%253Cpath%2520d%253D%2522M358%2520228%2520L325%2520328%2520L351%2520328%2520L329%2520428%2520L385%2520318%2520L357%2520318%2520Z%2522%2520fill%253D%2522%2523ffd700%2522%2520stroke%253D%2522%2523e6a800%2522%2520stroke-width%253D%25222.5%2522%2520stroke-linejoin%253D%2522round%2522/%253E%253C/svg%253E%22%2C%20%22sizes%22%3A%20%22512x512%22%2C%20%22type%22%3A%20%22image/svg%2Bxml%22%2C%20%22purpose%22%3A%20%22any%20maskable%22%7D%5D%7D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* LIGHT THEME */
+body.light {
+  --bg: #f5f7f4; --bg2: #ffffff; --bg3: #eef1ec;
+  --border: #d4ddd2; --border2: #b8c9b5;
+  --green: #1a8a63; --green-light: #156e4f; --green-dim: #c8e6d8;
+  --text: #1a2e1a; --text2: #3d5c3a; --text3: #7a9a78;
+  --warn: #a06a00; --warn-bg: #fff8e6;
+  --danger: #b03030; --danger-bg: #fff0f0;
+  --info: #1a7a9a; --info-bg: #e6f4fa;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif; --radius: 6px;
+}
+:root {
+  --bg: #0f1a14; --bg2: #162010; --bg3: #1c2a1a;
+  --border: #2a3d28; --border2: #344f30;
+  --green: #1d9e75; --green-light: #2dc98f; --green-dim: #1a5c45;
+  --text: #e8f0e5; --text2: #9ab89a; --text3: #5a7a58;
+  --warn: #d4900a; --warn-bg: #2a1e05;
+  --danger: #c94040; --danger-bg: #2a1010;
+  --info: #4a9eba; --info-bg: #0a1e2a;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif; --radius: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.5; overflow-x: hidden; }
+
+/* HEADER */
+.app-header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 16px 10px; position: sticky; top: 0; z-index: 100; }
+.app-title { display: flex; align-items: baseline; gap: 8px; }
+.app-title h1 { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--green-light); letter-spacing: 0.05em; }
+.app-title span { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.app-badge { font-size: 10px; padding: 2px 7px; border: 1px solid var(--border2); border-radius: 20px; color: var(--text3); font-family: var(--mono); margin-left: auto; }
+
+/* TABS */
+.tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--bg); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex-shrink: 0; font-size: 11px; font-family: var(--mono); padding: 10px 14px; border: none; background: transparent; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; letter-spacing: 0.04em; }
+.tab.active { color: var(--green-light); border-bottom-color: var(--green); }
+.tab-badge { display: inline-block; font-size: 9px; padding: 1px 4px; border-radius: 8px; background: var(--danger); color: #fff; margin-left: 4px; vertical-align: middle; }
+.tab-setup { color: var(--warn) !important; }
+
+/* CONTENT */
+.content { padding: 14px 14px 80px; max-width: 720px; margin: 0 auto; }
+.pane { display: none; }
+.pane.active { display: block; }
+
+/* PANEL */
+.panel { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+.panel-green { border-color: var(--green-dim); background: #111f15; }
+body.light .panel-green { background: #edf7f2; border-color: #a8d9c2; }
+.panel-warn { border-color: var(--warn); background: var(--warn-bg); }
+.sl { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin: 0 0 10px; }
+.sdiv { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin: 14px 0 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+
+/* GRID */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+@media (max-width: 480px) { .g3 { grid-template-columns: 1fr 1fr; } .g4 { grid-template-columns: 1fr 1fr; } }
+
+/* METRICS */
+.metric { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 11px; }
+.metric-label { font-size: 10px; color: var(--text3); font-family: var(--mono); margin: 0 0 3px; letter-spacing: 0.04em; }
+.metric-value { font-size: 17px; font-weight: 500; color: var(--text); font-family: var(--mono); margin: 0; line-height: 1.2; }
+.metric-unit { font-size: 10px; color: var(--text2); font-weight: 400; }
+.metric-sub { font-size: 10px; color: var(--text3); margin: 2px 0 0; font-family: var(--mono); }
+
+/* FORMS */
+.fg label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 4px; font-family: var(--mono); letter-spacing: 0.03em; }
+.fg input, .fg select { width: 100%; font-size: 14px; padding: 9px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg3); color: var(--text); font-family: var(--sans); -webkit-appearance: none; appearance: none; }
+.fg input:focus, .fg select:focus { outline: none; border-color: var(--green); }
+.fg select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7a58' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.fg input.hi { border-color: var(--green-dim); }
+
+/* SEGMENTED */
+.seg-label { font-size: 11px; color: var(--text3); margin-bottom: 5px; font-family: var(--mono); letter-spacing: 0.03em; }
+.seg-ctrl { display: flex; border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; margin-bottom: 4px; }
+.seg-btn { flex: 1; font-size: 12px; padding: 8px 4px; border: none; background: transparent; color: var(--text3); cursor: pointer; text-align: center; border-right: 1px solid var(--border); font-family: var(--sans); }
+.seg-btn:last-child { border-right: none; }
+.seg-btn.active { background: var(--green-dim); color: var(--green-light); font-weight: 500; }
+
+/* RANGE */
+input[type=range] { width: 100%; -webkit-appearance: none; appearance: none; height: 3px; border-radius: 2px; background: var(--border2); outline: none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--green); cursor: pointer; }
+.range-row { margin-bottom: 14px; }
+.range-label { font-size: 11px; color: var(--text2); display: flex; justify-content: space-between; margin-bottom: 6px; font-family: var(--mono); }
+.range-val { color: var(--green-light); font-weight: 500; }
+
+/* BARS */
+.bar-wrap { margin-bottom: 8px; }
+.bar-label { font-size: 11px; color: var(--text3); display: flex; justify-content: space-between; margin-bottom: 3px; font-family: var(--mono); }
+.bar-bg { background: var(--bg3); border-radius: 3px; height: 7px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width .3s ease; }
+
+/* BUTTONS */
+.btn { font-size: 13px; padding: 10px 16px; border: 1px solid var(--border2); border-radius: var(--radius); background: transparent; color: var(--text); cursor: pointer; font-weight: 500; font-family: var(--sans); transition: background .15s; }
+.btn:active { background: var(--bg3); }
+.btn-green { border-color: var(--green-dim); color: var(--green-light); }
+.btn-green:active { background: var(--green-dim); }
+.btn-red { border-color: #5a2020; color: var(--danger); }
+.btn-red:active { background: var(--danger-bg); }
+.btn-sm { font-size: 11px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--text3); cursor: pointer; font-family: var(--mono); }
+.btn-sm:active { background: var(--danger-bg); color: var(--danger); }
+
+/* PROFILE BUTTONS */
+.fl { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.pb { font-size: 12px; padding: 6px 12px; border: 1px solid var(--border2); border-radius: 20px; background: transparent; color: var(--text3); cursor: pointer; font-family: var(--mono); letter-spacing: 0.03em; }
+.pb.active { border-color: var(--green); color: var(--green-light); background: var(--green-dim); }
+
+/* ALERTS */
+.alert { font-size: 13px; padding: 10px 12px; border-radius: var(--radius); margin-bottom: 12px; line-height: 1.6; border-left: 3px solid; }
+.a-ok   { background: #0d2018; border-color: var(--green);  color: #7dd4a8; }
+.a-warn { background: var(--warn-bg); border-color: var(--warn); color: #d4a84a; }
+.a-danger { background: var(--danger-bg); border-color: var(--danger); color: #d47a7a; }
+.a-info { background: var(--info-bg); border-color: var(--info); color: #7ac4d4; }
+
+/* TAGS */
+.tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; font-family: var(--mono); letter-spacing: 0.04em; }
+.tag-urbano  { background: #0d2018; color: #4dbb8a; border: 1px solid #1d5c3a; }
+.tag-misto   { background: #0a1a2e; color: #5a9ada; border: 1px solid #1a3a6a; }
+.tag-estrada { background: #201808; color: #c4904a; border: 1px solid #5a3a10; }
+
+/* CHARGE BAR */
+.charge-track { height: 24px; background: var(--bg3); border-radius: 5px; overflow: hidden; display: flex; margin-bottom: 4px; }
+.charge-seg { height: 100%; transition: width .4s ease; }
+
+/* TRECHO CARD */
+.trecho-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 8px; }
+.trecho-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.trecho-title { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--green-light); }
+.trecho-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+/* STEP */
+.step-row { display: flex; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: var(--text2); line-height: 1.6; }
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border2); font-size: 10px; font-weight: 500; color: var(--text3); margin-right: 8px; flex-shrink: 0; margin-top: 2px; font-family: var(--mono); }
+
+/* VEL CALC */
+.vel-calc { background: var(--bg3); border-radius: var(--radius); padding: 8px 10px; font-size: 12px; color: var(--text3); margin-top: 6px; min-height: 34px; font-family: var(--mono); border: 1px solid var(--border); }
+.vel-calc strong { color: var(--green-light); }
+
+/* TOGGLE */
+.toggle-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); margin-bottom: 10px; }
+.toggle { width: 38px; height: 22px; border-radius: 11px; background: var(--border2); border: none; cursor: pointer; position: relative; flex-shrink: 0; transition: background .2s; }
+.toggle.on { background: var(--green); }
+.toggle::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: left .2s; }
+.toggle.on::after { left: 19px; }
+
+/* FILTER */
+.filter-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+
+/* PROFILE STAT */
+.profile-stat { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 8px; }
+.profile-stat-hdr { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+
+/* HINT */
+.hint { font-size: 11px; color: var(--text3); padding: 6px 10px; background: var(--bg3); border-radius: var(--radius); margin-top: 6px; line-height: 1.6; font-family: var(--mono); border: 1px solid var(--border); }
+.hint strong { color: var(--text2); }
+
+/* FIELD HINT */
+.fhint { font-size: 10px; color: var(--text3); font-family: var(--mono); line-height: 1.5; margin-top: 3px; }
+
+/* LOG TABLE */
+.log-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.log-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: auto; min-width: 560px; }
+.log-table th { font-size: 10px; font-weight: 500; color: var(--text3); text-align: left; padding: 5px 7px; border-bottom: 1px solid var(--border); font-family: var(--mono); letter-spacing: 0.04em; white-space: nowrap; }
+.log-table td { padding: 7px 7px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: middle; white-space: nowrap; }
+.log-table tr:last-child td { border-bottom: none; }
+
+/* CHART */
+.chart-wrap { position: relative; width: 100%; height: 180px; margin-bottom: 8px; }
+
+/* STATUS BAR */
+.toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 200; font-size: 13px; font-family: var(--mono); padding: 10px 18px; border-radius: var(--radius); border-left: 3px solid; max-width: 90vw; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+.toast.show { opacity: 1; }
+.toast-ok  { background: var(--bg2); border-color: var(--green);  color: var(--green-light); }
+.toast-info{ background: var(--bg2); border-color: var(--info);   color: var(--info); }
+.toast-err { background: var(--bg2); border-color: var(--danger); color: var(--danger); }
+.status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--border); backdrop-filter: blur(4px); padding: 6px 14px 10px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text3); font-family: var(--mono); z-index: 99; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
+.status-dot.active { background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* VEHICLE CONFIG SPECIFIC */
+.eq-box { background: var(--bg3); border: 1px solid var(--green-dim); border-radius: var(--radius); padding: 10px 14px; font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 2; margin-top: 10px; }
+.eq-box .eq-title { font-size: 10px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.eq-val { color: var(--green-light); font-weight: 500; }
+.eq-formula { color: var(--text2); font-size: 11px; margin-top: 4px; }
+
+/* COLLAPSIBLE ADVANCED */
+.adv-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-family: var(--mono); color: var(--text3); padding: 8px 0; border-top: 1px solid var(--border); margin-top: 10px; user-select: none; }
+.adv-toggle:hover { color: var(--text2); }
+.adv-arrow { font-size: 10px; transition: transform .2s; }
+.adv-arrow.open { transform: rotate(90deg); }
+.adv-body { display: none; }
+.adv-body.open { display: block; }
+
+/* VEHICLE COMPLETENESS BADGE */
+.veh-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 20px; }
+.veh-badge.ok   { background: var(--green-dim); color: var(--green-light); border: 1px solid var(--green-dim); }
+.veh-badge.warn { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); }
+
+/* NO-VEHICLE WARNING */
+.no-vehicle-banner { background: var(--warn-bg); border: 1px solid var(--warn); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #d4a84a; font-family: var(--mono); line-height: 1.7; display: none; }
+.no-vehicle-banner a { color: var(--warn); text-decoration: underline; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">
+    <h1 id="hdr-title">EV DASHBOARD</h1>
+    <span id="hdr-apelido"></span>
+    <span class="app-badge" id="hdr-badge">—</span>
+    <button id="theme-toggle" onclick="toggleTheme()" style="margin-left:8px;background:transparent;border:1px solid var(--border2);border-radius:20px;padding:4px 10px;font-size:12px;color:var(--text2);cursor:pointer;font-family:var(--mono);letter-spacing:0.03em" title="Alternar tema">☀ claro</button>
+  </div>
+</div>
+
+<div id="toast" class="toast toast-ok" role="alert" aria-live="polite"></div>
+
+<div class="tabs">
+  <button class="tab" id="tab-veiculo" onclick="switchTab('veiculo')">Veículo</button>
+  <button class="tab active" onclick="switchTab('calc')">Calc.</button>
+  <button class="tab" onclick="switchTab('log')">Registrar viagem</button>
+  <button class="tab" id="tab-rota" onclick="switchTab('recarga')">Viagem ativa</button>
+  <button class="tab" onclick="switchTab('stats')">Histórico</button>
+  <button class="tab" onclick="switchTab('config')">Config.</button>
+  <button class="tab" onclick="switchTab('plan')">Planejar</button>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════════════════════
+     ABA VEÍCULO
+═══════════════════════════════════════════════════════ -->
+<div id="pane-veiculo" class="pane">
+
+  <!-- Instrução geral -->
+  <div class="panel panel-green" style="margin-bottom:14px">
+    <p class="sl">Bem-vindo ao Autonomia EV</p>
+    <div style="font-size:12px;color:var(--text2);line-height:1.9;font-family:var(--mono)">
+      Este aplicativo registra e analisa o desempenho do seu veículo elétrico, considerando autonomia real, eficiência por perfil de condução, custo por km e planejamento de viagens longas.<br><br>
+      Conforme você registra viagens, o aplicativo elabora automaticamente um modelo físico de consumo ajustado pelos seus dados reais, levando em conta velocidade, temperatura, ar-condicionado, tráfego, número de ocupantes e topografia. Quanto mais viagens registradas, mais preciso o planejamento.<br><br>
+      <span style="color:var(--green-light)">Configure aqui o seu veículo.</span> Os campos obrigatórios são nome, bateria e autonomia. Os parâmetros avançados (peso, carroceria, pneus) permitem ao aplicativo derivar o modelo físico desde o início — assim, quanto mais preciso, melhor será a calibração.<br><br>
+      <span style="color:var(--text3)">Você pode usar as demais abas antes de configurar, mas os cálculos serão genéricos até que o veículo esteja definido.</span>
+    </div>
+  </div>
+
+  <!-- Seção básica -->
+  <div class="panel">
+    <p class="sl">Identificação</p>
+    <div class="g2">
+      <div class="fg">
+        <label>Nome do carro</label>
+        <input type="text" id="v-nome" placeholder="ex: MG 4" oninput="onVehicleChange()">
+        <div class="fhint">Marca e modelo — exibido no cabeçalho do app.</div>
+      </div>
+      <div class="fg">
+        <label>Apelido (opcional)</label>
+        <input type="text" id="v-apelido" placeholder="ex: Meu MG" oninput="onVehicleChange()">
+        <div class="fhint">Nome informal do seu carro — aparece ao lado do modelo.</div>
+      </div>
+    </div>
+
+    <div class="fg" style="margin-bottom:8px">
+      <label>Tipo de carroceria ★</label>
+      <select id="v-carroceria" onchange="onVehicleChange()">
+        <option value="">— selecione —</option>
+        <option value="seda-aero">Sedã — ex: BYD Seal, BYD Han (Cd~0,24)</option>
+        <option value="hatch">Hatch — ex: BYD Dolphin, Volvo EX30 (Cd~0,29)</option>
+        <option value="suv-compacto">SUV compacto — ex: Leapmotor B10, MG S5 (Cd~0,35)</option>
+        <option value="suv-medio">SUV médio/grande — ex: BYD Seal U, BYD Song Plus (Cd~0,37)</option>
+        <option value="picape">Picape — ex: BYD Shark (Cd~0,44)</option>
+      </select>
+      <div class="fhint">Define estimativas de coeficiente de arrasto (Cd), peso e área frontal usadas no modelo físico. Você pode refinar nos Parâmetros avançados.</div>
+    </div>
+    <div id="carroceria-defaults-hint" class="hint" style="display:none;margin-bottom:10px"></div>
+
+    <p class="sdiv">Bateria e autonomia</p>
+    <div class="g3">
+      <div class="fg">
+        <label>Capacidade da bateria (kWh) ★</label>
+        <input type="number" id="v-batt" min="5" max="200" step="0.1" placeholder="ex: 65" oninput="onVehicleChange()">
+        <div class="fhint">Capacidade total (bruta). Consulte o manual ou ficha técnica do fabricante.</div>
+      </div>
+      <div class="fg">
+        <label>Fator utilizável (%)</label>
+        <input type="number" id="v-util" min="80" max="100" step="0.1" placeholder="98" oninput="onVehicleChange()">
+        <div class="fhint">Porcentagem da bateria realmente disponível. Padrão 98% se não souber.</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="fg">
+        <label>Autonomia Inmetro (km) ★</label>
+        <input type="number" id="v-inmetro" min="50" max="1000" step="1" placeholder="ex: 385" oninput="onVehicleChange()">
+        <div class="fhint">Autonomia oficial do ciclo Inmetro (Brasil). Consulte inmetro.gov.br ou a ficha do veículo.</div>
+      </div>
+      <div class="fg">
+        <label>Autonomia WLTP (km) — opcional</label>
+        <input type="number" id="v-wltp" min="50" max="1000" step="1" placeholder="ex: 420" oninput="onVehicleChange()">
+        <div class="fhint">Ciclo europeu, geralmente ~10% acima do Inmetro. Preencha se disponível.</div>
+      </div>
+    </div>
+
+    <!-- Seção avançada colapsável -->
+    <div class="adv-toggle" onclick="toggleAdv(this)" style="border-top:1px solid var(--border);margin-top:14px;padding-top:10px">
+      <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+      <span style="color:var(--text2);font-weight:500">Parâmetros avançados</span>
+      <span style="color:var(--text3);font-size:11px"> — calibração física do modelo C(v)</span>
+      <span id="adv-status" style="margin-left:auto;font-size:10px;color:var(--green-light)"></span>
+    </div>
+    <div class="adv-body" id="adv-body">
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7;margin:8px 0 14px;padding:8px 10px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)">
+        Com esses dados o app deriva automaticamente os coeficientes do modelo físico C(v) = a + b·v + c·v², onde <strong style="color:var(--text2)">a</strong> representa perda de rolamento, <strong style="color:var(--text2)">b</strong> perdas auxiliares e <strong style="color:var(--text2)">c</strong> o arrasto aerodinâmico. Todos os campos são opcionais individualmente — o app usa estimativas padrão para os que ficarem em branco.
+      </div>
+
+      <p class="sdiv">Dimensões e carroceria</p>
+      <div class="g3">
+        <div class="fg">
+          <label>Altura (mm)</label>
+          <input type="number" id="v-altura" min="1200" max="2200" step="1" placeholder="ex: 1480" oninput="onVehicleChange()">
+          <div class="fhint">Altura total do veículo, da ficha técnica.</div>
+        </div>
+        <div class="fg">
+          <label>Largura (mm)</label>
+          <input type="number" id="v-largura" min="1400" max="2500" step="1" placeholder="ex: 1800" oninput="onVehicleChange()">
+          <div class="fhint">Largura total com retrovisores. Área frontal = largura × altura × 0,75.</div>
+        </div>
+        <div class="fg">
+          <label>Cd personalizado — opcional</label>
+          <input type="number" id="v-cd-custom" min="0.15" max="0.60" step="0.01" placeholder="ex: 0.32" oninput="onVehicleChange()">
+          <div class="fhint">Coeficiente de arrasto real do fabricante, se disponível. Substitui a estimativa da categoria.</div>
+        </div>
+      </div>
+
+      <p class="sdiv">Peso e pneus</p>
+      <div class="g2">
+        <div class="fg">
+          <label>Peso (kg)</label>
+          <input type="number" id="v-massa" min="500" max="4000" step="1" placeholder="ex: 1680" oninput="onVehicleChange()">
+          <div class="fhint">Peso em ordem de marcha (com motorista). Ficha técnica do fabricante.</div>
+        </div>
+        <div class="fg">
+          <label>Dimensões do pneu</label>
+          <input type="text" id="v-pneu" placeholder="ex: 215/50 R17" oninput="onVehicleChange()">
+          <div class="fhint">Formato padrão: largura/perfil Raio. Ex: 205/60 R16. Determina o Cr automaticamente.</div>
+        </div>
+      </div>
+    </div><!-- /adv-body -->
+  </div><!-- /panel básico -->
+
+  <!-- Preview do modelo -->
+  <div class="panel" id="model-preview-panel">
+    <p class="sl">Modelo de consumo derivado</p>
+    <div id="model-preview">
+      <p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha capacidade da bateria e autonomia Inmetro para ver o modelo.</p>
+    </div>
+  </div>
+
+  <!-- Botão salvar -->
+  <!-- Botões salvar / limpar -->
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-green" style="padding:11px 24px;font-size:14px" onclick="saveVehicle()">✓ Salvar configuração do veículo</button>
+    <button class="btn btn-red" style="padding:11px 16px;font-size:13px" onclick="clearVehicle()">✕ Limpar</button>
+    <span id="v-fb" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+  </div>
+
+</div><!-- /pane-veiculo -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CALCULADORA
+═══════════════════════════════════════════════════════ -->
+<div id="pane-calc" class="pane active">
+  <div id="calc-no-vehicle" class="no-vehicle-banner">
+    ⚠ Veículo não configurado. Os cálculos usam valores genéricos. <a onclick="switchTab('veiculo')">Configure seu veículo →</a>
+  </div>
+  <div class="panel">
+    <p class="sl">Perfis</p>
+    <div class="fl">
+      <button class="pb active" onclick="applyProfile('urbano',this)">Urbano</button>
+      <button class="pb" onclick="applyProfile('misto',this)">Misto</button>
+      <button class="pb" onclick="applyProfile('estrada',this)">Estrada</button>
+      <button class="pb" onclick="applyProfile('custom',this)">Manual</button>
+    </div>
+    <div class="range-row">
+      <div class="range-label"><span>Velocidade média</span><span class="range-val" id="lv">60 km/h</span></div>
+      <input type="range" id="sl-vel" min="10" max="140" value="60" oninput="document.getElementById('lv').textContent=this.value+' km/h';updateCalc()">
+    </div>
+    <div class="range-row">
+      <div class="range-label"><span>SoC inicial (%)</span><span class="range-val" id="ls">80%</span></div>
+      <input type="range" id="sl-soc" min="5" max="100" value="80" oninput="document.getElementById('ls').textContent=this.value+'%';updateCalc()">
+    </div>
+    <div class="range-row">
+      <div class="range-label"><span>Temperatura (°C)</span><span class="range-val" id="lt">25 °C</span></div>
+      <input type="range" id="sl-temp" min="-10" max="45" value="25" oninput="document.getElementById('lt').textContent=this.value+' °C';updateCalc()">
+    </div>
+    <div class="sdiv">Auxiliares</div>
+    <div class="seg-label">Ar-condicionado</div>
+    <div class="seg-ctrl" id="ctrl-ac">
+      <button class="seg-btn active" onclick="setCalcAc(0,this)">Desl.</button>
+      <button class="seg-btn" onclick="setCalcAc(0.8,this)">Fraco</button>
+      <button class="seg-btn" onclick="setCalcAc(1.5,this)">Mod.</button>
+      <button class="seg-btn" onclick="setCalcAc(2,this)">Forte</button>
+    </div>
+    <div class="seg-label" style="margin-top:8px">Tráfego / paradas</div>
+    <div class="seg-ctrl" id="ctrl-traf">
+      <button class="seg-btn active" onclick="setCalcTraf(0,this)">Livre</button>
+      <button class="seg-btn" onclick="setCalcTraf(12,this)">Ocas.</button>
+      <button class="seg-btn" onclick="setCalcTraf(25,this)">Mod.</button>
+      <button class="seg-btn" onclick="setCalcTraf(40,this)">Int.</button>
+    </div>
+    <div class="seg-label" style="margin-top:8px">Ocupantes</div>
+    <div class="seg-ctrl" id="ctrl-ocup">
+      <button class="seg-btn active" onclick="setCalcOcup(1,this)">1</button>
+      <button class="seg-btn" onclick="setCalcOcup(2,this)">2</button>
+      <button class="seg-btn" onclick="setCalcOcup(3,this)">3</button>
+      <button class="seg-btn" onclick="setCalcOcup(4,this)">4</button>
+      <button class="seg-btn" onclick="setCalcOcup(5,this)">5</button>
+    </div>
+    <div class="seg-label" style="margin-top:8px">Topografia</div>
+    <div class="seg-ctrl" id="ctrl-topo">
+      <button class="seg-btn active" onclick="setCalcTopo(0,this)">Plano</button>
+      <button class="seg-btn" onclick="setCalcTopo(1,this)">Subida</button>
+      <button class="seg-btn" onclick="setCalcTopo(-1,this)">Descida</button>
+      <button class="seg-btn" onclick="setCalcTopo(0.5,this)">Misto</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p class="sl">Resultado</p>
+    <!-- 2×2 grid matching Spark layout -->
+    <div class="g2" style="margin-bottom:6px">
+      <div class="metric">
+        <p class="metric-label">Consumo</p>
+        <p class="metric-value" id="mc">—</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Eficiência</p>
+        <p class="metric-value" id="mef" style="color:var(--green-light)">—</p>
+        <p class="metric-sub" id="mef100"></p>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="metric">
+        <p class="metric-label">Autonomia est.</p>
+        <p class="metric-value" id="mr">—</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Energia disp.</p>
+        <p class="metric-value" id="mq" style="color:var(--green-light)">—</p>
+      </div>
+    </div>
+    <p class="sdiv">Bateria</p>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px;font-family:var(--mono)">
+      <span>SoC atual</span><span id="soc-pct" style="color:var(--green-light);font-weight:500">80%</span>
+    </div>
+    <div class="bar-bg" style="height:10px;margin-bottom:14px"><div class="bar-fill" id="bar-soc" style="width:80%;background:var(--green)"></div></div>
+    <p class="sdiv">Comparativo de autonomia</p>
+    <div class="bar-wrap">
+      <div class="bar-label">
+        <span id="vi-label">vs. Inmetro — km</span>
+        <span id="vi" style="color:var(--text2)">—</span>
+      </div>
+      <div class="bar-bg" style="height:9px"><div class="bar-fill" id="bar-i" style="background:var(--text2)"></div></div>
+    </div>
+    <div class="bar-wrap" id="bar-w-wrap">
+      <div class="bar-label">
+        <span id="vw-label">vs. WLTP — km</span>
+        <span id="vw" style="color:var(--text2)">—</span>
+      </div>
+      <div class="bar-bg" style="height:9px"><div class="bar-fill" id="bar-w" style="background:#5a9ada"></div></div>
+    </div>
+    <div class="bar-wrap" id="bar-real-wrap" style="display:none">
+      <div class="bar-label">
+        <span>vs. média real <span id="real-ref" style="display:none;color:var(--text3)">(<span id="real-ref-val"></span>)</span></span>
+        <span id="vr" style="color:#d85a30">—</span>
+      </div>
+      <div class="bar-bg" style="height:9px"><div class="bar-fill" id="bar-r" style="background:#d85a30"></div></div>
+    </div>
+    <div class="alert a-ok" id="calc-alert" style="margin-top:12px;margin-bottom:6px;font-weight:500"></div>
+    <div style="font-size:12px;padding:8px 12px;border-radius:var(--radius);background:var(--info-bg);border-left:3px solid var(--info);color:var(--info);font-family:var(--mono);display:none" id="calib-notice">
+      Modelo calibrado com <span id="calib-n">0</span> viagens.
+    </div>
+  </div>
+
+  <div class="panel">
+    <p class="sl">Curva de consumo C(v)</p>
+    <div class="chart-wrap" id="chartVelWrap" style="position:relative;width:100%;height:180px;overflow:hidden"></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:8px">
+      <span><span style="display:inline-block;width:18px;height:0;border-top:1.5px dashed var(--text3);margin-right:4px;vertical-align:middle"></span>Padrão</span>
+      <span><span style="display:inline-block;width:18px;height:0;border-top:2px solid var(--green);margin-right:4px;vertical-align:middle"></span>Calibrado</span>
+      <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green-light);margin-right:4px;vertical-align:middle"></span>Estimativa atual</span>
+      <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#d85a30;margin-right:4px;vertical-align:middle"></span>Viagens</span>
+    </div>
+    <!-- inline model summary below chart -->
+    <div id="calc-chart-summary" style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:8px;line-height:1.7"></div>
+    <!-- expand/collapse explain -->
+    <div id="calc-explain-toggle" onclick="toggleCalcExplain()" style="font-size:11px;color:var(--green-light);font-family:var(--mono);cursor:pointer;margin-top:6px;user-select:none">▶ Explicar o modelo</div>
+    <div id="calc-explain-body" style="display:none"></div>
+  </div>
+</div><!-- /pane-calc -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     REGISTRAR VIAGEM
+═══════════════════════════════════════════════════════ -->
+<div id="pane-log" class="pane">
+  <div id="log-no-vehicle" class="no-vehicle-banner">
+    ⚠ Veículo não configurado. <a onclick="switchTab('veiculo')">Configure seu veículo →</a>
+  </div>
+
+  <!-- Instruções no topo -->
+  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
+    <span style="color:var(--text2);font-weight:500">Como usar</span><br>
+    Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, de ponta a ponta. Por exemplo, ao chegar em casa após uma saída. Alternativamente, use a aba <strong style="color:var(--text2)">Viagem ativa</strong> se preferir registrar mais de um trecho durante o trajeto.<br><br>
+    <span style="color:var(--green-light)">1.</span> Informe o SoC ao sair e ao chegar, lidos no painel do veículo<br>
+    <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
+    <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
+    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em> — os dados entram no Histórico e calibram o modelo
+  </div>
+  <div class="panel">
+    <p class="sl">Dados da viagem</p>
+    <div class="g2">
+      <div class="fg"><label>Local de partida</label><input type="text" id="f-orig" placeholder="ex: Campinas-SP"></div>
+      <div class="fg"><label>Destino</label><input type="text" id="f-dest" placeholder="ex: São Paulo-SP"></div>
+    </div>
+    <div class="g3">
+      <div class="fg"><label>Data</label><input type="date" id="f-data"></div>
+      <div class="fg">
+        <label>Perfil</label>
+        <select id="f-perfil">
+          <option value="urbano">Urbano</option>
+          <option value="misto" selected>Misto</option>
+          <option value="estrada">Estrada</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Modo de condução</label>
+        <select id="f-modo">
+          <option value="eco">Eco</option>
+          <option value="padrao" selected>Padrão</option>
+          <option value="esportivo">Esportivo</option>
+        </select>
+      </div>
+    </div>
+    <p class="sdiv">Bateria</p>
+    <div class="g3">
+      <div class="fg"><label>SoC inicial (%)</label><input type="number" id="f-si" min="1" max="100" placeholder="ex: 90" oninput="previewLog()"></div>
+      <div class="fg"><label>SoC final (%)</label><input type="number" id="f-sf" min="0" max="99" placeholder="ex: 23" oninput="previewLog()"></div>
+      <div class="fg"><label>Aut. restante (km)</label><input type="number" id="f-aut" min="0" placeholder="ex: 57" oninput="previewLog()"></div>
+    </div>
+    <p class="sdiv">Percurso</p>
+    <div class="fg" style="margin-bottom:8px">
+      <label>Distância (km)</label>
+      <input type="number" id="f-km" min="1" step="0.1" placeholder="ex: 233.4" oninput="calcLogVel();previewLog()">
+    </div>
+    <div class="fg" style="margin-bottom:8px">
+      <label>Efic. indicada pelo painel (kWh/100km) — opcional</label>
+      <input type="number" id="f-ef-painel" min="0" step="0.1" placeholder="ex: 15.2" oninput="previewLog()">
+    </div>
+    <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 8px;line-height:1.6">Se o painel do seu veículo já exibe a eficiência do trecho, informe aqui para comparação. Não é usado na calibração do modelo.</p>
+    <div class="g3">
+      <div class="fg"><label>Horário de partida</label><input type="time" id="f-thora" oninput="calcLogVel()"></div>
+      <div class="fg"><label>Horário de chegada</label><input type="time" id="f-tcheg" oninput="calcLogVel()"></div>
+      <div class="fg"><label>Tempo de paradas (min) — opcional</label><input type="number" id="f-paradas" min="0" step="5" placeholder="0 se não houve paradas" oninput="calcLogVel()"></div>
+    </div>
+    <div class="vel-calc" id="f-vel-calc">Informe km + horários para calcular velocidade média.</div>
+    <p style="font-size:11px;color:var(--text3);font-family:var(--mono);margin:5px 0 10px">A velocidade é calculada sobre o tempo <strong style="color:var(--text2)">em movimento</strong> (total − paradas).</p>
+    <input type="hidden" id="f-vel" value="0">
+    <div class="g2" style="margin-bottom:4px">
+      <div class="fg"><label>Temperatura (°C) — opcional</label><input type="number" id="f-temp" min="-15" max="50" placeholder="ex: 28" oninput="previewLog()"></div>
+    </div>
+    <p class="sdiv">Auxiliares</p>
+    <div class="seg-label">Ar-condicionado</div>
+    <div class="seg-ctrl" id="log-ctrl-ac">
+      <button class="seg-btn" onclick="setLogAc(0,this)">Desl.</button>
+      <button class="seg-btn active" onclick="setLogAc(0.8,this)">Fraco</button>
+      <button class="seg-btn" onclick="setLogAc(1.5,this)">Mod.</button>
+      <button class="seg-btn" onclick="setLogAc(2,this)">Forte</button>
+    </div>
+    <div class="seg-label" style="margin-top:8px">Tráfego / paradas</div>
+    <div class="seg-ctrl" id="log-ctrl-traf">
+      <button class="seg-btn active" onclick="setLogTraf(0,this)">Livre</button>
+      <button class="seg-btn" onclick="setLogTraf(12,this)">Ocas.</button>
+      <button class="seg-btn" onclick="setLogTraf(25,this)">Mod.</button>
+      <button class="seg-btn" onclick="setLogTraf(40,this)">Int.</button>
+    </div>
+    <div class="seg-label" style="margin-top:8px">Ocupantes</div>
+    <div class="seg-ctrl" id="log-ctrl-ocup">
+      <button class="seg-btn active" onclick="setLogOcup(1,this)">1</button>
+      <button class="seg-btn" onclick="setLogOcup(2,this)">2</button>
+      <button class="seg-btn" onclick="setLogOcup(3,this)">3</button>
+      <button class="seg-btn" onclick="setLogOcup(4,this)">4</button>
+      <button class="seg-btn" onclick="setLogOcup(5,this)">5</button>
+    </div>
+    <div class="seg-label" style="margin-top:8px">Topografia</div>
+    <div class="seg-ctrl" id="log-ctrl-topo">
+      <button class="seg-btn active" onclick="setLogTopo(0,this)">Plano</button>
+      <button class="seg-btn" onclick="setLogTopo(1,this)">Subida</button>
+      <button class="seg-btn" onclick="setLogTopo(-1,this)">Descida</button>
+      <button class="seg-btn" onclick="setLogTopo(0.5,this)">Misto</button>
+    </div>
+    <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:5px 0 0;line-height:1.6">Na aba <strong style="color:var(--text2)">Viagem ativa</strong>, estas condições são ajustadas individualmente para cada trecho.</p>
+    <p class="sdiv">Custo</p>
+    <div class="g3">
+      <div class="fg"><label>Tipo de carga</label><select id="f-tipo"><option value="casa">Casa</option><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC fast</option></select></div>
+      <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="f-tarifa" min="0" step="0.01" placeholder="1.00" oninput="previewLog()"></div>
+      <div class="fg"><label>Total pago (R$)</label><input type="number" id="f-total" min="0" step="0.01" placeholder="27.50" oninput="previewLog()"></div>
+    </div>
+    <p class="sdiv">Local de recarga</p>
+    <div class="g2">
+      <div class="fg"><label>Posto / local</label><input type="text" id="f-posto" placeholder="ex: Shell Anhanguera"></div>
+      <div class="fg"><label>Município</label><input type="text" id="f-mun" placeholder="ex: Campinas"></div>
+      <div class="fg"><label>Operadora</label><input type="text" id="f-oper" placeholder="ex: Volty"></div>
+      <div class="fg"><label>Observação</label><input type="text" id="f-obs" placeholder="ex: SP → interior"></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+      <button class="btn btn-green" onclick="addTrip()">+ Registrar</button>
+      <span id="f-fb" style="font-size:12px;color:var(--text3);font-family:var(--mono)"></span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p class="sl">Resultado calculado</p>
+    <div id="log-preview"><p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha SoC inicial, final e distância para ver o resultado. Os demais campos são opcionais.</p></div>
+  </div>
+
+</div><!-- /pane-log -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     VIAGEM ATIVA
+═══════════════════════════════════════════════════════ -->
+<div id="pane-recarga" class="pane">
+  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
+    <span style="color:var(--text2);font-weight:500">Como usar</span><br>
+    Use esta aba para registrar a viagem em tempo real, trecho a trecho.<br><br>
+    <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial e toque em <em>Iniciar viagem ativa</em><br>
+    <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e as demais informações solicitadas; toque em <em>Registrar trecho</em><br>
+    <span style="color:var(--green-light)">3. Ao final</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
+  </div>
+
+  <div id="va-inicio-panel" class="panel">
+    <p class="sl">Iniciar viagem</p>
+    <div class="g3">
+      <div class="fg"><label>SoC ao sair (%)</label><input type="number" id="va-soc-inicio" min="1" max="100" value="100"></div>
+      <div class="fg"><label>Horário de partida — opcional</label><input type="time" id="va-hora-inicio"></div>
+      <div class="fg"><label>Destino — opcional</label><input type="text" id="va-destino" placeholder="ex: Campinas"></div>
+    </div>
+    <div class="g3" style="margin-top:4px">
+      <div class="fg"><label>Km no odômetro/trajeto ao sair — opcional</label><input type="number" id="va-km-inicio" min="0" step="0.1" placeholder="0" value="0"></div>
+      <div class="fg"><label>Modo de condução</label><select id="va-modo-inicio"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
+    </div>
+    <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:4px 0 12px">Se não zerou o trajeto, informe o km atual para desconto automático.</p>
+    <div style="margin-bottom:14px">
+      <div class="seg-label">Tipo de trajeto</div>
+      <div class="seg-ctrl" id="va-perfil-ctrl">
+        <button class="seg-btn active" onclick="setVaPerfil('auto',this)">Automático</button>
+        <button class="seg-btn" onclick="setVaPerfil('urbano',this)">Urbano</button>
+        <button class="seg-btn" onclick="setVaPerfil('misto',this)">Misto</button>
+        <button class="seg-btn" onclick="setVaPerfil('estrada',this)">Estrada</button>
+      </div>
+      <div class="hint" id="va-perfil-hint"><strong>Automático:</strong> perfil inferido pela velocidade média ao encerrar — &lt;40 → Urbano · 40–60 → Misto · &gt;60 → Estrada.</div>
+    </div>
+    <button class="btn btn-green" style="width:100%;padding:12px" onclick="iniciarViagem()">▶ Iniciar viagem ativa</button>
+  </div>
+
+  <div id="va-ativa" style="display:none">
+    <div class="panel panel-green">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:12px;font-weight:500;color:var(--green-light);font-family:var(--mono)">● EM ANDAMENTO</span>
+          <span id="va-perfil-badge"></span>
+          <span id="va-destino-label" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+        </div>
+        <button class="btn btn-red" onclick="encerrarViagem()" style="font-size:11px;padding:6px 12px">Encerrar e salvar</button>
+      </div>
+      <div id="va-summary-cards" style="display:none">
+        <div class="g4" style="margin-bottom:6px">
+          <div class="metric"><p class="metric-label">Bateria agora</p><p class="metric-value" id="va-soc-i-show">—<span class="metric-unit">%</span></p></div>
+          <div class="metric"><p class="metric-label">Trechos concluídos</p><p class="metric-value" id="va-n-trechos">0</p></div>
+          <div class="metric"><p class="metric-label">Percurso total</p><p class="metric-value" id="va-km-total">0<span class="metric-unit">km</span></p></div>
+          <div class="metric"><p class="metric-label">Eficiência média</p><p class="metric-value" id="va-ef-total">—</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="sl" id="va-trecho-titulo">Trecho 1 — em andamento</p>
+      <div class="g3">
+        <div class="fg"><label>SoC agora (%)</label><input type="number" id="va-soc-now" min="0" max="99" placeholder="ex: 42" oninput="calcTrecho()"></div>
+        <div class="fg"><label>Distância percorrida (km)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()"></div>
+        <div class="fg"><label>Aut. indicada no painel (km)</label><input type="number" id="va-aut-panel" min="0" placeholder="ex: 78" oninput="calcTrecho()"></div>
+      </div>
+      <div class="fg" style="margin-bottom:8px">
+        <label>Efic. indicada pelo painel neste trecho (kWh/100km) — opcional</label>
+        <input type="number" id="va-ef-painel" min="0" step="0.1" placeholder="ex: 15.2" oninput="calcTrecho()">
+      </div>
+      <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 8px;line-height:1.6">Se o painel exibir a eficiência deste trecho, informe aqui para comparação. Não é usado na calibração do modelo.</p>
+      <div class="g2" style="margin-bottom:8px">
+        <div class="fg"><label>Modo de condução neste trecho</label><select id="va-modo-trecho"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
+        <div class="fg"><label>Temperatura (°C) — opcional</label><input type="number" id="va-temp-trecho" min="-15" max="50" placeholder="ex: 28"></div>
+      </div>
+      <p class="sdiv">Condições deste trecho</p>
+      <div class="seg-label">Ar-condicionado</div>
+      <div class="seg-ctrl" id="va-ctrl-ac">
+        <button class="seg-btn" onclick="setVaAc(0,this)">Desl.</button>
+        <button class="seg-btn active" onclick="setVaAc(0.8,this)">Fraco</button>
+        <button class="seg-btn" onclick="setVaAc(1.5,this)">Mod.</button>
+        <button class="seg-btn" onclick="setVaAc(2,this)">Forte</button>
+      </div>
+      <div class="seg-label" style="margin-top:8px">Tráfego / paradas</div>
+      <div class="seg-ctrl" id="va-ctrl-traf">
+        <button class="seg-btn active" onclick="setVaTraf(0,this)">Livre</button>
+        <button class="seg-btn" onclick="setVaTraf(12,this)">Ocas.</button>
+        <button class="seg-btn" onclick="setVaTraf(25,this)">Mod.</button>
+        <button class="seg-btn" onclick="setVaTraf(40,this)">Int.</button>
+      </div>
+      <div class="seg-label" style="margin-top:8px">Ocupantes</div>
+      <div class="seg-ctrl" id="va-ctrl-ocup">
+        <button class="seg-btn active" onclick="setVaOcup(1,this)">1</button>
+        <button class="seg-btn" onclick="setVaOcup(2,this)">2</button>
+        <button class="seg-btn" onclick="setVaOcup(3,this)">3</button>
+        <button class="seg-btn" onclick="setVaOcup(4,this)">4</button>
+        <button class="seg-btn" onclick="setVaOcup(5,this)">5</button>
+      </div>
+      <div class="seg-label" style="margin-top:8px">Topografia</div>
+      <div class="seg-ctrl" id="va-ctrl-topo">
+        <button class="seg-btn active" onclick="setVaTopo(0,this)">Plano</button>
+        <button class="seg-btn" onclick="setVaTopo(1,this)">Subida</button>
+        <button class="seg-btn" onclick="setVaTopo(-1,this)">Descida</button>
+        <button class="seg-btn" onclick="setVaTopo(0.5,this)">Misto</button>
+      </div>
+      <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:8px 0 0;line-height:1.6">Estas condições valem apenas para este trecho — ajuste novamente a cada parada se mudarem.</p>
+      <div class="g2">
+        <div class="fg"><label>Horário de chegada / parada</label><input type="time" id="va-hora-trecho" oninput="calcTrechoVel()"></div>
+        <div class="fg"><label>Distância ao destino — opcional</label><input type="number" id="va-dest-restante" min="1" placeholder="deixe vazio se não souber" oninput="calcTrecho()"></div>
+      </div>
+      <div class="vel-calc" id="va-vel-calc">Informe km + horário para calcular velocidade.</div>
+      <input type="hidden" id="va-vel-hidden" value="0">
+      <p class="sdiv">Recarga nesta parada (opcional)</p>
+      <div class="g3">
+        <div class="fg"><label>Tipo</label><select id="va-tipo"><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC fast</option></select></div>
+        <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="va-tarifa" min="0" step="0.01" placeholder="1.00"></div>
+        <div class="fg"><label>Total pago (R$)</label><input type="number" id="va-total-pago" min="0" step="0.01" placeholder="45.00"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label>Posto / local</label><input type="text" id="va-posto" placeholder="ex: Posto BR Km 47"></div>
+        <div class="fg"><label>Operadora</label><input type="text" id="va-oper" placeholder="ex: Zletric"></div>
+      </div>
+      <p class="sdiv" style="margin-top:12px">Margem de segurança</p>
+      <div class="fl">
+        <button class="pb active" onclick="setMargin(10,this)">Mínima 10%</button>
+        <button class="pb" onclick="setMargin(20,this)">Confortável 20%</button>
+        <button class="pb" onclick="setMargin(30,this)">Conservadora 30%</button>
+      </div>
+      <button class="btn btn-green" style="width:100%;padding:12px;margin-top:6px" onclick="addTrecho()">+ Registrar trecho e continuar</button>
+      <div id="va-fb" style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--mono)"></div>
+    </div>
+
+    <div id="va-trecho-result" class="panel" style="display:none">
+      <p class="sl">Resultado do trecho atual</p>
+      <div id="va-trecho-metrics"></div>
+      <div style="margin-top:10px">
+        <div class="charge-track">
+          <div class="charge-seg" id="va-rv-used" style="background:#7a2020"></div>
+          <div class="charge-seg" id="va-rv-now"  style="background:var(--border2)"></div>
+          <div class="charge-seg" id="va-rv-add"  style="background:var(--green)"></div>
+          <div class="charge-seg" id="va-rv-marg" style="background:var(--green-dim)"></div>
+          <div class="charge-seg" id="va-rv-rest" style="background:var(--bg3)"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:3px;font-family:var(--mono)">
+          <span>0%</span><span id="va-lnow"></span><span id="va-ltgt"></span><span>100%</span>
+        </div>
+      </div>
+      <div id="va-bias-text" style="font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6;font-family:var(--mono)"></div>
+    </div>
+
+    <div class="panel" id="va-trechos-panel" style="display:none">
+      <p class="sl">Trechos registrados</p>
+      <div id="va-trechos-list"></div>
+    </div>
+  </div>
+</div><!-- /pane-recarga -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HISTÓRICO
+═══════════════════════════════════════════════════════ -->
+<div id="pane-stats" class="pane">
+  <div id="no-data" class="panel" style="text-align:center;padding:32px;color:var(--text3);font-family:var(--mono);font-size:12px">
+    Nenhuma viagem registrada ainda.<br><br>Use <strong style="color:var(--text2)">Registrar</strong> ou <strong style="color:var(--text2)">Viagem ativa</strong> para começar.
+  </div>
+  <div id="stats-body" style="display:none">
+    <p class="sl">Filtrar por perfil</p>
+    <div class="filter-btns">
+      <button class="pb active" onclick="setFilter('todos',this)">Todos</button>
+      <button class="pb" onclick="setFilter('estrada',this)">Estrada</button>
+      <button class="pb" onclick="setFilter('misto',this)">Misto</button>
+      <button class="pb" onclick="setFilter('urbano',this)">Urbano</button>
+    </div>
+    <div class="g4">
+      <div class="metric"><p class="metric-label">Viagens</p><p class="metric-value" id="st-n">0</p></div>
+      <div class="metric"><p class="metric-label">km/kWh</p><p class="metric-value" id="st-ef">—</p></div>
+      <div class="metric"><p class="metric-label">Autonomia</p><p class="metric-value" id="st-range">—<span class="metric-unit">km</span></p></div>
+      <div class="metric"><p class="metric-label">R$/km</p><p class="metric-value" id="st-cpm">—</p></div>
+    </div>
+    <div class="panel">
+      <p class="sl">Por perfil</p>
+      <div id="perfil-cards"></div>
+    </div>
+    <div class="panel">
+      <p class="sl">Calibração do modelo</p>
+      <div id="calib-txt" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;font-family:var(--mono)"></div>
+      <div class="chart-wrap" id="chartCalibWrap" style="position:relative;width:100%;height:160px;overflow:hidden"></div>
+    </div>
+    <div class="panel">
+      <p class="sl">Eficiência por viagem</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="display:flex;border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;font-size:10px;font-family:var(--mono)">
+          <button id="ch1-bars" onclick="setChartMode('bars')" style="padding:4px 10px;border:none;background:var(--green-dim);color:var(--green-light);cursor:pointer;font-family:var(--mono);font-size:10px">Barras</button>
+          <button id="ch1-line" onclick="setChartMode('line')"  style="padding:4px 10px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">Linha</button>
+        </div>
+        <div style="display:flex;border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;font-size:10px;font-family:var(--mono)">
+          <button onclick="setChartWindow(10,this)"  style="padding:4px 8px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">10</button>
+          <button onclick="setChartWindow(15,this)"  style="padding:4px 8px;border:none;background:var(--green-dim);color:var(--green-light);cursor:pointer;font-family:var(--mono);font-size:10px">15</button>
+          <button onclick="setChartWindow(20,this)"  style="padding:4px 8px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">20</button>
+          <button onclick="setChartWindow(999,this)" style="padding:4px 8px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--mono);font-size:10px">Todas</button>
+        </div>
+      </div>
+      <div id="chart-ef-viagem" style="width:100%;height:180px"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:6px">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#854F0B;margin-right:3px;vertical-align:middle"></span>Estrada</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#185FA5;margin-right:3px;vertical-align:middle"></span>Misto</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#0F6E56;margin-right:3px;vertical-align:middle"></span>Urbano</span>
+        <span><span style="display:inline-block;width:16px;height:0;border-top:2px dashed var(--text3);margin-right:3px;vertical-align:middle"></span>Média</span>
+      </div>
+    </div>
+    <div class="panel">
+      <p class="sl">Eficiência ao longo dos km acumulados</p>
+      <div id="chart-ef-km" style="width:100%;height:180px"></div>
+    </div>
+    <div class="panel">
+      <p class="sl">Custo por tipo de recarga</p>
+      <div id="custo-tipos" style="font-size:12px;color:var(--text2);line-height:1.9;font-family:var(--mono)"></div>
+    </div>
+    <div class="panel">
+      <p class="sl">Viagens registradas</p>
+      <div id="log-tbody"></div>
+    </div>
+  </div>
+</div><!-- /pane-stats -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CONFIGURAÇÕES
+═══════════════════════════════════════════════════════ -->
+<div id="pane-config" class="pane">
+  <div class="panel">
+    <p class="sl">Tarifa doméstica padrão</p>
+    <div class="fg" style="margin-bottom:10px"><label>Tarifa residencial (R$/kWh)</label><input type="number" id="cfg-tarifa" min="0" step="0.01" placeholder="ex: 1.00" oninput="saveConfig()"></div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Usada automaticamente para viagens com tipo "Casa".</div>
+  </div>
+  <div class="panel">
+    <p class="sl">Cálculo de custo</p>
+    <div class="toggle-row">
+      <button class="toggle on" id="tog-desconto" onclick="toggleDesconto()"></button>
+      <span>Descontar energia restante ao chegar no custo da viagem</span>
+    </div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">Ativo: custo reflete apenas energia consumida (viagens ponto a ponto). Inativo: considera toda energia carregada (viagens circulares).</div>
+  </div>
+  <div class="panel">
+    <p class="sl">Dados</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" onclick="exportData()">Exportar JSON</button>
+      <button class="btn" onclick="document.getElementById('imp-file').click()">Importar JSON</button>
+    </div>
+    <input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)">
+    <div id="imp-fb" style="font-size:11px;color:var(--text3);margin-top:8px;font-family:var(--mono)"></div>
+  </div>
+  <div class="panel">
+    <p class="sl">Sobre o veículo configurado</p>
+    <div id="config-about" style="font-size:12px;color:var(--text2);line-height:2;font-family:var(--mono)">
+      Nenhum veículo configurado. <a onclick="switchTab('veiculo')" style="color:var(--green-light);cursor:pointer;text-decoration:underline">Configure na aba Veículo →</a>
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--mono)">
+      Autonomia EV · versão 1.0<br>
+      Disponível no Google Play<br><br>
+      © 2026 Renato Perim Colistete<br>
+      Desenvolvido com assistência de Claude (Anthropic)<br>
+      Todos os direitos reservados
+    </div>
+  </div>
+</div><!-- /pane-config -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PLANEJAR
+═══════════════════════════════════════════════════════ -->
+<div id="pane-plan" class="pane">
+  <div id="plan-no-vehicle" class="no-vehicle-banner">
+    ⚠ Veículo não configurado. Os cálculos usam valores genéricos. <a onclick="switchTab('veiculo')">Configure seu veículo →</a>
+  </div>
+  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
+    <span style="color:var(--text2);font-weight:500">O que é esta aba</span><br>
+    Use antes de uma viagem longa para estimar se a bateria atual é suficiente — e, se não for, quantas paradas de recarga serão necessárias e quanto carregar em cada uma.<br><br>
+    <span style="color:var(--green-light);font-weight:500">Como usar</span><br>
+    <span style="color:var(--green-light)">1.</span> Informe a carga atual da bateria (SoC)<br>
+    <span style="color:var(--green-light)">2.</span> Informe a distância total do trajeto — obtenha do Google Maps<br>
+    <span style="color:var(--green-light)">3.</span> Escolha o perfil predominante da viagem e a margem de chegada desejada<br>
+    <span style="color:var(--green-light)">4.</span> O aplicativo calcula autonomia disponível, necessidade de recargas e tempo estimado<br><br>
+    O cálculo usa sua eficiência média real registrada no Histórico. Sem dados suficientes, usa o modelo padrão calibrado.
+  </div>
+
+  <div class="panel">
+    <p class="sl">Dados da viagem</p>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="fg"><label>Local de partida</label><input type="text" id="pl-orig" placeholder="ex: São Paulo-SP" oninput="calcPlan()"></div>
+      <div class="fg"><label>Destino</label><input type="text" id="pl-dest" placeholder="ex: Campinas-SP" oninput="calcPlan()"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>SoC atual (%)</label><input type="number" id="pl-soc" min="1" max="100" placeholder="ex: 85" oninput="calcPlan()"></div>
+      <div class="fg"><label>Distância total (km) — via Google Maps</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 420" oninput="calcPlan()"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Perfil predominante</label>
+        <select id="pl-perfil" onchange="calcPlan()">
+          <option value="estrada">Estrada</option>
+          <option value="misto">Misto</option>
+          <option value="urbano">Urbano</option>
+        </select>
+      </div>
+      <div class="fg"><label>Tipo de carregador disponível</label>
+        <select id="pl-tipo" onchange="calcPlan()">
+          <option value="dc">DC fast (50 kW)</option>
+          <option value="ac">AC rápido (6,6 kW)</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="seg-label">Ocupantes</div>
+      <div class="seg-ctrl" id="pl-ctrl-ocup">
+        <button class="seg-btn active" onclick="setPlOcup(1,this)">1</button>
+        <button class="seg-btn" onclick="setPlOcup(2,this)">2</button>
+        <button class="seg-btn" onclick="setPlOcup(3,this)">3</button>
+        <button class="seg-btn" onclick="setPlOcup(4,this)">4</button>
+        <button class="seg-btn" onclick="setPlOcup(5,this)">5</button>
+      </div>
+      <div class="seg-label" style="margin-top:8px">Topografia</div>
+      <div class="seg-ctrl" id="pl-ctrl-topo">
+        <button class="seg-btn active" onclick="setPlTopo(0,this)">Plano</button>
+        <button class="seg-btn" onclick="setPlTopo(1,this)">Subida</button>
+        <button class="seg-btn" onclick="setPlTopo(-1,this)">Descida</button>
+        <button class="seg-btn" onclick="setPlTopo(0.5,this)">Misto</button>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="seg-label">Margem de segurança ao chegar</div>
+      <div class="seg-ctrl" id="pl-margem-ctrl">
+        <button class="seg-btn" onclick="setPlMargem(10,this)">10%</button>
+        <button class="seg-btn active" onclick="setPlMargem(20,this)">20%</button>
+        <button class="seg-btn" onclick="setPlMargem(30,this)">30%</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pl-result" style="display:none">
+    <div id="pl-alert" class="alert a-info"></div>
+    <div class="g2" style="margin-bottom:12px">
+      <div class="metric"><p class="metric-label">Energia disponível</p><p class="metric-value" id="pl-disp">—<span class="metric-unit"> kWh</span></p><p class="metric-sub" id="pl-disp-km"></p></div>
+      <div class="metric"><p class="metric-label">Energia necessária</p><p class="metric-value" id="pl-need">—<span class="metric-unit"> kWh</span></p><p class="metric-sub" id="pl-need-sub"></p></div>
+      <div class="metric"><p class="metric-label">Tempo de deslocamento</p><p class="metric-value" id="pl-tempo">—</p><p class="metric-sub" id="pl-tempo-sub"></p></div>
+      <div class="metric"><p class="metric-label">Tempo total com recarga</p><p class="metric-value" id="pl-tempo-total">—</p><p class="metric-sub" id="pl-tempo-total-sub"></p></div>
+      <div class="metric"><p class="metric-label">Eficiência usada</p><p class="metric-value" id="pl-ef">—<span class="metric-unit"> km/kWh</span></p><p class="metric-sub" id="pl-ef-sub"></p></div>
+      <div class="metric"><p class="metric-label">Margem aplicada</p><p class="metric-value" id="pl-marg-show">—<span class="metric-unit"> %</span></p><p class="metric-sub" id="pl-marg-sub"></p></div>
+    </div>
+    <div class="panel" id="pl-etapas-panel">
+      <p class="sl">Roteiro de viagem</p>
+      <div id="pl-etapas"></div>
+    </div>
+    <div class="panel" style="margin-top:0">
+      <p class="sl">Nota</p>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
+        Paradas distribuídas uniformemente ao longo do trajeto. O tempo de recarga considera eficiência de 90% do carregador.<br><br>
+        Este app calcula <strong style="color:var(--text2)">quanto</strong> carregar em cada parada. Use o <span style="color:var(--green-light)">Carregados.com.br</span> para saber <strong style="color:var(--text2)">onde</strong> estão os eletropostos no trajeto.<br><br>
+        <strong style="color:var(--text2)">Ocupantes:</strong> cada passageiro adicional (75 kg) aumenta o consumo proporcionalmente pela massa total do veículo. <strong style="color:var(--text2)">Topografia:</strong> Subida estima +300m de altitude (+6% de energia); Descida estima −300m com regeneração a 65% (−4%); Misto aplica correção neutra (+1%).
+      </div>
+    </div>
+  </div>
+</div><!-- /pane-plan -->
+
+</div><!-- /content -->
+
+<div class="status-bar">
+  <div class="status-dot" id="status-dot"></div>
+  <span id="status-text">pronto</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script>
+// ─── STORAGE KEYS (isolados do Spark) ────────────────────────────────────────
+const SK = {
+  trips:   'autonomia_ev_trips',
+  cfg:     'autonomia_ev_cfg',
+  vehicle: 'autonomia_ev_vehicle',
+  theme:   'autonomia_ev_theme'
+};
+
+// ─── VEHICLE DEFAULTS (usado quando não configurado) ─────────────────────────
+const VEH_DEFAULT = {
+  nome:'',apelido:'',
+  batt:60, util:0.98, inmetro:300, wltp:null,
+  // advanced
+  massa:1700, cd:0.35, aFrontal:2.35, cr:0.010,
+  // raw inputs (for form restore)
+  largura:null, altura:null, carroceria:'', cdCustom:null,
+  pneu:'', configured:false
+};
+
+// Defaults por categoria de carroceria (usados quando adv não preenchidos)
+const CARROCERIA_DEFAULTS = {
+  'seda-aero': { cd:0.24, massa:1600, aFrontal:2.10, cr:0.009,
+    label:'Sedã', hint:'Cd~0,24 · peso ~1.600 kg · área frontal ~2,10 m²' },
+  'hatch':     { cd:0.29, massa:1450, aFrontal:2.15, cr:0.010,
+    label:'Hatch',             hint:'Cd~0,29 · peso ~1.450 kg · área frontal ~2,15 m²' },
+  'suv-compacto':{ cd:0.35, massa:1700, aFrontal:2.35, cr:0.010,
+    label:'SUV compacto',     hint:'Cd~0,35 · peso ~1.700 kg · área frontal ~2,35 m²' },
+  'suv-medio': { cd:0.37, massa:2000, aFrontal:2.55, cr:0.011,
+    label:'SUV médio/grande', hint:'Cd~0,37 · peso ~2.000 kg · área frontal ~2,55 m²' },
+  'picape':    { cd:0.44, massa:2400, aFrontal:2.80, cr:0.012,
+    label:'Picape',            hint:'Cd~0,44 · peso ~2.400 kg · área frontal ~2,80 m²' },
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let vehicle  = Object.assign({}, VEH_DEFAULT, JSON.parse(localStorage.getItem(SK.vehicle)||'{}'));
+let trips    = JSON.parse(localStorage.getItem(SK.trips)||'[]');
+let cfg      = JSON.parse(localStorage.getItem(SK.cfg)||'{"tarifa":1.00,"desconto":true}');
+let margin   = 10, plMargem = 20;
+let calcAcVal=0, calcTrafVal=0, logAcVal=0.8, logTrafVal=0;
+let calcOcup=1, calcTopo=0;
+let logOcupVal=1, logTopoVal=0;
+// Estado por trecho da Viagem ativa — independente do Registrar viagem
+let vaAcVal=0.8, vaTrafVal=0, vaOcupVal=1, vaTopoVal=0;
+let statsFilter = 'todos';
+let viagemAtiva = null;
+let vaPerfil = 'auto';
+let calibration = {active:false, scale:1};
+let chartMode = 'bars', chartWindow = 15;
+
+// ─── MODELO FÍSICO DE CONSUMO ─────────────────────────────────────────────────
+// C(v) = a + b·v + c·v²  [kWh/km],  v em km/h
+// a: resistência de rolamento   = Cr · m · g / (3600 · η)
+// b: perdas lineares auxiliares = a · 0,004
+// c: arrasto aerodinâmico       = 0,5 · ρ · Cd · A / (3,6² · 3600 · η)
+
+function deriveCoefficients(v) {
+  const g   = 9.81;   // m/s²
+  const rho = 1.20;   // kg/m³ (ar a ~25°C)
+  const eta = 0.85;   // eficiência da cadeia de tração
+
+  // a: resistência de rolamento [kWh/km]
+  // F_roll = Cr · m · g  [N]
+  // Energia/km = F_roll [N] · 1000 [m/km] / (eta · 3.6e6 [J/kWh])
+  //            = Cr · m · g / (3600 · eta)
+  const a = (v.cr * v.massa * g) / (3600 * eta);
+
+  // b: perdas lineares auxiliares (ventilação, viscosidade)
+  // ~0,4% de 'a' por km/h — pequeno termo de ajuste
+  const b = a * 0.004;
+
+  // c: arrasto aerodinâmico [kWh/km por (km/h)²]
+  // F_drag = 0.5 · ρ · Cd · A · v_ms²,  v_ms = v_kmh / 3.6
+  // Energia/km = F_drag · 1000 / (eta · 3.6e6)
+  //            = 0.5 · ρ · Cd · A / (3.6² · 3600 · eta)  · v²
+  const c = (0.5 * rho * v.cd * v.aFrontal) / (3.6 * 3.6 * 3600 * eta);
+
+  return {a, b, c};
+}
+
+function getCoeffs() {
+  return deriveCoefficients(vehicle);
+}
+
+const PESO_OCUP = 75; // kg por ocupante adicional
+
+function consumoBase(vel, nOcup, topo) {
+  nOcup = nOcup || 1; topo = topo || 0;
+  const {a, b, c} = getCoeffs();
+  // Fator de massa: ocupantes extras aumentam a resistência de rolamento (coef. a)
+  const massaBase = vehicle.massa || VEH_DEFAULT.massa;
+  const fatorMassa = (massaBase + (nOcup - 1) * PESO_OCUP) / massaBase;
+  // Fator de topografia: Subida +6%, Descida −4%, Misto +1%, Plano neutro
+  const topoF = topo === 1 ? 1.06 : topo === -1 ? 0.96 : topo === 0.5 ? 1.01 : 1.00;
+  return Math.max(0.05, (a * fatorMassa + b * vel + c * vel * vel) * topoF);
+}
+
+// ─── TEMPERATURE & CALC ───────────────────────────────────────────────────────
+function tempF(t) {
+  if(t < 0)  return 1.35;
+  if(t < 10) return 1 + (10-t)*0.025;
+  if(t < 30) return 1.0;
+  return 1 + (t-30)*0.008;
+}
+
+function calcC(v, t, ac, tr, cal, nOcup, topo) {
+  let r = (consumoBase(v, nOcup||1, topo||0) * tempF(t) + (v > 0 ? ac/v : 0)) * (1 + tr/100);
+  if(cal && calibration.active) r *= calibration.scale;
+  return Math.max(0.05, r);
+}
+
+function computeCalib() {
+  if(trips.length < 2) { calibration.active = false; return; }
+  let s = 0;
+  trips.forEach(t => {
+    const real = (t.socI - t.socF) * vehicle.batt / 100 / t.km;
+    const pred = calcC(t.vel||90, t.temp||25, t.ac||0.8, t.traf||0, false);
+    s += real / pred;
+  });
+  calibration.scale = +(s / trips.length).toFixed(4);
+  calibration.active = true;
+}
+
+function realAvgEf(arr) {
+  if(!arr || !arr.length) return null;
+  let tk=0, tw=0;
+  arr.forEach(t => { tk+=t.km; tw+=(t.socI-t.socF)*vehicle.batt/100; });
+  return tw > 0 ? tk/tw : null;
+}
+
+function tripCostPerKm(t) {
+  const kwh = (t.socI - t.socF) * vehicle.batt / 100;
+  let tar = t.tarifa || (!isNaN(t.total) && t.total > 0 ? t.total/kwh : null);
+  if(t.tipo === 'casa' && !tar) tar = cfg.tarifa;
+  if(!tar) return null;
+  return kwh * tar / t.km;
+}
+
+function inferirPerfil(v) { return v < 40 ? 'urbano' : v <= 60 ? 'misto' : 'estrada'; }
+
+const VEL_DEFAULT = {urbano:30, misto:50, estrada:70};
+
+function velFallback(perfil) {
+  const perf = perfil || 'misto';
+  const perfilTrips = trips.filter(t => t.perfil===perf && t.velCalc && t.vel && Math.round(t.vel)!==VEL_DEFAULT[perf]);
+  if(perfilTrips.length >= 2) {
+    return Math.round(perfilTrips.reduce((s,t)=>s+t.vel,0) / perfilTrips.length);
+  }
+  return VEL_DEFAULT[perf] || 60;
+}
+
+// ─── VEHICLE CONFIG UI ────────────────────────────────────────────────────────
+function parsePneu(str) {
+  const m = str.replace(/\s/g,'').match(/^(\d+)\/(\d+)[Rr](\d+)$/);
+  if(!m) return null;
+  return {width: +m[1], aspect: +m[2], rim: +m[3]};
+}
+
+function pneuToCr(str) {
+  const p = parsePneu(str);
+  if(!p) return null; // null = use category default
+  const baseW = 175;
+  const crW   = 0.008 + Math.max(0, (p.width - baseW) / 25) * 0.001;
+  const crP   = p.aspect < 50 ? 0.0005 : 0;
+  return Math.min(0.015, Math.max(0.007, crW + crP));
+}
+
+function aFrontalFromDim(largura, altura) {
+  // largura/altura in mm → convert to m, factor 0.75
+  return (largura/1000) * (altura/1000) * 0.75;
+}
+
+function cdFromCarroceria(tipo, custom) {
+  if(custom && !isNaN(custom)) return parseFloat(custom);
+  const def = CARROCERIA_DEFAULTS[tipo];
+  return def ? def.cd : VEH_DEFAULT.cd;
+}
+
+function toggleAdv(el) {
+  const arrow = el.querySelector('.adv-arrow');
+  const body  = document.getElementById('adv-body');
+  const open  = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+}
+
+function onVehicleChange() {
+  // Show carroceria defaults hint
+  const carr = document.getElementById('v-carroceria').value;
+  const hintEl = document.getElementById('carroceria-defaults-hint');
+  if(carr && CARROCERIA_DEFAULTS[carr]) {
+    hintEl.style.display = 'block';
+    hintEl.innerHTML = '<strong>Defaults da categoria:</strong> ' + CARROCERIA_DEFAULTS[carr].hint + ' — usados quando os parâmetros avançados não estão preenchidos.';
+  } else {
+    hintEl.style.display = 'none';
+  }
+  updateModelPreview();
+}
+
+function updateModelPreview() {
+  const batt   = parseFloat(document.getElementById('v-batt').value);
+  const inmetro= parseFloat(document.getElementById('v-inmetro').value);
+  const box    = document.getElementById('model-preview');
+
+  if(isNaN(batt) || isNaN(inmetro) || batt <= 0 || inmetro <= 0) {
+    box.innerHTML = '<p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha capacidade da bateria e autonomia Inmetro para ver o modelo.</p>';
+    return;
+  }
+
+  const tv = buildTempVehicle();
+  const {a, b, c} = deriveCoefficients(tv);
+  const util   = tv.util;
+  const c90    = a + b*90 + c*90*90;
+  const ef90   = (1/c90).toFixed(2);
+  const range90= Math.round(batt * util / c90);
+  const efInm  = (inmetro / batt).toFixed(2);
+  const wltp   = parseFloat(document.getElementById('v-wltp').value);
+  const efWltp = (!isNaN(wltp) && wltp > 0) ? (wltp / batt).toFixed(2) : null;
+
+  // Determine source of each param
+  const carr    = document.getElementById('v-carroceria').value;
+  const catDef  = CARROCERIA_DEFAULTS[carr] || null;
+  const massaRaw= parseFloat(document.getElementById('v-massa').value);
+  const larguraRaw = parseFloat(document.getElementById('v-largura').value);
+  const alturaRaw  = parseFloat(document.getElementById('v-altura').value);
+  const cdCustom   = parseFloat(document.getElementById('v-cd-custom').value);
+  const pneu       = document.getElementById('v-pneu').value.trim();
+
+  const srcMassa  = !isNaN(massaRaw)&&massaRaw>0 ? 'manual' : (catDef?'categoria':'padrão');
+  const srcArea   = (!isNaN(larguraRaw)&&!isNaN(alturaRaw)&&larguraRaw>0&&alturaRaw>0) ? 'manual' : (catDef?'categoria':'padrão');
+  const srcCd     = !isNaN(cdCustom)&&cdCustom>0 ? 'manual' : (catDef?'categoria':'padrão');
+  const srcCr     = pneu ? 'pneu' : (catDef?'categoria':'padrão');
+  const srcColor  = s => s==='manual'||s==='pneu' ? 'var(--green-light)' : s==='categoria' ? 'var(--info)' : 'var(--text3)';
+
+  box.innerHTML = `
+    <div class="eq-box">
+      <div class="eq-title">C(v) = a + b·v + c·v²  [kWh/km]</div>
+      <div style="margin-bottom:8px">
+        <span style="color:var(--text3)">a</span> = <span class="eq-val">${a.toFixed(5)}</span>
+        <span style="color:var(--text3);margin-left:10px">b</span> = <span class="eq-val">${b.toFixed(7)}</span>
+        <span style="color:var(--text3);margin-left:10px">c</span> = <span class="eq-val">${c.toFixed(8)}</span>
+      </div>
+      <div class="eq-formula" style="line-height:2">
+        Peso: <span style="color:${srcColor(srcMassa)}">${tv.massa} kg</span> <span style="font-size:9px;color:var(--text3)">(${srcMassa})</span> ·
+        Cd: <span style="color:${srcColor(srcCd)}">${tv.cd.toFixed(3)}</span> <span style="font-size:9px;color:var(--text3)">(${srcCd})</span> ·
+        Área: <span style="color:${srcColor(srcArea)}">${tv.aFrontal.toFixed(2)} m²</span> <span style="font-size:9px;color:var(--text3)">(${srcArea})</span> ·
+        Cr: <span style="color:${srcColor(srcCr)}">${tv.cr.toFixed(4)}</span> <span style="font-size:9px;color:var(--text3)">(${srcCr})</span><br>
+        A 90 km/h → <span class="eq-val">${c90.toFixed(3)} kWh/km</span> · <span class="eq-val">${ef90} km/kWh</span> · autonomia est. <span class="eq-val">${range90} km</span> <span style="font-size:9px;color:var(--text3)">(de acordo com o modelo físico, estrada plana)</span><br>
+        Eficiência Inmetro referência: <span class="eq-val">${efInm} km/kWh</span> <span style="font-size:9px;color:var(--text3)">(ciclo misto, valor declarado ÷ bateria)</span>${efWltp ? `<br>
+        Eficiência WLTP referência: <span class="eq-val">${efWltp} km/kWh</span> <span style="font-size:9px;color:var(--text3)">(ciclo europeu, valor declarado ÷ bateria)</span>` : ''}
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;font-size:10px;font-family:var(--mono);flex-wrap:wrap">
+      <span><span style="color:var(--green-light)">■</span> manual</span>
+      <span><span style="color:var(--info)">■</span> padrão da categoria</span>
+      <span><span style="color:var(--text3)">■</span> padrão global</span>
+    </div>
+  `;
+
+  // Update adv-status
+  const hasAdv = (!isNaN(massaRaw)&&massaRaw>0) || (!isNaN(larguraRaw)&&larguraRaw>0) || pneu || (!isNaN(cdCustom)&&cdCustom>0);
+  document.getElementById('adv-status').textContent = hasAdv ? '✓ refinados' : '';
+}
+
+function buildTempVehicle() {
+  const batt    = parseFloat(document.getElementById('v-batt').value)    || VEH_DEFAULT.batt;
+  const util    = (parseFloat(document.getElementById('v-util').value)   || 98) / 100;
+  const inmetro = parseFloat(document.getElementById('v-inmetro').value) || VEH_DEFAULT.inmetro;
+  const wltp    = parseFloat(document.getElementById('v-wltp').value)    || null;
+  const carr    = document.getElementById('v-carroceria').value || '';
+  const cdCustom= parseFloat(document.getElementById('v-cd-custom').value);
+  const pneu    = document.getElementById('v-pneu').value.trim();
+
+  // Category defaults (fallback for each advanced param individually)
+  const catDef  = CARROCERIA_DEFAULTS[carr] || null;
+
+  // Advanced fields — each falls back to category default, then global default
+  const massaRaw = parseFloat(document.getElementById('v-massa').value);
+  const larguraRaw = parseFloat(document.getElementById('v-largura').value);  // mm
+  const alturaRaw  = parseFloat(document.getElementById('v-altura').value);   // mm
+
+  const massa   = !isNaN(massaRaw) && massaRaw > 0
+                    ? massaRaw
+                    : (catDef ? catDef.massa : VEH_DEFAULT.massa);
+
+  const aFrontal= (!isNaN(larguraRaw) && !isNaN(alturaRaw) && larguraRaw > 0 && alturaRaw > 0)
+                    ? aFrontalFromDim(larguraRaw, alturaRaw)
+                    : (catDef ? catDef.aFrontal : VEH_DEFAULT.aFrontal);
+
+  // Cd: custom field beats category beats global
+  const cd      = !isNaN(cdCustom) && cdCustom > 0
+                    ? cdCustom
+                    : (catDef ? catDef.cd : VEH_DEFAULT.cd);
+
+  // Cr: pneu beats category beats global
+  const crFromPneu = pneu ? pneuToCr(pneu) : null;
+  const cr      = crFromPneu !== null
+                    ? crFromPneu
+                    : (catDef ? catDef.cr : VEH_DEFAULT.cr);
+
+  return {
+    nome: document.getElementById('v-nome').value.trim(),
+    apelido: document.getElementById('v-apelido').value.trim(),
+    batt, util, inmetro, wltp,
+    massa, cd, aFrontal, cr,
+    largura: isNaN(larguraRaw)?null:larguraRaw,
+    altura:  isNaN(alturaRaw)?null:alturaRaw,
+    carroceria: carr, cdCustom: isNaN(cdCustom)?null:cdCustom,
+    pneu, configured: true
+  };
+}
+
+function saveVehicle() {
+  const batt   = parseFloat(document.getElementById('v-batt').value);
+  const inmetro= parseFloat(document.getElementById('v-inmetro').value);
+  if(!batt || batt <= 0) { showToast('⚠ Informe a capacidade da bateria (kWh).','err',4); return; }
+  if(!inmetro || inmetro <= 0) { showToast('⚠ Informe a autonomia Inmetro (km).','err',4); return; }
+
+  vehicle = buildTempVehicle();
+  localStorage.setItem(SK.vehicle, JSON.stringify(vehicle));
+  computeCalib();
+  updateHeader();
+  updateConfigAbout();
+  updateNoVehicleBanners();
+  updateModelExplain();
+  requestAnimationFrame(()=>updateCalc());
+  document.getElementById('v-fb').textContent = '✓ Salvo em ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  showToast('✓ Veículo "' + (vehicle.nome||'EV') + '" configurado com sucesso.', 'ok', 4);
+  setStatus('Veículo configurado: ' + (vehicle.nome||'EV'));
+
+  // Update tab indicator
+  const tabV = document.getElementById('tab-veiculo');
+  tabV.classList.remove('tab-setup');
+}
+
+function clearVehicle() {
+  if(!confirm('Limpar toda a configuração do veículo?\n\nOs registros de viagem não serão apagados.')) return;
+  vehicle = Object.assign({}, VEH_DEFAULT);
+  localStorage.removeItem(SK.vehicle);
+  // Limpar campos do formulário
+  ['v-nome','v-apelido','v-batt','v-util','v-inmetro','v-wltp',
+   'v-massa','v-largura','v-altura','v-cd-custom','v-pneu'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('v-carroceria').value='';
+  document.getElementById('cd-custom-row').style.display='none';
+  document.getElementById('carroceria-defaults-hint').style.display='none';
+  document.getElementById('model-preview').innerHTML=
+    '<p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha capacidade da bateria e autonomia Inmetro para ver o modelo.</p>';
+  document.getElementById('adv-status').textContent='';
+  document.getElementById('v-fb').textContent='';
+  computeCalib();
+  updateHeader();
+  updateConfigAbout();
+  updateNoVehicleBanners();
+  requestAnimationFrame(()=>updateCalc());
+  showToast('Configuração do veículo removida.','info',4);
+  setStatus('pronto');
+}
+
+function loadVehicleForm() {
+  if(!vehicle.configured) return;
+  document.getElementById('v-nome').value    = vehicle.nome    || '';
+  document.getElementById('v-apelido').value = vehicle.apelido || '';
+  document.getElementById('v-carroceria').value = vehicle.carroceria || '';
+  document.getElementById('v-batt').value    = vehicle.batt    || '';
+  document.getElementById('v-util').value    = vehicle.util ? (vehicle.util*100).toFixed(1) : '';
+  document.getElementById('v-inmetro').value = vehicle.inmetro || '';
+  document.getElementById('v-wltp').value    = vehicle.wltp    || '';
+  document.getElementById('v-massa').value   = vehicle.massa   || '';
+  document.getElementById('v-largura').value = vehicle.largura || '';  // mm
+  document.getElementById('v-altura').value  = vehicle.altura  || '';  // mm
+  document.getElementById('v-cd-custom').value  = vehicle.cdCustom  || '';
+  document.getElementById('v-pneu').value    = vehicle.pneu    || '';
+  // Show carroceria hint if set
+  const carr = vehicle.carroceria || '';
+  const hintEl = document.getElementById('carroceria-defaults-hint');
+  if(carr && CARROCERIA_DEFAULTS[carr]) {
+    hintEl.style.display = 'block';
+    hintEl.innerHTML = '<strong>Defaults da categoria:</strong> ' + CARROCERIA_DEFAULTS[carr].hint + ' — usados quando os parâmetros avançados não estão preenchidos.';
+  }
+  updateModelPreview();
+}
+
+function updateHeader() {
+  const nome    = vehicle.nome    || 'Autonomia EV';
+  const apelido = vehicle.apelido || '';
+  const batt    = vehicle.batt    || '';
+  document.getElementById('hdr-title').textContent   = nome.toUpperCase();
+  document.getElementById('hdr-apelido').textContent = apelido;
+  document.getElementById('hdr-badge').textContent   = batt ? batt + ' kWh' : '—';
+  document.title = apelido ? apelido + ' · Autonomia EV' : (vehicle.nome ? vehicle.nome + ' · Autonomia EV' : 'Autonomia EV');
+}
+
+function updateNoVehicleBanners() {
+  const show = !vehicle.configured;
+  ['calc-no-vehicle','log-no-vehicle','plan-no-vehicle'].forEach(id=>{
+    document.getElementById(id).style.display = show ? 'block' : 'none';
+  });
+  const tabV = document.getElementById('tab-veiculo');
+  if(!vehicle.configured) tabV.classList.add('tab-setup');
+  else tabV.classList.remove('tab-setup');
+}
+
+function updateConfigAbout() {
+  const el = document.getElementById('config-about');
+  if(!vehicle.configured) {
+    el.innerHTML = 'Nenhum veículo configurado. <a onclick="switchTab(\'veiculo\')" style="color:var(--green-light);cursor:pointer;text-decoration:underline">Configure na aba Veículo →</a>';
+    return;
+  }
+  const {a,b,c} = deriveCoefficients(vehicle);
+  const catLabel = vehicle.carroceria && CARROCERIA_DEFAULTS[vehicle.carroceria]
+    ? CARROCERIA_DEFAULTS[vehicle.carroceria].label : '';
+  const gl = 'color:var(--green-light)';
+  const t3 = 'color:var(--text3)';
+  let html = '';
+  if(vehicle.nome)    html += `Modelo: <span style="${gl}">${vehicle.nome}</span><br>`;
+  if(vehicle.apelido) html += `Apelido: <span style="${gl}">${vehicle.apelido}</span><br>`;
+  if(catLabel)        html += `Carroceria: <span style="${gl}">${catLabel}</span><br>`;
+  html += `Bateria: <span style="${gl}">${vehicle.batt} kWh</span><br>`;
+  html += `Inmetro: <span style="${gl}">${vehicle.inmetro} km</span><br>`;
+  if(vehicle.wltp)    html += `WLTP: <span style="${gl}">${vehicle.wltp} km</span><br>`;
+  html += `Fator utilizável: <span style="${gl}">${(vehicle.util*100).toFixed(1)}%</span><br>`;
+  html += `Peso: <span style="${gl}">${vehicle.massa} kg</span><br>`;
+  if(vehicle.pneu)    html += `Pneus: <span style="${gl}">${vehicle.pneu}</span><br>`;
+  html += `<br><span style="${t3}">`;
+  html += `Modelo: C(v) = ${a.toFixed(5)} + ${b.toFixed(7)}&middot;v + ${c.toFixed(8)}&middot;v&sup2;<br>`;
+  html += `Cr=${vehicle.cr.toFixed(4)} &middot; Cd=${vehicle.cd.toFixed(3)} &middot; &Aacute;rea frontal=${vehicle.aFrontal.toFixed(2)} m&sup2;<br>`;
+  html += `Calibrado pelos dados reais de cada usu&aacute;rio<br><br>`;
+  html += `Perfil auto: &lt;40 &rarr; Urbano &middot; 40&ndash;60 &rarr; Misto &middot; &gt;60 &rarr; Estrada<br>`;
+  html += `Vel. padr&atilde;o s/ hor&aacute;rio: Urbano ${VEL_DEFAULT.urbano} &middot; Misto ${VEL_DEFAULT.misto} &middot; Estrada ${VEL_DEFAULT.estrada} km/h<br>`;
+  html += `(ajustada automaticamente pela m&eacute;dia real das suas viagens)</span>`;
+  el.innerHTML = html;
+}
+
+// ─── GENERAL UTILITIES ────────────────────────────────────────────────────────
+const TIPO_LABEL = {casa:'Casa','ac-lento':'AC lento','ac-rapido':'AC rápido','dc-fast':'DC fast'};
+const HINTS = {
+  auto:    '<strong>Automático:</strong> perfil inferido pela velocidade média ao encerrar — &lt;40 → Urbano · 40–60 → Misto · &gt;60 → Estrada.',
+  urbano:  '<strong>Urbano:</strong> cidade, velocidade baixa, paradas frequentes.',
+  misto:   '<strong>Misto:</strong> combinação de trechos urbanos e de rodovia.',
+  estrada: '<strong>Estrada:</strong> rodovia, velocidade mais constante e elevada.'
+};
+
+function showToast(msg, type, duration) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.className   = 'toast toast-' + (type||'ok');
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), (duration||5)*1000);
+}
+
+function setStatus(txt, active) {
+  document.getElementById('status-text').textContent = txt;
+  document.getElementById('status-dot').classList.toggle('active', !!active);
+}
+
+function saveConfig() { cfg.tarifa = parseFloat(document.getElementById('cfg-tarifa').value)||1.00; localStorage.setItem(SK.cfg, JSON.stringify(cfg)); }
+function toggleDesconto() { cfg.desconto=!cfg.desconto; document.getElementById('tog-desconto').classList.toggle('on',cfg.desconto); localStorage.setItem(SK.cfg,JSON.stringify(cfg)); }
+function setFilter(f,btn) { statsFilter=f; document.querySelectorAll('.filter-btns .pb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderStats(); }
+function setCalcAc(v,btn)  { calcAcVal=v;  document.getElementById('ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));   btn.classList.add('active'); updateCalc(); }
+function setCalcTraf(v,btn){ calcTrafVal=v; document.getElementById('ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateCalc(); }
+function setCalcOcup(v,btn){ calcOcup=v;   document.getElementById('ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateCalc(); }
+function setCalcTopo(v,btn){ calcTopo=v;   document.getElementById('ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateCalc(); }
+function setLogAc(v,btn)   { logAcVal=v;   document.getElementById('log-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));   btn.classList.add('active'); }
+function setLogTraf(v,btn) { logTrafVal=v; document.getElementById('log-ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setLogOcup(v,btn) { logOcupVal=v; const el=document.getElementById('log-ctrl-ocup'); if(el) el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setLogTopo(v,btn) { logTopoVal=v; const el=document.getElementById('log-ctrl-topo'); if(el) el.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setVaAc(v,btn)   { vaAcVal=v;   document.getElementById('va-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));   btn.classList.add('active'); }
+function setVaTraf(v,btn) { vaTrafVal=v; document.getElementById('va-ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setVaOcup(v,btn) { vaOcupVal=v; document.getElementById('va-ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setVaTopo(v,btn) { vaTopoVal=v; document.getElementById('va-ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setMargin(v,btn)  { margin=v; document.querySelectorAll('#pane-recarga .fl .pb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); calcTrecho(); }
+function setVaPerfil(v,btn){ vaPerfil=v; document.getElementById('va-perfil-ctrl').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.getElementById('va-perfil-hint').innerHTML=HINTS[v]; }
+let plOcup=1, plTopo=0;
+function setPlOcup(v,btn){ plOcup=v; document.getElementById('pl-ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); calcPlan(); }
+function setPlTopo(v,btn){ plTopo=v; document.getElementById('pl-ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); calcPlan(); }
+function setPlMargem(v,btn){ plMargem=v; document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); calcPlan(); }
+
+// ─── TIME / VEL ───────────────────────────────────────────────────────────────
+function timeToMin(t) { if(!t) return null; const[h,m]=t.split(':').map(Number); return h*60+m; }
+
+function velFromTimes(km, t1min, chegId, displayId, hiddenId) {
+  const km_ = parseFloat(typeof km==='string' ? document.getElementById(km).value : km);
+  const t2  = timeToMin(document.getElementById(chegId).value);
+  const box = document.getElementById(displayId);
+  if(!isNaN(km_) && km_>0 && t1min!==null && t2!==null) {
+    let dur = t2 - t1min; if(dur<=0) dur+=1440;
+    const vel = km_/(dur/60);
+    document.getElementById(hiddenId).value = vel.toFixed(1);
+    box.innerHTML = 'Vel. média: <strong>'+vel.toFixed(1)+' km/h</strong> ('+Math.floor(dur/60)+'h'+String(dur%60).padStart(2,'0')+'min)';
+    return vel;
+  }
+  document.getElementById(hiddenId).value = 90;
+  box.textContent = 'Informe km + horários para calcular velocidade média.';
+  return null;
+}
+
+function calcLogVel() {
+  const km = parseFloat(document.getElementById('f-km').value);
+  const t1 = timeToMin(document.getElementById('f-thora').value);
+  const t2 = timeToMin(document.getElementById('f-tcheg').value);
+  const paradas = Math.max(0, parseFloat(document.getElementById('f-paradas').value)||0);
+  const box = document.getElementById('f-vel-calc');
+  if(!isNaN(km) && km>0 && t1!==null && t2!==null) {
+    let durTotal = t2 - t1; if(durTotal<=0) durTotal+=1440;
+    const durLiq = Math.max(1, durTotal-paradas);
+    const vel = km/(durLiq/60);
+    document.getElementById('f-vel').value = vel.toFixed(1);
+    const paStr = paradas>0 ? ` (${Math.floor(paradas/60)?Math.floor(paradas/60)+'h':''}${paradas%60?paradas%60+'min':''} de paradas)` : '';
+    box.innerHTML = 'Tempo total: <strong>'+(Math.floor(durTotal/60)?Math.floor(durTotal/60)+'h':'')+String(durTotal%60).padStart(2,'0')+'min</strong>'+paStr+' → vel. média: <strong>'+vel.toFixed(1)+' km/h</strong>';
+  } else {
+    document.getElementById('f-vel').value = 0;
+    box.textContent = 'Informe km + horários para calcular velocidade média.';
+  }
+  previewLog();
+}
+
+function calcTrechoVel() { if(viagemAtiva) velFromTimes('va-km', timeToMin(viagemAtiva.horaUltimaPartida), 'va-hora-trecho','va-vel-calc','va-vel-hidden'); calcTrecho(); }
+
+// ─── PROFILES ─────────────────────────────────────────────────────────────────
+const profiles = {
+  urbano:  {vel:35,  soc:80, temp:28, acIdx:1, trafIdx:2},
+  misto:   {vel:60,  soc:80, temp:25, acIdx:1, trafIdx:1},
+  estrada: {vel:100, soc:90, temp:28, acIdx:1, trafIdx:0}
+};
+const acVals=[0,0.8,1.5,2], trafVals=[0,12,25,40];
+
+function applyProfile(k, btn) {
+  document.querySelectorAll('#pane-calc .pb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(!profiles[k]) return;
+  const p = profiles[k];
+  document.getElementById('sl-vel').value  = p.vel;
+  document.getElementById('sl-soc').value  = p.soc;
+  document.getElementById('sl-temp').value = p.temp;
+  calcAcVal   = acVals[p.acIdx];
+  calcTrafVal = trafVals[p.trafIdx];
+  document.getElementById('ctrl-ac').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===p.acIdx));
+  document.getElementById('ctrl-traf').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===p.trafIdx));
+  updateCalc();
+}
+
+// ─── CALCULADORA ──────────────────────────────────────────────────────────────
+function updateCalc() {
+  const vel  = +document.getElementById('sl-vel').value;
+  const soc  = +document.getElementById('sl-soc').value;
+  const temp = +document.getElementById('sl-temp').value;
+  document.getElementById('lv').textContent = vel + ' km/h';
+  document.getElementById('ls').textContent = soc + '%';
+  document.getElementById('lt').textContent = temp + ' °C';
+
+  const BATT = vehicle.batt;
+  const UTIL = vehicle.util;
+  const INMETRO = vehicle.inmetro;
+  const WLTP    = vehicle.wltp;
+
+  const kwh = +(BATT * soc/100 * UTIL).toFixed(1);
+  const c   = calcC(vel, temp, calcAcVal, calcTrafVal, true, calcOcup, calcTopo);
+  const range = Math.round(kwh/c);
+  const ef    = +(1/c).toFixed(2);
+
+  document.getElementById('mc').innerHTML  = c.toFixed(3)+'<span class="metric-unit"> kWh/km</span>';
+  document.getElementById('mef').innerHTML = ef.toFixed(2)+'<span class="metric-unit"> km/kWh</span>';
+  const el100 = document.getElementById('mef100');
+  if(el100) el100.textContent = (c*100).toFixed(1)+' kWh/100km';
+  document.getElementById('mr').innerHTML  = range+'<span class="metric-unit"> km</span>';
+  document.getElementById('mq').innerHTML  = kwh.toFixed(1)+'<span class="metric-unit"> kWh</span>';
+  document.getElementById('soc-pct').textContent = soc+'%';
+  const sc = soc>40?'var(--green)':soc>20?'var(--warn)':'var(--danger)';
+  document.getElementById('bar-soc').style.cssText = 'width:'+soc+'%;background:'+sc;
+
+  const pi = Math.min(100, Math.round(range/INMETRO*100));
+  document.getElementById('vi-label').textContent = 'vs. Inmetro '+INMETRO+' km';
+  document.getElementById('vi').textContent = range+'/'+INMETRO+' km ('+pi+'%)';
+  const biEl = document.getElementById('bar-i');
+  biEl.style.width = pi+'%'; biEl.style.background = 'var(--text2)';
+
+  const wWrap = document.getElementById('bar-w-wrap');
+  if(WLTP) {
+    wWrap.style.display = '';
+    const pw = Math.min(100, Math.round(range/WLTP*100));
+    document.getElementById('vw-label').textContent = 'vs. WLTP est. '+WLTP+' km';
+    document.getElementById('vw').textContent = range+'/'+WLTP+' km ('+pw+'%)';
+    const bwEl = document.getElementById('bar-w');
+    bwEl.style.width = pw+'%'; bwEl.style.background = '#5a9ada';
+  } else {
+    wWrap.style.display = 'none';
+  }
+
+  const avg = realAvgEf(trips);
+  if(avg) {
+    const rr = Math.round(kwh*avg);
+    const pr = Math.min(100, Math.round(range/rr*100));
+    document.getElementById('vr').textContent = range+'/'+rr+' km ('+pr+'%)';
+    document.getElementById('vr').style.color = '#d85a30';
+    const brEl = document.getElementById('bar-r');
+    brEl.style.width = pr+'%'; brEl.style.background = '#d85a30';
+    document.getElementById('bar-real-wrap').style.display = 'block';
+    document.getElementById('real-ref').style.display = 'inline';
+    document.getElementById('real-ref-val').textContent = avg.toFixed(2)+' km/kWh — '+Math.round(BATT*UTIL*avg)+' km';
+  } else {
+    document.getElementById('bar-real-wrap').style.display = 'none';
+  }
+
+  const al = document.getElementById('calc-alert');
+  if(range < 60)       { al.className='alert a-danger'; al.textContent='Autonomia crítica — carregue em breve.'; }
+  else if(range < 120) { al.className='alert a-warn';   al.textContent='Autonomia reduzida — planeje uma recarga.'; }
+  else                 { al.className='alert a-ok';     al.textContent='Autonomia confortável para o percurso.'; }
+
+  const cn = document.getElementById('calib-notice');
+  if(calibration.active) {
+    cn.style.display = 'block';
+    document.getElementById('calib-n').textContent = trips.length;
+  } else {
+    cn.style.display = 'none';
+  }
+
+  buildVelChart(vel, temp, calcAcVal, calcTrafVal, calcOcup, calcTopo);
+  updateModelExplain(); // updates chart summary + explain body if open
+}
+
+// ─── SVG CHART ────────────────────────────────────────────────────────────────
+function svgChart(wrId, H, curves, points, curPt) {
+  const wrap = document.getElementById(wrId);
+  if(!wrap) return;
+  const isLight = document.body.classList.contains('light');
+  const W=300, pad={l:40,r:8,t:8,b:28};
+  const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+  const allY = curves.reduce((a,c)=>a.concat(c.data),[]).concat(points.map(p=>p.y));
+  if(!allY.length) return;
+  const yMin=Math.max(0,Math.min(...allY)*0.93), yMax=Math.max(...allY)*1.07;
+  const px = v => pad.l + pw*(v-10)/(120);
+  const py = v => pad.t + ph*(1-(v-yMin)/(yMax-yMin));
+  const gc = isLight?'#d4ddd2':'#2a3d28', tc = isLight?'#7a9a78':'#5a7a58';
+  let out = '';
+  [0,.25,.5,.75,1].forEach(t=>{
+    const v=yMin+(yMax-yMin)*t, y=py(v);
+    out+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${W-pad.r}" y2="${y.toFixed(1)}" stroke="${gc}" stroke-width="0.5"/>`;
+    out+=`<text x="${pad.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${tc}" font-family="monospace">${v.toFixed(3)}</text>`;
+  });
+  [20,40,60,80,100,120].forEach(v=>{
+    const x=px(v);
+    out+=`<line x1="${x.toFixed(1)}" y1="${pad.t}" x2="${x.toFixed(1)}" y2="${H-pad.b}" stroke="${gc}" stroke-width="0.5"/>`;
+    out+=`<text x="${x.toFixed(1)}" y="${H-pad.b+12}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace">${v}</text>`;
+  });
+  out+=`<text x="150" y="${H-1}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace">km/h</text>`;
+  const xs=[]; for(let v=10;v<=130;v+=5) xs.push(v);
+  curves.forEach(c=>{
+    const d=c.data.map((v,i)=>(i===0?'M':'L')+px(xs[i]).toFixed(1)+' '+py(v).toFixed(1)).join(' ');
+    out+=`<path d="${d}" stroke="${c.color}" stroke-width="${c.w||1.5}" fill="none" ${c.dash?'stroke-dasharray="4,3"':''}/>`;
+  });
+  points.forEach(p=>{ out+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="${p.color||'#d85a30'}" opacity="0.9"/>`; });
+  if(curPt) { out+=`<circle cx="${px(curPt.x).toFixed(1)}" cy="${py(curPt.y).toFixed(1)}" r="5.5" fill="${curPt.color}" stroke="${isLight?'#fff':'#0f1a14'}" stroke-width="1.5"/>`; }
+  wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+}
+
+let calcExplainOpen = false;
+function toggleCalcExplain() {
+  calcExplainOpen = !calcExplainOpen;
+  const body   = document.getElementById('calc-explain-body');
+  const toggle = document.getElementById('calc-explain-toggle');
+  body.style.display   = calcExplainOpen ? 'block' : 'none';
+  toggle.textContent   = (calcExplainOpen ? '▼' : '▶') + ' Explicar o modelo';
+  if(calcExplainOpen) updateModelExplain();
+}
+
+function updateModelExplain() {
+  // Update inline chart summary (always shown below chart)
+  const sumEl = document.getElementById('calc-chart-summary');
+  if(sumEl && vehicle.configured) {
+    const {a, b, c} = deriveCoefficients(vehicle);
+    const aStr = a.toFixed(3), bStr = b.toFixed(5), cStr = c.toFixed(6);
+    const pneuStr = vehicle.pneu || '—';
+    const catDef  = CARROCERIA_DEFAULTS[vehicle.carroceria];
+    sumEl.innerHTML =
+      `C(v) = ${aStr} + ${bStr}·v + ${cStr}·v² kWh/km<br>` +
+      `Cr=${vehicle.cr.toFixed(4)} · Cd=${vehicle.cd.toFixed(3)} · ` +
+      `Área ${vehicle.aFrontal.toFixed(2)} m² · Peso ${vehicle.massa} kg` +
+      (vehicle.pneu ? ` · Pneus ${vehicle.pneu}` : '');
+  } else if(sumEl) {
+    sumEl.innerHTML = '';
+  }
+
+  // Full explain body (collapsible)
+  const el = document.getElementById('calc-explain-body');
+  if(!el || !calcExplainOpen) return;
+
+  if(!vehicle.configured) {
+    el.innerHTML = `<div class="hint" style="margin-top:8px">Configure seu veículo na aba <a onclick="switchTab('veiculo')" style="color:var(--green-light);cursor:pointer;text-decoration:underline">Veículo</a> para ver o modelo físico derivado.</div>`;
+    return;
+  }
+
+  const {a, b, c} = deriveCoefficients(vehicle);
+  const BATT = vehicle.batt, UTIL = vehicle.util;
+  const aFmt = a.toFixed(3), bFmt = b.toFixed(5), cFmt = c.toFixed(6);
+
+  // Dynamic description of each term
+  const catDef   = CARROCERIA_DEFAULTS[vehicle.carroceria];
+  const catLabel = catDef ? catDef.label.toLowerCase() : 'configurado';
+  const pneuStr  = vehicle.pneu || 'informados';
+  const cdDesc   = catDef
+    ? `a carroceria ${catLabel} (Cd=${vehicle.cd.toFixed(3)}, área frontal ~${vehicle.aFrontal.toFixed(2)} m²)`
+    : `o veículo configurado (Cd=${vehicle.cd.toFixed(3)}, área frontal ~${vehicle.aFrontal.toFixed(2)} m²)`;
+
+  const calStr = calibration.active
+    ? `Fator de calibração atual: <strong style="color:var(--green-light)">${calibration.scale.toFixed(3)}×</strong> — consumo real ${Math.abs(((calibration.scale-1)*100)).toFixed(1)}% ${calibration.scale>1?'acima':'abaixo'} do padrão (${trips.length} viagem${trips.length>1?'s':''}).`
+    : `A calibração ficará ativa após o registro de ao menos 2 viagens.`;
+
+  el.innerHTML = `
+    <div style="margin-top:12px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text2);font-family:var(--mono);line-height:1.9">
+      <div style="font-weight:500;color:var(--text);margin-bottom:8px">Como funciona a curva de consumo</div>
+      <div style="margin-bottom:10px">O consumo estimado em kWh/km é decomposto em três parcelas físicas:</div>
+      <div style="color:var(--green-light);margin-bottom:12px;font-size:13px">C(v) = ${aFmt} + ${bFmt}·v + ${cFmt}·v²</div>
+      <div style="margin-bottom:8px">
+        · <strong style="color:var(--text)">${aFmt}</strong> — perdas fixas: resistência ao rolamento
+        (Cr=${vehicle.cr.toFixed(4)}${vehicle.pneu?', pneus '+vehicle.pneu:''}${vehicle.massa?', peso '+vehicle.massa+' kg':''})
+        mais auxiliares elétricos (BMS, luzes, ventilação)
+      </div>
+      <div style="margin-bottom:8px">
+        · <strong style="color:var(--text)">${bFmt}·v</strong> — perdas lineares com a velocidade: atrito interno do motor e transmissão
+      </div>
+      <div style="margin-bottom:14px">
+        · <strong style="color:var(--text)">${cFmt}·v²</strong> — arrasto aerodinâmico, que cresce com o quadrado da velocidade; o coeficiente reflete ${cdDesc}
+      </div>
+      <div style="margin-bottom:6px;color:var(--text3)">
+        <em>Curva padrão (tracejada)</em> — modelo teórico sem ajuste<br>
+        <em>Curva calibrada (contínua)</em> — ajustada pelo fator calculado a partir das suas viagens reais; quanto mais registros, mais precisa<br>
+        <em>Pontos laranjas</em> — eficiência observada em cada viagem, plotada na velocidade média do trecho
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;color:var(--text3)">
+        A calibração funciona como um fator de escala global: se seus dados reais mostram consumo sistematicamente menor ou maior que o modelo padrão, o fator corrige a curva inteira proporcionalmente.<br><br>
+        ${calStr}
+      </div>
+    </div>
+  `;
+}
+
+function buildVelChart(cv, ct, ca, ctr, nOcup, topo) {
+  const isLight = document.body.classList.contains('light');
+  const base=[], cal=[];
+  for(let v=10;v<=130;v+=5){
+    base.push(calcC(v,ct,ca,ctr,false,nOcup||1,topo||0));
+    cal.push(calcC(v,ct,ca,ctr,true,nOcup||1,topo||0));
+  }
+  const curC   = calcC(cv,ct,ca,ctr,true,nOcup||1,topo||0);
+  const realPts = trips.map(t=>({x:t.vel||90, y:(t.socI-t.socF)*vehicle.batt/100/t.km, color:'#d85a30'}));
+  const bC=isLight?'#b8c9b5':'#3d5a3a', cC=isLight?'#1a8a63':'#1d9e75', dC=isLight?'#156e4f':'#2dc98f';
+  svgChart('chartVelWrap',180,[{data:base,color:bC,w:1,dash:true},{data:cal,color:cC,w:1.5}],realPts,{x:cv,y:curC,color:dC});
+}
+
+// ─── REGISTRAR VIAGEM ─────────────────────────────────────────────────────────
+function previewLog() {
+  const si  = parseFloat(document.getElementById('f-si').value);
+  const sf  = parseFloat(document.getElementById('f-sf').value);
+  const km  = parseFloat(document.getElementById('f-km').value);
+  const aut = parseFloat(document.getElementById('f-aut').value);
+  const efPainel100 = parseFloat(document.getElementById('f-ef-painel').value);
+  const tar = parseFloat(document.getElementById('f-tarifa').value);
+  const tot = parseFloat(document.getElementById('f-total').value);
+  const box = document.getElementById('log-preview');
+  const BATT= vehicle.batt;
+  const UTIL= vehicle.util;
+  if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0){
+    box.innerHTML='<p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha SoC inicial, final e distância para ver o resultado. Os demais campos são opcionais.</p>'; return;
+  }
+  const kwh=(si-sf)*BATT/100, ef=km/kwh, rangeEst=Math.round(BATT*UTIL*ef);
+  const autTotal = !isNaN(aut)&&aut>0 ? Math.round(km+aut) : null;
+  let tarEf = tar || (!isNaN(tot)&&tot>0 ? tot/kwh : null);
+  const costKm = tarEf ? +(kwh*tarEf/km).toFixed(3) : null;
+
+  // Comparação com eficiência indicada pelo painel (kWh/100km → km/kWh)
+  let painelCompareHtml = '';
+  if(!isNaN(efPainel100) && efPainel100 > 0) {
+    const efPainelKmKwh = 100 / efPainel100;
+    const diffPct = ((ef - efPainelKmKwh) / efPainelKmKwh * 100);
+    const diffSign = diffPct >= 0 ? '+' : '';
+    painelCompareHtml = `<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:6px;padding:6px 8px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)">
+      Painel: <strong style="color:var(--text2)">${efPainel100.toFixed(1)} kWh/100km</strong> (${efPainelKmKwh.toFixed(2)} km/kWh) vs. calculado: <strong style="color:var(--text2)">${ef.toFixed(2)} km/kWh</strong> — diferença de <strong style="color:${Math.abs(diffPct)<10?'var(--green-light)':'var(--warn)'}">${diffSign}${diffPct.toFixed(1)}%</strong>
+    </div>`;
+  }
+
+  box.innerHTML=`<div class="g2" style="margin-bottom:8px">
+    <div class="metric"><p class="metric-label">kWh consumidos</p><p class="metric-value">${kwh.toFixed(2)}<span class="metric-unit"> kWh</span></p></div>
+    <div class="metric"><p class="metric-label">Eficiência</p><p class="metric-value">${ef.toFixed(2)}<span class="metric-unit"> km/kWh</span></p></div>
+    <div class="metric"><p class="metric-label">Autonomia extrap.</p><p class="metric-value">${rangeEst}<span class="metric-unit"> km</span></p></div>
+    ${autTotal?`<div class="metric"><p class="metric-label">Aut. total indicada</p><p class="metric-value">${autTotal}<span class="metric-unit"> km</span></p></div>`:''}
+    ${costKm?`<div class="metric"><p class="metric-label">Custo/km</p><p class="metric-value">R$${costKm}</p></div>`:''}
+  </div>
+  ${autTotal?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">Painel: ${autTotal} km vs. calculado: ${rangeEst} km (dif. ${Math.abs(autTotal-rangeEst)} km)</div>`:''}
+  ${painelCompareHtml}`;
+}
+
+function addTrip() {
+  const si = parseFloat(document.getElementById('f-si').value);
+  const sf = parseFloat(document.getElementById('f-sf').value);
+  const km = parseFloat(document.getElementById('f-km').value);
+  if(isNaN(si)||isNaN(sf)||isNaN(km)||si<=sf||km<=0) { showToast('⚠ Verifique: SoC inicial > final, distância > 0.','err',5); return; }
+  trips.push({
+    id:Date.now(), data:document.getElementById('f-data').value,
+    perfil:document.getElementById('f-perfil').value, modo:document.getElementById('f-modo').value,
+    orig:document.getElementById('f-orig').value.trim(), dest:document.getElementById('f-dest').value.trim(),
+    socI:si, socF:sf, km,
+    autR:parseFloat(document.getElementById('f-aut').value)||null,
+    vel:parseFloat(document.getElementById('f-vel').value)||velFallback(document.getElementById('f-perfil').value),
+    velCalc:!!(document.getElementById('f-thora').value&&document.getElementById('f-tcheg').value),
+    temp:parseFloat(document.getElementById('f-temp').value)||25,
+    ac:logAcVal, traf:logTrafVal, ocup:logOcupVal, topo:logTopoVal,
+    efPainel:parseFloat(document.getElementById('f-ef-painel').value)||null,
+    tipo:document.getElementById('f-tipo').value,
+    tarifa:parseFloat(document.getElementById('f-tarifa').value)||null,
+    total:parseFloat(document.getElementById('f-total').value)||null,
+    posto:document.getElementById('f-posto').value.trim(), mun:document.getElementById('f-mun').value.trim(),
+    oper:document.getElementById('f-oper').value.trim(), obs:document.getElementById('f-obs').value.trim()
+  });
+  localStorage.setItem(SK.trips, JSON.stringify(trips));
+  computeCalib();
+  ['f-orig','f-dest','f-sf','f-km','f-aut','f-ef-painel','f-thora','f-tcheg','f-temp','f-tarifa','f-total','f-posto','f-mun','f-oper','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-paradas').value='';
+  document.getElementById('f-vel').value=0;
+  document.getElementById('f-vel-calc').textContent='Informe km + horários para calcular velocidade média.';
+  document.getElementById('log-preview').innerHTML='<p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha SoC inicial, final e distância para ver o resultado. Os demais campos são opcionais.</p>';
+  logOcupVal=1; logTopoVal=0;
+  ['log-ctrl-ocup','log-ctrl-topo'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));});
+  showToast('✓ Viagem registrada! Total: '+trips.length+' viagem(ns).','ok',4);
+  setStatus(trips.length+' viagem(ns) registrada(s)');
+}
+
+function confirmDel(id) {
+  if(!confirm('Excluir esta viagem?')) return;
+  trips = trips.filter(t=>t.id!==id);
+  localStorage.setItem(SK.trips, JSON.stringify(trips));
+  computeCalib(); renderStats();
+  showToast('Viagem excluída.','info',3);
+}
+
+// ─── VIAGEM ATIVA ─────────────────────────────────────────────────────────────
+function iniciarViagem() {
+  const soc = parseFloat(document.getElementById('va-soc-inicio').value);
+  if(isNaN(soc)||soc<=0) { showToast('⚠ Informe o SoC inicial.','err',3); return; }
+  const hora = document.getElementById('va-hora-inicio').value;
+  const dest = document.getElementById('va-destino').value.trim();
+  const kmI  = parseFloat(document.getElementById('va-km-inicio').value)||0;
+  const modo = document.getElementById('va-modo-inicio').value;
+  viagemAtiva = {socInicio:soc, socAtual:soc, horaInicio:hora, horaUltimaPartida:hora||null,
+    destino:dest, kmInicioDa:kmI, kmAcum:0, perfilManual:vaPerfil, trechos:[], modo};
+  document.getElementById('va-inicio-panel').style.display = 'none';
+  document.getElementById('va-ativa').style.display = 'block';
+  if(dest) document.getElementById('va-destino-label').textContent = '→ '+dest;
+  updateViagemStats(); updateTabBadge();
+  setStatus('Viagem ativa em andamento', true);
+  showToast('▶ Viagem iniciada! SoC: '+soc+'%.','ok',4);
+}
+
+function calcTrecho() {
+  if(!viagemAtiva) return;
+  const sn = parseFloat(document.getElementById('va-soc-now').value);
+  const km = parseFloat(document.getElementById('va-km').value);
+  const ap = parseFloat(document.getElementById('va-aut-panel').value);
+  const dr = parseFloat(document.getElementById('va-dest-restante').value);
+  const res= document.getElementById('va-trecho-result');
+  const BATT=vehicle.batt;
+
+  if(isNaN(sn)||isNaN(km)) { res.style.display='none'; return; }
+  const kmInicioDa = viagemAtiva.kmInicioDa||0;
+  const kmAcum     = viagemAtiva.trechos.reduce((s,t)=>s+t.km,0);
+  const kmReal = Math.max(0.1, km - kmInicioDa - kmAcum);
+  const kwh=(viagemAtiva.socAtual-sn)*BATT/100;
+  if(kwh<=0||kmReal<=0){res.style.display='none';return;}
+  const ef=(kmReal/kwh).toFixed(2);
+
+  const efPainel100 = parseFloat(document.getElementById('va-ef-painel').value);
+  let painelCompareHtml = '';
+  if(!isNaN(efPainel100) && efPainel100 > 0) {
+    const efPainelKmKwh = 100 / efPainel100;
+    const diffPct = ((parseFloat(ef) - efPainelKmKwh) / efPainelKmKwh * 100);
+    const diffSign = diffPct >= 0 ? '+' : '';
+    painelCompareHtml = `<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;padding:6px 8px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)">
+      Painel: <strong style="color:var(--text2)">${efPainel100.toFixed(1)} kWh/100km</strong> (${efPainelKmKwh.toFixed(2)} km/kWh) vs. calculado: <strong style="color:var(--text2)">${ef} km/kWh</strong> — diferença de <strong style="color:${Math.abs(diffPct)<10?'var(--green-light)':'var(--warn)'}">${diffSign}${diffPct.toFixed(1)}%</strong>
+    </div>`;
+  }
+
+  let html=`<div class="g3" style="margin-bottom:8px">
+    <div class="metric"><p class="metric-label">kWh consumidos</p><p class="metric-value">${kwh.toFixed(2)}<span class="metric-unit">kWh</span></p></div>
+    <div class="metric"><p class="metric-label">Eficiência</p><p class="metric-value">${ef}<span class="metric-unit">km/kWh</span></p></div>
+    <div class="metric"><p class="metric-label">Distância trecho</p><p class="metric-value">${kmReal.toFixed(1)}<span class="metric-unit">km</span></p></div>
+  </div>${painelCompareHtml}`;
+
+  if(!isNaN(dr)&&dr>0) {
+    const kwhNeeded=dr/parseFloat(ef), kwhNow=sn*BATT/100;
+    const kwhMarg=margin/100*BATT;
+    const kwhAdd=Math.max(0,kwhNeeded+kwhMarg-kwhNow);
+    const socTgt=Math.round(Math.min(95,(sn*BATT/100+kwhAdd)/BATT*100));
+    html+=`<div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-family:var(--mono)">
+      Faltam: <strong style="color:var(--text)">${dr} km</strong> · 
+      Energia necessária: <strong style="color:var(--text)">${kwhNeeded.toFixed(1)} kWh</strong> + ${kwhMarg.toFixed(1)} kWh margem →
+      ${kwhAdd>0?`Carregar <strong style="color:var(--green-light)">${kwhAdd.toFixed(1)} kWh</strong> (até ${socTgt}%)`:'<strong style="color:var(--green-light)">Carga suficiente ✓</strong>'}
+    </div>`;
+    // bar
+    const usedW=Math.round((viagemAtiva.socInicio-sn)), nowW=sn, addW=kwhAdd>0?Math.round(kwhAdd/BATT*100):0, margW=margin;
+    document.getElementById('va-rv-used').style.width=usedW+'%';
+    document.getElementById('va-rv-now').style.width=nowW+'%';
+    document.getElementById('va-rv-add').style.width=addW+'%';
+    document.getElementById('va-rv-marg').style.width=margW+'%';
+    document.getElementById('va-rv-rest').style.width=Math.max(0,100-usedW-nowW-addW-margW)+'%';
+    document.getElementById('va-lnow').textContent=sn+'%';
+    document.getElementById('va-ltgt').textContent=socTgt?socTgt+'%':'';
+  }
+  document.getElementById('va-trecho-metrics').innerHTML=html;
+  res.style.display='block';
+}
+
+function addTrecho() {
+  if(!viagemAtiva) return;
+  const sn  = parseFloat(document.getElementById('va-soc-now').value);
+  const km  = parseFloat(document.getElementById('va-km').value);
+  const hora= document.getElementById('va-hora-trecho').value;
+  const vel = parseFloat(document.getElementById('va-vel-hidden').value)||null;
+  const fb  = document.getElementById('va-fb');
+  if(isNaN(sn)||isNaN(km)||sn<0) { showToast('⚠ Informe SoC atual e km percorridos.','err',3); return; }
+  const kmInicioDa=viagemAtiva.kmInicioDa||0;
+  const kmAcum=viagemAtiva.trechos.reduce((s,t)=>s+t.km,0);
+  const kmReal=Math.max(0.1,km-kmInicioDa-kmAcum);
+  const modoTrecho=document.getElementById('va-modo-trecho').value;
+  const tempTrecho=parseFloat(document.getElementById('va-temp-trecho').value)||null;
+  viagemAtiva.trechos.push({
+    n:viagemAtiva.trechos.length+1, socI:viagemAtiva.socAtual, socF:sn,
+    km:parseFloat(kmReal.toFixed(1)), autPanel:parseFloat(document.getElementById('va-aut-panel').value)||null,
+    efPainel:parseFloat(document.getElementById('va-ef-painel').value)||null,
+    vel, destRestante:parseFloat(document.getElementById('va-dest-restante').value)||null,
+    tipo:document.getElementById('va-tipo').value, tarifa:parseFloat(document.getElementById('va-tarifa').value)||null,
+    total:parseFloat(document.getElementById('va-total-pago').value)||null,
+    posto:document.getElementById('va-posto').value.trim(), oper:document.getElementById('va-oper').value.trim(),
+    hora, modo:modoTrecho,
+    temp:tempTrecho, ac:vaAcVal, traf:vaTrafVal, ocup:vaOcupVal, topo:vaTopoVal
+  });
+  viagemAtiva.socAtual=sn;
+  if(hora) viagemAtiva.horaUltimaPartida=hora;
+  ['va-soc-now','va-km','va-aut-panel','va-ef-painel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper','va-temp-trecho'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('va-modo-trecho').value='padrao';
+  // Reset condições do trecho para o padrão — cada trecho começa "limpo"
+  vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
+  ['va-ctrl-ac','va-ctrl-traf','va-ctrl-ocup','va-ctrl-topo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active', id==='va-ctrl-ac'?i===1:i===0));
+  });
+  document.getElementById('va-trecho-titulo').textContent='Trecho '+(viagemAtiva.trechos.length+1)+' — em andamento';
+  document.getElementById('va-trecho-result').style.display='none';
+  document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
+  document.getElementById('va-vel-hidden').value=0;
+  fb.textContent='';
+  showToast('✓ Trecho '+viagemAtiva.trechos.length+' registrado!','ok',5);
+  updateViagemStats(); renderTrechos();
+}
+
+function updateViagemStats() {
+  if(!viagemAtiva) return;
+  const t=viagemAtiva.trechos;
+  const tk=t.reduce((s,x)=>s+x.km,0), tw=t.reduce((s,x)=>s+(x.socI-x.socF)*vehicle.batt/100,0);
+  const cards=document.getElementById('va-summary-cards');
+  if(cards) cards.style.display=t.length>0?'block':'none';
+  document.getElementById('va-soc-i-show').innerHTML=viagemAtiva.socAtual+'<span class="metric-unit">%</span>';
+  document.getElementById('va-n-trechos').textContent=t.length;
+  document.getElementById('va-km-total').innerHTML=tk.toFixed(1)+'<span class="metric-unit">km</span>';
+  document.getElementById('va-ef-total').textContent=tw>0?(tk/tw).toFixed(2):'—';
+  updateTabBadge();
+}
+
+function updateTabBadge() {
+  const tab=document.getElementById('tab-rota');
+  if(viagemAtiva&&viagemAtiva.trechos.length>0) tab.innerHTML='Viagem ativa <span class="tab-badge">'+viagemAtiva.trechos.length+'</span>';
+  else if(viagemAtiva) tab.innerHTML='Viagem ativa <span class="tab-badge">●</span>';
+  else tab.textContent='Viagem ativa';
+}
+
+function renderTrechos() {
+  const panel=document.getElementById('va-trechos-panel');
+  const list=document.getElementById('va-trechos-list');
+  if(!viagemAtiva||!viagemAtiva.trechos.length){panel.style.display='none';return;}
+  panel.style.display='block';
+  list.innerHTML=viagemAtiva.trechos.map(t=>{
+    const kwh=(t.socI-t.socF)*vehicle.batt/100, ef=(t.km/kwh).toFixed(2);
+    const tar=t.tarifa||(t.total&&kwh>0?t.total/kwh:null);
+    const topoLabel={0:'',1:'Subida','-1':'Descida',0.5:'Misto'};
+    const condParts=[];
+    if(t.ocup&&t.ocup>1) condParts.push(t.ocup+' ocup.');
+    if(t.topo&&t.topo!==0) condParts.push(topoLabel[t.topo]||'');
+    if(t.temp!=null) condParts.push(t.temp+'°C');
+    const condStr=condParts.join(' · ');
+    return`<div class="trecho-card"><div class="trecho-hdr"><span class="trecho-title">Trecho ${t.n}</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${t.socI}%→${t.socF}%</span></div>
+    <div class="trecho-meta"><span>${t.km}km</span><span>${kwh.toFixed(1)}kWh</span><span>${ef}km/kWh</span>${t.efPainel?'<span>painel: '+t.efPainel.toFixed(1)+'kWh/100km</span>':''}${t.vel?'<span>'+t.vel.toFixed(0)+'km/h</span>':''}${tar?'<span>R$'+(kwh*tar).toFixed(2)+'</span>':''}${t.posto?'<span>'+t.posto+'</span>':''}</div>
+    ${condStr?'<div style="font-size:10px;color:var(--text3);font-family:var(--mono);opacity:0.75;margin-top:4px">'+condStr+'</div>':''}</div>`;
+  }).join('');
+}
+
+function encerrarViagem() {
+  if(!viagemAtiva||!viagemAtiva.trechos.length) { if(confirm('Nenhum trecho. Cancelar viagem?')){viagemAtiva=null;vaPerfil='auto';resetVaUI();}return; }
+  const t=viagemAtiva.trechos;
+  const tk=t.reduce((s,x)=>s+x.km,0), tw=t.reduce((s,x)=>s+(x.socI-x.socF)*vehicle.batt/100,0);
+  const vls=t.filter(x=>x.vel&&x.hora);
+  const avgVel=vls.length?vls.reduce((s,x)=>s+x.vel,0)/vls.length:null;
+  const velCalcFinal=vls.length>0;
+  const perfilFinal=viagemAtiva.perfilManual==='auto'?(avgVel?inferirPerfil(avgVel):'misto'):viagemAtiva.perfilManual;
+  const velFinal=avgVel||velFallback(perfilFinal);
+  const fonte=viagemAtiva.perfilManual==='auto'?' (inferido)':' (manual)';
+  let tc=0,hc=false;
+  t.forEach(x=>{const k=(x.socI-x.socF)*vehicle.batt/100;const tar=x.tarifa||(x.total&&k>0?x.total/k:null);if(tar){tc+=k*tar;hc=true;}});
+  const postos=t.filter(x=>x.posto).map(x=>x.posto).join(' → ');
+  const modos=t.map(x=>x.modo||'padrao');
+  const modoFinal=modos.length===1?modos[0]:(modos.every(m=>m===modos[0])?modos[0]:'misto');
+
+  // ── Agregação das condições por trecho (cada trecho pode ter valores diferentes) ──
+  // kWh de cada trecho, usado como peso para médias de AC/Tráfego
+  const trechoKwh = t.map(x=>(x.socI-x.socF)*vehicle.batt/100);
+  const totalKwh  = trechoKwh.reduce((s,k)=>s+k,0) || 1;
+
+  // AC e Tráfego: média ponderada pela energia consumida em cada trecho
+  const acFinal   = t.reduce((s,x,i)=>s+(x.ac??0.8)*trechoKwh[i],0) / totalKwh;
+  const trafFinal = t.reduce((s,x,i)=>s+(x.traf??0)*trechoKwh[i],0) / totalKwh;
+
+  // Ocupantes: usa o valor máximo observado (cenário mais conservador para planejamento)
+  const ocupFinal = Math.max(...t.map(x=>x.ocup||1));
+
+  // Topografia: se todos os trechos coincidem, usa esse valor; senão, marca como "misto" (0.5)
+  const topos = t.map(x=>x.topo??0);
+  const topoFinal = topos.every(tp=>tp===topos[0]) ? topos[0] : 0.5;
+
+  // Temperatura: média simples dos trechos que informaram valor
+  const temps = t.map(x=>x.temp).filter(tp=>tp!=null && !isNaN(tp));
+  const tempFinal = temps.length ? temps.reduce((s,v)=>s+v,0)/temps.length : 25;
+
+  trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,
+    socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:velFinal,velCalc:velCalcFinal,
+    temp:tempFinal,ac:acFinal,traf:trafFinal,ocup:ocupFinal,topo:topoFinal,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,
+    posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
+  localStorage.setItem(SK.trips, JSON.stringify(trips));
+  computeCalib(); viagemAtiva=null; vaPerfil='auto'; resetVaUI(); updateCalc();
+  showToast('✓ Viagem encerrada e salva! Perfil: '+perfilFinal+' '+fonte,'ok',5);
+  setStatus(trips.length+' viagem(ns) registrada(s)');
+}
+
+function resetVaUI() {
+  document.getElementById('va-inicio-panel').style.display='block';
+  document.getElementById('va-ativa').style.display='none';
+  ['va-soc-inicio','va-hora-inicio','va-destino','va-km-inicio'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('va-km-inicio').value=0;
+  document.getElementById('va-modo-inicio').value='padrao';
+  document.getElementById('va-soc-inicio').value=100;
+  document.getElementById('va-perfil-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('va-perfil-hint').innerHTML=HINTS['auto'];
+  // Reset condições do trecho para o padrão, evitando vazamento entre viagens
+  vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
+  ['va-ctrl-ac','va-ctrl-traf','va-ctrl-ocup','va-ctrl-topo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active', id==='va-ctrl-ac'?i===1:i===0));
+  });
+  const tempEl=document.getElementById('va-temp-trecho'); if(tempEl) tempEl.value='';
+  updateTabBadge(); setStatus('pronto');
+}
+
+// ─── HISTÓRICO ────────────────────────────────────────────────────────────────
+function renderStats() {
+  const filtered = statsFilter==='todos' ? trips : trips.filter(t=>t.perfil===statsFilter);
+  if(!trips.length) { document.getElementById('no-data').style.display='block'; document.getElementById('stats-body').style.display='none'; return; }
+  document.getElementById('no-data').style.display='none';
+  document.getElementById('stats-body').style.display='block';
+  const BATT=vehicle.batt, UTIL=vehicle.util;
+  let tk=0,tw=0,cs=0,cn=0;
+  filtered.forEach(t=>{tk+=t.km;tw+=(t.socI-t.socF)*BATT/100;const c=tripCostPerKm(t);if(c){cs+=c;cn++;}});
+  const avgEf=tw>0?tk/tw:0, re=Math.round(BATT*UTIL*avgEf);
+  document.getElementById('st-n').textContent=filtered.length;
+  document.getElementById('st-ef').textContent=avgEf>0?avgEf.toFixed(2):'—';
+  document.getElementById('st-range').innerHTML=(avgEf>0?re:'—')+'<span class="metric-unit">km</span>';
+  document.getElementById('st-cpm').textContent=cn?'R$'+(cs/cn).toFixed(3):'—';
+
+  const perfilDefs=[{k:'estrada',label:'Estrada'},{k:'misto',label:'Misto'},{k:'urbano',label:'Urbano'}];
+  document.getElementById('perfil-cards').innerHTML=perfilDefs.map(p=>{
+    const pt=trips.filter(t=>t.perfil===p.k);
+    if(!pt.length)return`<div class="profile-stat" style="opacity:.35"><div class="profile-stat-hdr"><span class="tag tag-${p.k}">${p.label}</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">sem dados</span></div></div>`;
+    const ef=realAvgEf(pt), range=Math.round(BATT*UTIL*ef);
+    let pcs=0,pcn=0; pt.forEach(t=>{const c=tripCostPerKm(t);if(c){pcs+=c;pcn++;}});
+    return`<div class="profile-stat"><div class="profile-stat-hdr"><span class="tag tag-${p.k}">${p.label}</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${pt.length} viagem${pt.length>1?'s':''}</span></div>
+    <div class="g3"><div><p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 2px">km/kWh</p><p style="font-size:16px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef.toFixed(2)}</p></div>
+    <div><p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 2px">Autonomia</p><p style="font-size:16px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${range}<span style="font-size:10px;color:var(--text2)">km</span></p></div>
+    <div><p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 2px">R$/km</p><p style="font-size:16px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${pcn?'R$'+(pcs/pcn).toFixed(3):'—'}</p></div></div></div>`;
+  }).join('');
+
+  const cd=document.getElementById('calib-txt');
+  if(calibration.active){const p=((calibration.scale-1)*100).toFixed(1),d=calibration.scale>1?'acima':'abaixo';cd.textContent=`Fator: ${calibration.scale.toFixed(3)}× — consumo real ${Math.abs(p)}% ${d} do padrão (${trips.length} viagens).`;}
+  else cd.textContent='Registre ao menos 2 viagens para ativar a calibração. ('+trips.length+'/2)';
+  buildCalibChart();
+  drawEfViagemChart();
+  drawEfKmChart();
+
+  const tipoMap={};
+  trips.forEach(t=>{const kwh=(t.socI-t.socF)*BATT/100;let tar=t.tarifa||(!isNaN(t.total)&&t.total>0?t.total/kwh:null);if(t.tipo==='casa'&&!tar)tar=cfg.tarifa;if(!tar)return;if(!tipoMap[t.tipo])tipoMap[t.tipo]={sum:0,n:0};tipoMap[t.tipo].sum+=tar;tipoMap[t.tipo].n++;});
+  const keys=Object.keys(tipoMap);
+  document.getElementById('custo-tipos').innerHTML=!keys.length?'Nenhum custo registrado ainda.':keys.map(k=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:5px 0">${TIPO_LABEL[k]||k} <span style="color:var(--text3)">(${tipoMap[k].n}×)</span> <strong style="color:var(--green-light)">R$ ${(tipoMap[k].sum/tipoMap[k].n).toFixed(2)}/kWh</strong></div>`).join('');
+
+  document.getElementById('log-tbody').innerHTML=filtered.slice().reverse().map(t=>{
+    const kwh=((t.socI-t.socF)*BATT/100), ef=(t.km/kwh).toFixed(2), cpm=tripCostPerKm(t), kmDisp=parseFloat(t.km.toFixed(1));
+    const local=(t.orig&&t.dest)?t.orig+' → '+t.dest:([t.posto,t.mun].filter(Boolean).join(', ')||t.obs||'');
+    const mL={'eco':'Eco','padrao':'Padrão','esportivo':'Esportivo'};
+    const mTag=t.modo&&t.modo!=='padrao'?`<span style="font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:20px;background:var(--bg3);color:var(--text3);border:1px solid var(--border)">${mL[t.modo]||t.modo}</span>`:'';
+    const topoLabel={0:'',1:'Subida','-1':'Descida',0.5:'Misto'};
+    const ctxParts=[];
+    if(t.ocup&&t.ocup>1) ctxParts.push(t.ocup+' ocup.');
+    if(t.topo&&t.topo!==0) ctxParts.push(topoLabel[t.topo]||'');
+    const ctxStr=ctxParts.join(' · ');
+    return`<div style="border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span class="tag tag-${t.perfil}">${t.perfil}</span>${mTag}
+        <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">${t.data}</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${t.socI}%→${t.socF}%</span>
+        ${local?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${local}</span>`:''}
+        ${ctxStr?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3);opacity:0.75">${ctxStr}</span>`:''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:2px 0 0">${t.efPainel?'painel: '+t.efPainel.toFixed(1)+' kWh/100km':(100/parseFloat(ef)).toFixed(1)+' kWh/100km'}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${(t.velCalc||(t.vel&&t.vel!==90&&t.vel!==70&&t.vel!==60&&t.vel!==35))?t.vel.toFixed(0):'—'}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km/(t.socI-t.socF)*100)}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
+      </div>
+      <button onclick="confirmDel(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
+    </div>`;
+  }).join('');
+}
+
+function buildCalibChart() {
+  const isLight=document.body.classList.contains('light');
+  const base=[],cal=[];
+  for(let v=10;v<=130;v+=5){base.push(calcC(v,25,0.8,0,false,1,0));cal.push(calcC(v,25,0.8,0,true,1,0));}
+  const realPts=trips.map(t=>({x:t.vel||90,y:(t.socI-t.socF)*vehicle.batt/100/t.km,color:'#d85a30'}));
+  const bC=isLight?'#b8c9b5':'#3d5a3a', cC=isLight?'#1a8a63':'#1d9e75';
+  svgChart('chartCalibWrap',160,[{data:base,color:bC,w:1,dash:true},{data:cal,color:cC,w:2}],realPts,null);
+}
+
+// ─── EF CHARTS ────────────────────────────────────────────────────────────────
+function setChartMode(mode) {
+  chartMode=mode;
+  document.getElementById('ch1-bars').style.background=mode==='bars'?'var(--green-dim)':'transparent';
+  document.getElementById('ch1-bars').style.color=mode==='bars'?'var(--green-light)':'var(--text3)';
+  document.getElementById('ch1-line').style.background=mode==='line'?'var(--green-dim)':'transparent';
+  document.getElementById('ch1-line').style.color=mode==='line'?'var(--green-light)':'var(--text3)';
+  drawEfViagemChart();
+}
+function setChartWindow(n,btn){chartWindow=n;btn.closest('div').querySelectorAll('button').forEach(b=>{b.style.background='transparent';b.style.color='var(--text3)';});btn.style.background='var(--green-dim)';btn.style.color='var(--green-light)';drawEfViagemChart();}
+
+const PERFIL_COLORS={estrada:'#c4904a',misto:'#5a9ada',urbano:'#4dbb8a'};
+
+function drawEfViagemChart() {
+  const wrap=document.getElementById('chart-ef-viagem');
+  if(!wrap)return;
+  const isLight=document.body.classList.contains('light');
+  const sorted=trips.slice().sort((a,b)=>a.id-b.id);
+  const shown=chartWindow>=999?sorted:sorted.slice(-chartWindow);
+  if(!shown.length){wrap.innerHTML='<p style="font-size:11px;color:var(--text3);font-family:var(--mono);padding:16px">Sem viagens registradas.</p>';return;}
+  const BATT=vehicle.batt;
+  const W=300,H=180,pad={l:36,r:8,t:10,b:28};
+  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const efs=shown.map(t=>t.km/((t.socI-t.socF)*BATT/100));
+  const avgEf=efs.reduce((s,v)=>s+v,0)/efs.length;
+  const yMin=Math.max(0,Math.min(...efs)*0.9),yMax=Math.max(...efs)*1.1;
+  const py=v=>pad.t+ph*(1-(v-yMin)/(yMax-yMin));
+  const gc=isLight?'#d4ddd2':'#2a3d28',tc=isLight?'#7a9a78':'#5a7a58';
+  let out='';
+  [0,.25,.5,.75,1].forEach(t=>{const v=yMin+(yMax-yMin)*t,y=py(v);out+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${W-pad.r}" y2="${y.toFixed(1)}" stroke="${gc}" stroke-width="0.5"/>`;out+=`<text x="${pad.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${tc}" font-family="monospace">${v.toFixed(1)}</text>`;});
+  const barW=Math.max(2,Math.floor(pw/shown.length)-2);
+  const xOf=i=>pad.l+i*(pw/shown.length)+barW*0.1;
+  shown.forEach((t,i)=>{
+    const ef=efs[i],x=xOf(i),color=PERFIL_COLORS[t.perfil]||'#4dbb8a';
+    if(chartMode==='bars'){const y=py(ef),h=ph-(y-pad.t);out+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW}" height="${Math.max(1,h.toFixed(1))}" fill="${color}" opacity="0.8"/>`;}
+    else{const y=py(ef);out+=`<circle cx="${(x+barW/2).toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${color}"/>`;if(i>0){const px2=(xOf(i-1)+barW/2).toFixed(1),py2=py(efs[i-1]).toFixed(1);out+=`<line x1="${px2}" y1="${py2}" x2="${(x+barW/2).toFixed(1)}" y2="${y.toFixed(1)}" stroke="${color}" stroke-width="1.2" opacity="0.6"/>`;}}
+    // x label every 5
+    if(shown.length<=10||(i%Math.ceil(shown.length/6)===0))out+=`<text x="${(x+barW/2).toFixed(1)}" y="${H-pad.b+10}" text-anchor="middle" font-size="7" fill="${tc}" font-family="monospace">${i+1}</text>`;
+  });
+  // avg dashed line
+  const yaY=py(avgEf);out+=`<line x1="${pad.l}" y1="${yaY.toFixed(1)}" x2="${W-pad.r}" y2="${yaY.toFixed(1)}" stroke="${tc}" stroke-width="1" stroke-dasharray="4,3"/>`;
+  wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+}
+
+function drawEfKmChart() {
+  const wrap=document.getElementById('chart-ef-km');
+  if(!wrap)return;
+  const isLight=document.body.classList.contains('light');
+  const BATT=vehicle.batt,UTIL=vehicle.util;
+  if(!trips.length){wrap.innerHTML='';return;}
+  const sorted=trips.slice().sort((a,b)=>a.id-b.id);
+  let kmAcum=0;
+  const pts=sorted.map(t=>{kmAcum+=t.km;return{x:kmAcum,y:t.km/((t.socI-t.socF)*BATT/100),p:t.perfil};});
+  const W=300,H=180,pad={l:36,r:8,t:10,b:28};
+  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const xMin=0,xMax=Math.max(100,kmAcum);
+  const ys=pts.map(p=>p.y);
+  const yMin=Math.max(0,Math.min(...ys)*0.9),yMax=Math.max(...ys)*1.1;
+  const px=v=>pad.l+pw*(v-xMin)/(xMax-xMin);
+  const py=v=>pad.t+ph*(1-(v-yMin)/(yMax-yMin));
+  const gc=isLight?'#d4ddd2':'#2a3d28',tc=isLight?'#7a9a78':'#5a7a58';
+  let out='';
+  [0,.25,.5,.75,1].forEach(t=>{const v=yMin+(yMax-yMin)*t,y=py(v);out+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${W-pad.r}" y2="${y.toFixed(1)}" stroke="${gc}" stroke-width="0.5"/>`;out+=`<text x="${pad.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${tc}" font-family="monospace">${v.toFixed(1)}</text>`;});
+  pts.forEach(p=>{out+=`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="3.5" fill="${PERFIL_COLORS[p.p]||'#4dbb8a'}" opacity="0.85"/>`;});
+  // trend line
+  if(pts.length>=3){
+    const n=pts.length,sx=pts.reduce((s,p)=>s+p.x,0),sy=pts.reduce((s,p)=>s+p.y,0),sxy=pts.reduce((s,p)=>s+p.x*p.y,0),sx2=pts.reduce((s,p)=>s+p.x*p.x,0);
+    const slope=(n*sxy-sx*sy)/(n*sx2-sx*sx),inter=(sy-slope*sx)/n;
+    const x1=xMin,x2=xMax,y1=inter+slope*x1,y2=inter+slope*x2;
+    out+=`<line x1="${px(x1).toFixed(1)}" y1="${py(y1).toFixed(1)}" x2="${px(x2).toFixed(1)}" y2="${py(y2).toFixed(1)}" stroke="var(--green)" stroke-width="1.5" opacity="0.7"/>`;
+  }
+  out+=`<text x="150" y="${H-1}" text-anchor="middle" font-size="7.5" fill="${tc}" font-family="monospace">km acumulados</text>`;
+  wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+}
+
+// ─── EXPORT / IMPORT ─────────────────────────────────────────────────────────
+function exportData() {
+  const a=document.createElement('a');
+  const nome=(vehicle.apelido||vehicle.nome||'ev_dashboard').toLowerCase().replace(/\s+/g,'_');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify({trips,cfg,vehicle},null,2));
+  a.download=nome+'_autonomia_ev.json'; a.click();
+}
+function importData(e) {
+  const file=e.target.files[0]; if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(d.trips){trips=d.trips;localStorage.setItem(SK.trips,JSON.stringify(trips));}
+      if(d.cfg){cfg=d.cfg;localStorage.setItem(SK.cfg,JSON.stringify(cfg));applyConfigUI();}
+      if(d.vehicle){vehicle=d.vehicle;localStorage.setItem(SK.vehicle,JSON.stringify(vehicle));loadVehicleForm();updateHeader();updateConfigAbout();}
+      computeCalib();updateCalc();updateNoVehicleBanners();
+      document.getElementById('imp-fb').textContent='';
+      showToast('✓ Importado: '+trips.length+' viagem(ns) carregada(s).','ok',5);
+      setStatus(trips.length+' viagens importadas');
+    }catch{document.getElementById('imp-fb').textContent='Erro ao importar o arquivo.';}
+  };r.readAsText(file);
+}
+function applyConfigUI() {
+  document.getElementById('cfg-tarifa').value=cfg.tarifa||'';
+  document.getElementById('tog-desconto').classList.toggle('on',cfg.desconto!==false);
+}
+
+// ─── PLANEJAR ─────────────────────────────────────────────────────────────────
+function calcPlan() {
+  const soc  = parseFloat(document.getElementById('pl-soc').value);
+  const km   = parseFloat(document.getElementById('pl-km').value);
+  const perf = document.getElementById('pl-perfil').value;
+  const tipo = document.getElementById('pl-tipo').value;
+  const BATT=vehicle.batt, UTIL=vehicle.util;
+  document.getElementById('pl-result').style.display='none';
+  if(isNaN(soc)||isNaN(km)||soc<=0||km<=0) return;
+  document.getElementById('pl-result').style.display='block';
+
+  const perfTrips=trips.filter(t=>t.perfil===perf);
+  let efBase;
+  if(perfTrips.length>=2){
+    const tk=perfTrips.reduce((s,t)=>s+t.km,0),tw=perfTrips.reduce((s,t)=>s+(t.socI-t.socF)*BATT/100,0);
+    efBase=tk/tw;
+  } else {
+    const vRef=perf==='estrada'?95:perf==='misto'?60:35;
+    const cRef=calcC(vRef,25,0.8,perf==='urbano'?25:perf==='misto'?12:0,true,1,0);
+    efBase=1/cRef;
+  }
+  // Apply occupant and topography correction factors
+  const massaBase = vehicle.massa || VEH_DEFAULT.massa;
+  const fatorOcup = massaBase / (massaBase + (plOcup-1)*PESO_OCUP); // mais massa → menos ef.
+  const topoF     = plTopo===1?1.06:plTopo===-1?0.96:plTopo===0.5?1.01:1.00;
+  const ef        = efBase * fatorOcup / topoF;
+  const topoLabel = {0:'plano',1:'subida','-1':'descida',0.5:'misto'}[plTopo]||'plano';
+  const ocupAdj   = plOcup>1?' · '+plOcup+' ocup.':'';
+  const topoAdj   = plTopo!==0?' · '+topoLabel:'';
+  const efSource  = (perfTrips.length>=2?'média real ('+perfTrips.length+' viagens)':'modelo calibrado')+ocupAdj+topoAdj;
+
+  const kwhMargUtil=plMargem/100*BATT*UTIL;  // margem sobre energia utilizável
+  const kwhDisp=soc*BATT/100*UTIL, kwhNeed=km/ef, kwhTotal=kwhNeed+kwhMargUtil, kwhDef=kwhTotal-kwhDisp;
+  const vMed=velFallback(perf);
+  const hViagem=km/vMed;
+  const hStr=h=>Math.floor(h)+'h'+(Math.round((h%1)*60)).toString().padStart(2,'0')+'min';
+  const kWcharger=tipo==='dc'?50*0.90:6.6*0.90;
+  const orig=document.getElementById('pl-orig').value.trim(), dest=document.getElementById('pl-dest').value.trim();
+
+  document.getElementById('pl-disp').innerHTML=kwhDisp.toFixed(1)+'<span class="metric-unit"> kWh</span>';
+  document.getElementById('pl-disp-km').textContent='≈ '+(kwhDisp*ef).toFixed(0)+' km de autonomia';
+  document.getElementById('pl-need').innerHTML=kwhTotal.toFixed(1)+'<span class="metric-unit"> kWh</span>';
+  document.getElementById('pl-need-sub').textContent=kwhNeed.toFixed(1)+' kWh percurso + '+kwhMargUtil.toFixed(1)+' kWh margem ('+plMargem+'%)';
+  document.getElementById('pl-tempo').textContent=hStr(hViagem);
+  document.getElementById('pl-tempo-sub').textContent='a '+vMed+' km/h médios · sem paradas';
+  document.getElementById('pl-ef').innerHTML=ef.toFixed(2)+'<span class="metric-unit"> km/kWh</span>';
+  document.getElementById('pl-ef-sub').textContent=efSource;
+  document.getElementById('pl-marg-show').innerHTML=plMargem+'<span class="metric-unit"> %</span>';
+  document.getElementById('pl-marg-sub').textContent='aplicada no destino e nas paradas';
+
+  const al=document.getElementById('pl-alert'), etapas=document.getElementById('pl-etapas');
+
+  if(kwhDef<=0){
+    const socCheg=((kwhDisp-kwhNeed)/BATT*100);
+    al.className='alert a-ok';
+    const chegLabel=(orig&&dest)?orig+' → '+dest:'';
+    al.innerHTML='A carga atual é suficiente para os '+km+' km'+(chegLabel?' ('+chegLabel+')':'')+'. Chegada estimada com <strong>'+Math.round(socCheg)+'%</strong> de bateria — acima da margem de '+plMargem+'%.';
+    document.getElementById('pl-tempo-total').textContent=hStr(hViagem);
+    document.getElementById('pl-tempo-total-sub').textContent='sem paradas de recarga';
+    etapas.innerHTML=buildEtapa(0,soc,Math.round(socCheg),km,Math.round(hViagem*60),null,null,true,(orig&&dest)?orig+' → '+dest:'Chegada ao destino','');
+  } else {
+    // ── Algoritmo correto de planejamento ──────────────────────────────────────
+    // Simula trecho a trecho. Em cada parada intermédiária carrega APENAS o
+    // necessário para chegar ao próximo ponto com a margem escolhida.
+    // Encontra o número mínimo de paradas que torna a viagem viável.
+
+    const kwhMargUtil = plMargem/100 * BATT * UTIL; // margem em kWh (sobre utilizável)
+    const kwhMax      = 0.95 * BATT * UTIL;          // teto de carga (95%)
+
+    function simularParadas(nStops) {
+      const nSegs  = nStops + 1;
+      const segKm  = km / nSegs;
+      const kwhSeg = segKm / ef;
+      let kwh = kwhDisp;
+      let totalKwhCarregado = 0;
+      const paradas = [];
+
+      for(let i = 0; i < nStops; i++) {
+        kwh -= kwhSeg;                           // consome trecho i
+        const socChegaP = kwh / BATT * 100;
+        // Precisa sair com energia suficiente para próximo trecho + margem
+        const kwhNecessarioSaida = kwhSeg + kwhMargUtil;
+        const kwhFalta = kwhNecessarioSaida - kwh;
+        let kwhCarrega = 0;
+        if(kwhFalta > 0) {
+          kwhCarrega = Math.min(kwhFalta, kwhMax - kwh);
+          kwh += kwhCarrega;
+          totalKwhCarregado += kwhCarrega;
+        }
+        paradas.push({
+          socChega: Math.round(socChegaP),
+          kwhCarrega,
+          socSai: Math.round(kwh / BATT * 100)
+        });
+      }
+      kwh -= kwhSeg;                             // último trecho → destino
+      const socFinal = kwh / BATT * 100;
+      // Válido se chega com pelo menos a margem prometida
+      return { valido: kwh >= kwhMargUtil - 0.5, socFinal, totalKwhCarregado, paradas };
+    }
+
+    // Encontra nStops mínimo
+    let nStops = 1;
+    let sim;
+    while(nStops <= 10) {
+      sim = simularParadas(nStops);
+      if(sim.valido) break;
+      nStops++;
+    }
+    if(!sim.valido) { nStops = 1; sim = simularParadas(1); } // fallback
+
+    const hRecargaTotal = sim.totalKwhCarregado / kWcharger;
+    const hTotal        = hViagem + hRecargaTotal;
+    const segKm         = km / (nStops + 1);
+    const hTrechoReal   = segKm / vMed;
+
+    document.getElementById('pl-tempo-total').textContent = hStr(hTotal);
+    document.getElementById('pl-tempo-total-sub').textContent =
+      hStr(hViagem)+' deslocamento + '+hStr(hRecargaTotal)+' recarga';
+
+    const chegLabel2=(orig&&dest)?orig+' → '+dest:'';
+    al.className='alert a-info';
+    al.innerHTML='São necessárias <strong>'+nStops+' parada'+(nStops>1?'s':'')+
+      ' de recarga</strong> para completar os '+km+' km'+
+      (chegLabel2?' ('+chegLabel2+')':'')+
+      ' com <strong>'+plMargem+'%</strong> de margem ao chegar.';
+
+    // Monta roteiro
+    let html = '';
+    let socAtual = soc;
+    html += buildEtapa(0, socAtual, null, 0, 0, null, null, false, 'Partida', 'SoC: '+socAtual+'%');
+
+    for(let i = 0; i < nStops; i++) {
+      const p      = sim.paradas[i];
+      const kmPos  = Math.round(segKm * (i+1));
+      const hCarr  = p.kwhCarrega / kWcharger;
+      const tempoCarrStr = p.kwhCarrega > 0.5 ? hStr(hCarr) : null;
+      const socSaiStr    = p.kwhCarrega > 0.5
+        ? 'Carregar '+p.kwhCarrega.toFixed(1)+' kWh (até '+p.socSai+'%) · margem '+plMargem+'%'
+        : 'Carga suficiente — sem necessidade de recarregar aqui';
+      html += buildEtapa(
+        i+1, p.socChega, p.kwhCarrega>0.5?p.socSai:null,
+        Math.round(segKm), Math.round(hTrechoReal*60),
+        tempoCarrStr, tipo, false,
+        'Parada '+(i+1)+' — km '+kmPos+' de '+km,
+        socSaiStr
+      );
+      socAtual = p.socSai;
+    }
+
+    const socChegFinal = Math.max(0, Math.round(sim.socFinal));
+    html += buildEtapa(
+      nStops+1, socAtual, socChegFinal,
+      Math.round(segKm), Math.round(hTrechoReal*60),
+      null, null, true, 'Chegada', 'SoC: '+socChegFinal+'%'
+    );
+    etapas.innerHTML = html;
+  }
+}
+
+function buildEtapa(n,socAntes,socDepois,kmTrecho,minTrecho,tempoRecarga,tipoRecarga,isFinal,titulo,sub){
+  const isPartida=n===0;
+  const dotColor=isFinal?'var(--green)':isPartida?'var(--green)':'var(--warn)';
+  const label=titulo||(isFinal?'Chegada':isPartida?'Partida':'Parada '+n);
+  const orig=document.getElementById('pl-orig').value.trim(), dest=document.getElementById('pl-dest').value.trim();
+  let html=`<div style="display:flex;gap:10px;margin-bottom:${isFinal?'0':'16px'}">
+    <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+      <div style="width:12px;height:12px;border-radius:50%;background:${dotColor};border:2px solid var(--bg);margin-top:2px"></div>
+      ${!isFinal?'<div style="width:2px;flex:1;background:var(--border);margin:4px 0"></div>':''}
+    </div>
+    <div style="flex:1;padding-bottom:${isFinal?'0':'4px'}">
+      <div style="font-size:12px;font-weight:500;color:var(--text2);font-family:var(--mono)">${label}</div>`;
+  if(sub) html+=`<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${sub}</div>`;
+  if(!isPartida&&!isFinal&&kmTrecho>0){
+    html+=`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min</div>`;
+    const carregadosUrl='https://carregados.com.br/mapa?planejar=viagem';
+    html+=`<div style="margin-top:6px"><a href="${carregadosUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--green-light);border:1px solid var(--green-dim);border-radius:20px;padding:3px 9px;text-decoration:none;background:var(--green-dim)">Carregadores no trajeto — Carregados.com.br</a></div>`;
+  } else if(!isPartida&&isFinal&&kmTrecho>0){
+    html+=`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min</div>`;
+  }
+  if(tempoRecarga&&socDepois){
+    const tipoLabel=tipoRecarga==='dc'?'DC fast 50kW':'AC 6,6kW';
+    html+=`<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:4px">Recarregar até ${socDepois}% · tempo estimado: ${tempoRecarga} · ${tipoLabel}</div>`;
+  } else if(!isPartida&&!isFinal&&!tempoRecarga&&socDepois===null) {
+    // no charge needed at this stop — sub already has the message
+  }
+  if(isFinal&&socDepois!==null){html+=`<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:4px">Chegada com ~${Math.max(0,socDepois)}% de bateria ✓</div>`;}
+  if(isPartida&&orig&&dest){
+    const url='https://www.google.com/maps/dir/'+encodeURIComponent(orig)+'/'+encodeURIComponent(dest);
+    html+=`<div style="margin-top:6px"><a href="${url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--info);border:1px solid var(--info);border-radius:20px;padding:3px 9px;text-decoration:none;background:var(--info-bg)">Ver rota no Google Maps</a></div>`;
+  }
+  html+=`</div></div>`;
+  return html;
+}
+
+// ─── TAB SWITCH ───────────────────────────────────────────────────────────────
+function switchTab(t) {
+  const tabs=['veiculo','calc','log','recarga','stats','config','plan'];
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+t).classList.add('active');
+  if(t==='stats')  renderStats();
+  if(t==='calc')   requestAnimationFrame(()=>updateCalc());
+  if(t==='plan')   { document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1)); }
+}
+
+// ─── THEME ────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  // light is default, so only save when user explicitly goes dark
+  localStorage.setItem(SK.theme, isLight ? 'light' : 'dark');
+  document.getElementById('theme-toggle').textContent = isLight ? '◑ escuro' : '☀ claro';
+  requestAnimationFrame(()=>updateCalc());
+  if(document.getElementById('pane-stats').classList.contains('active')){renderStats();}
+}
+
+// ─── SERVICE WORKER ───────────────────────────────────────────────────────────
+if('serviceWorker' in navigator){
+  const sw=`
+const CACHE='autonomia-ev-v1';
+const ASSETS=['https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS).catch(()=>{}))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));return res;}).catch(()=>r))));
+  `;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+// Default: light mode (unless user explicitly chose dark)
+const savedTheme = localStorage.getItem(SK.theme);
+if(savedTheme === 'dark') {
+  // stay dark, already dark by default CSS
+} else {
+  // light is default
+  document.body.classList.add('light');
+  document.getElementById('theme-toggle').textContent = '◑ escuro';
+}
+document.getElementById('f-data').value = new Date().toISOString().slice(0,10);
+document.getElementById('va-hora-inicio').value = new Date().getHours().toString().padStart(2,'0')+':'+new Date().getMinutes().toString().padStart(2,'0');
+// Init plan margem default
+document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
+
+loadVehicleForm();
+applyConfigUI();
+computeCalib();
+updateHeader();
+updateNoVehicleBanners();
+updateConfigAbout();
+requestAnimationFrame(()=>updateCalc());
+setStatus(trips.length>0?trips.length+' viagem(ns) registrada(s)':'pronto');
+updateTabBadge();
+
+// Mark vehicle tab if not yet configured
+if(!vehicle.configured){
+  document.getElementById('tab-veiculo').classList.add('tab-setup');
+}
+</script>
+</body>
+</html>
