@@ -1,0 +1,26 @@
+{
+  "name": "Autonomia EV",
+  "short_name": "Autonomia EV",
+  "description": "Registre e analise o consumo real do seu carro elétrico",
+  "start_url": "/autonomia_ev.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1d9e75",
+  "theme_color": "#1d9e75",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
