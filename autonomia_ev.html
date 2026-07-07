@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Autonomia EV">
 <title>Autonomia EV</title>
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Autonomia%20EV%22%2C%22short_name%22%3A%22Autonomia%20EV%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f1a14%22%2C%22theme_color%22%3A%221d9e75%22%7D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -903,7 +903,12 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       Disponível no Google Play<br><br>
       © 2026 Renato Perim Colistete<br>
       Desenvolvido com assistência de Claude (Anthropic)<br>
-      Todos os direitos reservados
+      Todos os direitos reservados<br><br>
+      <a href="https://play.google.com/store/apps/details?id=io.github.renatocol.autonomia_ev"
+         target="_blank" rel="noopener"
+         style="display:inline-block;padding:8px 16px;background:var(--green-dim);border:1px solid var(--green);border-radius:20px;color:var(--green-light);font-size:11px;font-family:var(--mono);text-decoration:none;letter-spacing:0.03em">
+        ★ Gostou? Avalie no Google Play
+      </a>
     </div>
   </div>
 </div><!-- /pane-config -->
@@ -2474,7 +2479,14 @@ function toggleTheme() {
 
 // ─── SERVICE WORKER ───────────────────────────────────────────────────────────
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  const sw=`
+const CACHE='autonomia-ev-v1';
+const ASSETS=['https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS).catch(()=>{}))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));return res;}).catch(()=>r))));
+  `;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
