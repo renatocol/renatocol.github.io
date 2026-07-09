@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="18">
+<meta name="version" content="19">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -252,10 +252,24 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <div class="panel panel-green" style="margin-bottom:14px">
     <p class="sl">Bem-vindo ao Autonomia EV</p>
     <div style="font-size:12px;color:var(--text2);line-height:1.9;font-family:var(--mono)">
-      Este aplicativo registra e analisa o desempenho do seu veículo elétrico, considerando autonomia real, eficiência por perfil de condução, custo por km e planejamento de viagens longas.<br><br>
-      Conforme as viagens são registradas, o aplicativo elabora automaticamente um modelo físico de consumo ajustado pelos seus dados reais, levando em conta velocidade, temperatura, ar-condicionado, tráfego, número de ocupantes e topografia. Quanto mais viagens registradas, mais preciso o planejamento.<br><br>
-      <span style="color:var(--green-light)">Configure aqui o seu veículo.</span> Os campos obrigatórios são nome, bateria e autonomia. Os parâmetros avançados (peso, carroceria, pneus) permitem ao aplicativo derivar o modelo físico desde o início — assim, quanto mais preciso, melhor será a calibração.<br><br>
+      Configure aqui o seu veículo elétrico para realizar cálculos precisos de autonomia e consumo.
+
+      <!-- Seção "Sobre" colapsável -->
+      <div class="adv-toggle" onclick="toggleAdv(this,'about-body')" style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px">
+        <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+        <span style="color:var(--text2);font-weight:500">Sobre o Autonomia EV</span>
+      </div>
+      <div class="adv-body" id="about-body">
+        <div style="padding-top:10px">
+          Este aplicativo registra e analisa o desempenho do seu veículo elétrico, considerando autonomia real, eficiência por perfil de condução, custo por km e planejamento de viagens longas.<br><br>
+          Conforme as viagens são registradas, o aplicativo elabora automaticamente um modelo físico de consumo ajustado pelos seus dados reais, levando em conta velocidade, temperatura, ar-condicionado, tráfego, número de ocupantes e topografia. Quanto mais viagens registradas, mais preciso o planejamento.
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+      <span style="color:var(--green-light)">Para configurar seu veículo:</span> os campos obrigatórios são nome, bateria e autonomia. Os parâmetros avançados (peso, carroceria, pneus) permitem ao aplicativo derivar o modelo físico desde o início — assim, quanto mais preciso, melhor será a calibração.<br><br>
       <span style="color:var(--text3)">Você pode usar as demais abas antes de configurar, mas os cálculos serão genéricos até que o veículo esteja definido.</span>
+      </div>
     </div>
   </div>
 
@@ -1197,9 +1211,9 @@ function cdFromCarroceria(tipo, custom) {
   return def ? def.cd : VEH_DEFAULT.cd;
 }
 
-function toggleAdv(el) {
+function toggleAdv(el, targetId) {
   const arrow = el.querySelector('.adv-arrow');
-  const body  = document.getElementById('adv-body');
+  const body  = document.getElementById(targetId || 'adv-body');
   const open  = body.classList.toggle('open');
   arrow.classList.toggle('open', open);
 }
