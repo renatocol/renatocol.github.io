@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20">
+<meta name="version" content="21">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -327,6 +327,20 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <label>Autonomia WLTP (km) — opcional</label>
         <input type="number" id="v-wltp" min="50" max="1000" step="1" placeholder="ex: 420" oninput="onVehicleChange()">
         <div class="fhint">Ciclo europeu, geralmente ~10% acima do Inmetro. Preencha se disponível.</div>
+      </div>
+    </div>
+
+    <p class="sdiv">Recarga</p>
+    <div class="g2">
+      <div class="fg">
+        <label>Potência máx. AC (kW)</label>
+        <input type="number" id="v-ac-kw" min="1" max="43" step="0.1" placeholder="ex: 11" oninput="onVehicleChange()">
+        <div class="fhint">Potência máxima do carregador de bordo (corrente alternada). Consulte a ficha técnica — comum entre 6,6 e 22 kW.</div>
+      </div>
+      <div class="fg">
+        <label>Potência máx. DC (kW)</label>
+        <input type="number" id="v-dc-kw" min="10" max="400" step="1" placeholder="ex: 140" oninput="onVehicleChange()">
+        <div class="fhint">Potência máxima de recarga rápida (corrente contínua). Consulte a ficha técnica — comum entre 50 e 250 kW.</div>
       </div>
     </div>
 
@@ -966,8 +980,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       </div>
       <div class="fg"><label>Tipo de carregador disponível</label>
         <select id="pl-tipo" onchange="calcPlan()">
-          <option value="dc">DC fast (50 kW)</option>
-          <option value="ac">AC rápido (6,6 kW)</option>
+          <option value="dc" id="pl-tipo-dc">DC fast</option>
+          <option value="ac" id="pl-tipo-ac">AC</option>
         </select>
       </div>
     </div>
@@ -1015,7 +1029,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="panel" style="margin-top:0">
       <p class="sl">Nota</p>
       <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
-        Paradas distribuídas uniformemente ao longo do trajeto. O tempo de recarga considera eficiência de 90% do carregador.<br><br>
+        Paradas distribuídas uniformemente ao longo do trajeto. O tempo de recarga considera eficiência de 90% do carregador e a potência máxima AC/DC configurada na aba Veículo (ou valores genéricos, se não configurado).<br><br>
         Este app calcula <strong style="color:var(--text2)">quanto</strong> carregar em cada parada. Use o <span style="color:var(--green-light)">Carregados.com.br</span> para saber <strong style="color:var(--text2)">onde</strong> estão os eletropostos no trajeto.<br><br>
         <strong style="color:var(--text2)">Ocupantes:</strong> cada passageiro adicional (75 kg) aumenta o consumo proporcionalmente pela massa total do veículo. <strong style="color:var(--text2)">Topografia:</strong> Subida estima +300m de altitude (+6% de energia); Descida estima −300m com regeneração a 65% (−4%); Misto aplica correção neutra (+1%).
       </div>
@@ -1048,6 +1062,8 @@ const VEH_DEFAULT = {
   batt:60, util:0.98, inmetro:300, wltp:null,
   // advanced
   massa:1700, cd:0.35, aFrontal:2.35, cr:0.010,
+  // potência máx. de recarga (usada no planejamento de viagem)
+  acKw:6.6, dcKw:50,
   // raw inputs (for form restore)
   largura:null, altura:null, carroceria:'', cdCustom:null,
   pneu:'', configured:false
@@ -1332,11 +1348,17 @@ function buildTempVehicle() {
                     ? crFromPneu
                     : (catDef ? catDef.cr : VEH_DEFAULT.cr);
 
+  const acKwRaw = parseFloat(document.getElementById('v-ac-kw').value);
+  const dcKwRaw = parseFloat(document.getElementById('v-dc-kw').value);
+  const acKw    = !isNaN(acKwRaw) && acKwRaw > 0 ? acKwRaw : VEH_DEFAULT.acKw;
+  const dcKw    = !isNaN(dcKwRaw) && dcKwRaw > 0 ? dcKwRaw : VEH_DEFAULT.dcKw;
+
   return {
     nome: document.getElementById('v-nome').value.trim(),
     apelido: document.getElementById('v-apelido').value.trim(),
     batt, util, inmetro, wltp,
     massa, cd, aFrontal, cr,
+    acKw, dcKw,
     largura: isNaN(larguraRaw)?null:larguraRaw,
     altura:  isNaN(alturaRaw)?null:alturaRaw,
     carroceria: carr, cdCustom: isNaN(cdCustom)?null:cdCustom,
@@ -1357,8 +1379,8 @@ function saveVehicle() {
   updateConfigAbout();
   updateNoVehicleBanners();
   updateModelExplain();
+  updatePlChargerOptions();
   requestAnimationFrame(()=>updateCalc());
-  document.getElementById('v-fb').textContent = '✓ Salvo em ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   showToast('✓ Veículo "' + (vehicle.nome||'EV') + '" configurado com sucesso.', 'ok', 4);
   setStatus('Veículo configurado: ' + (vehicle.nome||'EV'));
 
@@ -1373,7 +1395,7 @@ function clearVehicle() {
   localStorage.removeItem(SK.vehicle);
   // Limpar campos do formulário
   ['v-nome','v-apelido','v-batt','v-util','v-inmetro','v-wltp',
-   'v-massa','v-largura','v-altura','v-cd-custom','v-pneu'].forEach(id=>{
+   'v-massa','v-largura','v-altura','v-cd-custom','v-pneu','v-ac-kw','v-dc-kw'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
   document.getElementById('v-carroceria').value='';
@@ -1387,6 +1409,7 @@ function clearVehicle() {
   updateHeader();
   updateConfigAbout();
   updateNoVehicleBanners();
+  updatePlChargerOptions();
   requestAnimationFrame(()=>updateCalc());
   showToast('Configuração do veículo removida.','info',4);
   setStatus('pronto');
@@ -1406,6 +1429,8 @@ function loadVehicleForm() {
   document.getElementById('v-altura').value  = vehicle.altura  || '';  // mm
   document.getElementById('v-cd-custom').value  = vehicle.cdCustom  || '';
   document.getElementById('v-pneu').value    = vehicle.pneu    || '';
+  document.getElementById('v-ac-kw').value   = vehicle.acKw   || '';
+  document.getElementById('v-dc-kw').value   = vehicle.dcKw   || '';
   // Show carroceria hint if set
   const carr = vehicle.carroceria || '';
   const hintEl = document.getElementById('carroceria-defaults-hint');
@@ -2276,6 +2301,17 @@ function applyConfigUI() {
 }
 
 // ─── PLANEJAR ─────────────────────────────────────────────────────────────────
+function updatePlChargerOptions() {
+  const acKw = vehicle.acKw || VEH_DEFAULT.acKw;
+  const dcKw = vehicle.dcKw || VEH_DEFAULT.dcKw;
+  const acEl = document.getElementById('pl-tipo-ac');
+  const dcEl = document.getElementById('pl-tipo-dc');
+  if(!acEl || !dcEl) return;
+  const acStr = acKw.toFixed(1).replace('.',',').replace(/,0$/,'');
+  dcEl.textContent = 'DC fast (' + dcKw + ' kW)' + (vehicle.configured ? '' : ' — genérico');
+  acEl.textContent = 'AC (' + acStr + ' kW)' + (vehicle.configured ? '' : ' — genérico');
+}
+
 function calcPlan() {
   const soc  = parseFloat(document.getElementById('pl-soc').value);
   const km   = parseFloat(document.getElementById('pl-km').value);
@@ -2311,7 +2347,7 @@ function calcPlan() {
   const vMed=velFallback(perf);
   const hViagem=km/vMed;
   const hStr=h=>Math.floor(h)+'h'+(Math.round((h%1)*60)).toString().padStart(2,'0')+'min';
-  const kWcharger=tipo==='dc'?50*0.90:6.6*0.90;
+  const kWcharger=tipo==='dc'?(vehicle.dcKw||VEH_DEFAULT.dcKw)*0.90:(vehicle.acKw||VEH_DEFAULT.acKw)*0.90;
   const orig=document.getElementById('pl-orig').value.trim(), dest=document.getElementById('pl-dest').value.trim();
 
   document.getElementById('pl-disp').innerHTML=kwhDisp.toFixed(1)+'<span class="metric-unit"> kWh</span>';
@@ -2478,7 +2514,7 @@ function switchTab(t) {
   document.getElementById('pane-'+t).classList.add('active');
   if(t==='stats')  renderStats();
   if(t==='calc')   requestAnimationFrame(()=>updateCalc());
-  if(t==='plan')   { document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1)); }
+  if(t==='plan')   { document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1)); updatePlChargerOptions(); }
 }
 
 // ─── THEME ────────────────────────────────────────────────────────────────────
@@ -2559,6 +2595,7 @@ document.getElementById('va-hora-inicio').value = new Date().getHours().toString
 document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
 
 loadVehicleForm();
+updatePlChargerOptions();
 applyConfigUI();
 computeCalib();
 updateHeader();
