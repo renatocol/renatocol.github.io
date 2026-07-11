@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="23">
+<meta name="version" content="24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2381,8 +2381,9 @@ function calcPlan() {
   const vehKw      = tipo==='dc' ? (vehicle.dcKw||VEH_DEFAULT.dcKw) : (vehicle.acKw||VEH_DEFAULT.acKw);
   const chargerKwRaw = parseFloat(document.getElementById('pl-kw').value);
   const chargerKw   = (!isNaN(chargerKwRaw) && chargerKwRaw > 0) ? chargerKwRaw : vehKw;
+  const kWeffRaw    = Math.min(vehKw, chargerKw); // potência efetiva real (sem o fator de eficiência)
   const fatorEf     = tipo==='dc' ? 0.80 : 0.90;
-  const kWcharger   = Math.min(vehKw, chargerKw) * fatorEf;
+  const kWcharger   = kWeffRaw * fatorEf;
 
   const orig=document.getElementById('pl-orig').value.trim(), dest=document.getElementById('pl-dest').value.trim();
 
@@ -2492,7 +2493,7 @@ function calcPlan() {
         Math.round(segKm), Math.round(hTrechoReal*60),
         tempoCarrStr, tipo, false,
         'Parada '+(i+1)+' — km '+kmPos+' de '+km,
-        socSaiStr
+        socSaiStr, kWeffRaw
       );
       socAtual = p.socSai;
     }
@@ -2507,7 +2508,7 @@ function calcPlan() {
   }
 }
 
-function buildEtapa(n,socAntes,socDepois,kmTrecho,minTrecho,tempoRecarga,tipoRecarga,isFinal,titulo,sub){
+function buildEtapa(n,socAntes,socDepois,kmTrecho,minTrecho,tempoRecarga,tipoRecarga,isFinal,titulo,sub,kwEfetivo){
   const isPartida=n===0;
   const dotColor=isFinal?'var(--green)':isPartida?'var(--green)':'var(--warn)';
   const label=titulo||(isFinal?'Chegada':isPartida?'Partida':'Parada '+n);
@@ -2528,7 +2529,8 @@ function buildEtapa(n,socAntes,socDepois,kmTrecho,minTrecho,tempoRecarga,tipoRec
     html+=`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min</div>`;
   }
   if(tempoRecarga&&socDepois){
-    const tipoLabel=tipoRecarga==='dc'?'DC fast 50kW':'AC 6,6kW';
+    const kwStr = kwEfetivo ? kwEfetivo.toFixed(1).replace('.',',').replace(/,0$/,'') : '';
+    const tipoLabel=tipoRecarga==='dc'?'DC rápido '+kwStr+' kW':'AC lento '+kwStr+' kW';
     html+=`<div style="font-size:11px;color:var(--green-light);font-family:var(--mono);margin-top:4px">Recarregar até ${socDepois}% · tempo estimado: ${tempoRecarga} · ${tipoLabel}</div>`;
   } else if(!isPartida&&!isFinal&&!tempoRecarga&&socDepois===null) {
     // no charge needed at this stop — sub already has the message
