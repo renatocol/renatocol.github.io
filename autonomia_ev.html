@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="21">
+<meta name="version" content="22">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -308,7 +308,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div class="fg">
         <label>Capacidade da bateria (kWh) ★</label>
         <input type="number" id="v-batt" min="5" max="200" step="0.1" placeholder="ex: 65" oninput="onVehicleChange()">
-        <div class="fhint">Capacidade total (bruta). Consulte o manual ou ficha técnica do fabricante.</div>
+        <div class="fhint">Capacidade total (bruta). Consulte a ficha técnica do veículo.</div>
       </div>
       <div class="fg">
         <label>Fator utilizável (%)</label>
@@ -321,13 +321,22 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div class="fg">
         <label>Autonomia Inmetro (km) ★</label>
         <input type="number" id="v-inmetro" min="50" max="1000" step="1" placeholder="ex: 385" oninput="onVehicleChange()">
-        <div class="fhint">Autonomia oficial do ciclo Inmetro (Brasil). Consulte inmetro.gov.br ou a ficha do veículo.</div>
+        <div class="fhint">Autonomia oficial do ciclo Inmetro (Brasil). Consulte a ficha técnica do veículo.</div>
       </div>
       <div class="fg">
         <label>Autonomia WLTP (km) — opcional</label>
         <input type="number" id="v-wltp" min="50" max="1000" step="1" placeholder="ex: 420" oninput="onVehicleChange()">
-        <div class="fhint">Ciclo europeu, geralmente ~10% acima do Inmetro. Preencha se disponível.</div>
+        <div class="fhint">Ciclo europeu. Consulte em <a href="https://evkx.net/pt-br/models" target="_blank" rel="noopener" style="color:var(--green-light)">evkx.net/pt-br/models</a>.</div>
       </div>
+    </div>
+
+    <div class="fg" style="margin-bottom:14px">
+      <label>Referência de comparação</label>
+      <div class="seg-ctrl" id="ctrl-refmetric">
+        <button class="seg-btn active" onclick="setRefMetric('inmetro',this)">Inmetro</button>
+        <button class="seg-btn" onclick="setRefMetric('wltp',this)">WLTP</button>
+      </div>
+      <div class="fhint">Autonomia usada como referência principal de comparação na aba Calculadora. O Inmetro tende a subestimar a autonomia real; o WLTP costuma ser mais otimista. Ambos continuam exibidos — esta escolha define qual aparece em destaque.</div>
     </div>
 
     <p class="sdiv">Recarga</p>
@@ -335,12 +344,12 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div class="fg">
         <label>Potência máx. AC (kW)</label>
         <input type="number" id="v-ac-kw" min="1" max="43" step="0.1" placeholder="ex: 11" oninput="onVehicleChange()">
-        <div class="fhint">Potência máxima do carregador de bordo (corrente alternada). Consulte a ficha técnica — comum entre 6,6 e 22 kW.</div>
+        <div class="fhint">Potência máxima de recarga lenta (corrente alternada). Consulte a ficha técnica do veículo — comum entre 6,6 e 22 kW.</div>
       </div>
       <div class="fg">
         <label>Potência máx. DC (kW)</label>
         <input type="number" id="v-dc-kw" min="10" max="400" step="1" placeholder="ex: 140" oninput="onVehicleChange()">
-        <div class="fhint">Potência máxima de recarga rápida (corrente contínua). Consulte a ficha técnica — comum entre 50 e 250 kW.</div>
+        <div class="fhint">Potência máxima de recarga rápida (corrente contínua). Consulte a ficha técnica do veículo — comum entre 50 e 250 kW.</div>
       </div>
     </div>
 
@@ -1064,6 +1073,8 @@ const VEH_DEFAULT = {
   massa:1700, cd:0.35, aFrontal:2.35, cr:0.010,
   // potência máx. de recarga (usada no planejamento de viagem)
   acKw:6.6, dcKw:50,
+  // referência principal de comparação de autonomia ('inmetro' ou 'wltp')
+  refMetric:'inmetro',
   // raw inputs (for form restore)
   largura:null, altura:null, carroceria:'', cdCustom:null,
   pneu:'', configured:false
@@ -1098,6 +1109,7 @@ let viagemAtiva = null;
 let vaPerfil = 'auto';
 let calibration = {active:false, scale:1};
 let chartMode = 'bars', chartWindow = 15;
+let formRefMetric = 'inmetro'; // seleção temporária no formulário Veículo, antes de salvar
 
 // ─── MODELO FÍSICO DE CONSUMO ─────────────────────────────────────────────────
 // C(v) = a + b·v + c·v²  [kWh/km],  v em km/h
@@ -1358,7 +1370,7 @@ function buildTempVehicle() {
     apelido: document.getElementById('v-apelido').value.trim(),
     batt, util, inmetro, wltp,
     massa, cd, aFrontal, cr,
-    acKw, dcKw,
+    acKw, dcKw, refMetric: formRefMetric,
     largura: isNaN(larguraRaw)?null:larguraRaw,
     altura:  isNaN(alturaRaw)?null:alturaRaw,
     carroceria: carr, cdCustom: isNaN(cdCustom)?null:cdCustom,
@@ -1399,7 +1411,9 @@ function clearVehicle() {
     const el=document.getElementById(id); if(el) el.value='';
   });
   document.getElementById('v-carroceria').value='';
-  document.getElementById('cd-custom-row').style.display='none';
+  formRefMetric = 'inmetro';
+  document.getElementById('ctrl-refmetric').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active', i===0));
+  const cdRow = document.getElementById('cd-custom-row'); if(cdRow) cdRow.style.display='none';
   document.getElementById('carroceria-defaults-hint').style.display='none';
   document.getElementById('model-preview').innerHTML=
     '<p style="font-size:11px;color:var(--text3);font-family:var(--mono)">Preencha capacidade da bateria e autonomia Inmetro para ver o modelo.</p>';
@@ -1431,6 +1445,10 @@ function loadVehicleForm() {
   document.getElementById('v-pneu').value    = vehicle.pneu    || '';
   document.getElementById('v-ac-kw').value   = vehicle.acKw   || '';
   document.getElementById('v-dc-kw').value   = vehicle.dcKw   || '';
+  formRefMetric = vehicle.refMetric || 'inmetro';
+  document.getElementById('ctrl-refmetric').querySelectorAll('.seg-btn').forEach((b,i)=>{
+    b.classList.toggle('active', (i===0 && formRefMetric==='inmetro') || (i===1 && formRefMetric==='wltp'));
+  });
   // Show carroceria hint if set
   const carr = vehicle.carroceria || '';
   const hintEl = document.getElementById('carroceria-defaults-hint');
@@ -1522,6 +1540,8 @@ function setFilter(f,btn) { statsFilter=f; document.querySelectorAll('.filter-bt
 function setCalcAc(v,btn)  { calcAcVal=v;  document.getElementById('ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));   btn.classList.add('active'); updateCalc(); }
 function setCalcTraf(v,btn){ calcTrafVal=v; document.getElementById('ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateCalc(); }
 function setCalcOcup(v,btn){ calcOcup=v;   document.getElementById('ctrl-ocup').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateCalc(); }
+
+function setRefMetric(v,btn){ formRefMetric=v; document.getElementById('ctrl-refmetric').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
 function setCalcTopo(v,btn){ calcTopo=v;   document.getElementById('ctrl-topo').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updateCalc(); }
 function setLogAc(v,btn)   { logAcVal=v;   document.getElementById('log-ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));   btn.classList.add('active'); }
 function setLogTraf(v,btn) { logTrafVal=v; document.getElementById('log-ctrl-traf').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
@@ -1631,20 +1651,23 @@ function updateCalc() {
   const sc = soc>40?'var(--green)':soc>20?'var(--warn)':'var(--danger)';
   document.getElementById('bar-soc').style.cssText = 'width:'+soc+'%;background:'+sc;
 
+  // Referência principal de comparação: Inmetro (padrão) ou WLTP, se escolhido e disponível
+  const useWltpAsPrimary = vehicle.refMetric === 'wltp' && WLTP;
+
   const pi = Math.min(100, Math.round(range/INMETRO*100));
-  document.getElementById('vi-label').textContent = 'vs. Inmetro '+INMETRO+' km';
+  document.getElementById('vi-label').textContent = 'vs. Inmetro '+INMETRO+' km'+(useWltpAsPrimary?'':' (referência)');
   document.getElementById('vi').textContent = range+'/'+INMETRO+' km ('+pi+'%)';
   const biEl = document.getElementById('bar-i');
-  biEl.style.width = pi+'%'; biEl.style.background = 'var(--text2)';
+  biEl.style.width = pi+'%'; biEl.style.background = useWltpAsPrimary ? 'var(--text2)' : 'var(--green-light)';
 
   const wWrap = document.getElementById('bar-w-wrap');
   if(WLTP) {
     wWrap.style.display = '';
     const pw = Math.min(100, Math.round(range/WLTP*100));
-    document.getElementById('vw-label').textContent = 'vs. WLTP est. '+WLTP+' km';
+    document.getElementById('vw-label').textContent = 'vs. WLTP est. '+WLTP+' km'+(useWltpAsPrimary?' (referência)':'');
     document.getElementById('vw').textContent = range+'/'+WLTP+' km ('+pw+'%)';
     const bwEl = document.getElementById('bar-w');
-    bwEl.style.width = pw+'%'; bwEl.style.background = '#5a9ada';
+    bwEl.style.width = pw+'%'; bwEl.style.background = useWltpAsPrimary ? 'var(--green-light)' : '#5a9ada';
   } else {
     wWrap.style.display = 'none';
   }
@@ -2308,8 +2331,13 @@ function updatePlChargerOptions() {
   const dcEl = document.getElementById('pl-tipo-dc');
   if(!acEl || !dcEl) return;
   const acStr = acKw.toFixed(1).replace('.',',').replace(/,0$/,'');
-  dcEl.textContent = 'DC fast (' + dcKw + ' kW)' + (vehicle.configured ? '' : ' — genérico');
-  acEl.textContent = 'AC (' + acStr + ' kW)' + (vehicle.configured ? '' : ' — genérico');
+  if(vehicle.configured) {
+    dcEl.textContent = 'DC rápido (' + dcKw + ' kW)';
+    acEl.textContent = 'AC lento (' + acStr + ' kW)';
+  } else {
+    dcEl.textContent = 'DC rápido (~' + dcKw + ' kW estimado)';
+    acEl.textContent = 'AC lento (~' + acStr + ' kW estimado)';
+  }
 }
 
 function calcPlan() {
