@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="24">
+<meta name="version" content="26">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -326,7 +326,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div class="fg">
         <label>Autonomia WLTP (km) — opcional</label>
         <input type="number" id="v-wltp" min="50" max="1000" step="1" placeholder="ex: 420" oninput="onVehicleChange()">
-        <div class="fhint">Ciclo europeu. Consulte em <a href="https://evkx.net/pt-br/models" target="_blank" rel="noopener" style="color:var(--green-light)">evkx.net/pt-br/models</a>.</div>
+        <div class="fhint">Ciclo europeu. Consulte o seu veículo em <a href="https://evkx.net/pt-br/models" target="_blank" rel="noopener" style="color:var(--green-light)">evkx.net/pt-br/models</a>.</div>
       </div>
     </div>
 
@@ -565,7 +565,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
     Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, de ponta a ponta. Por exemplo, ao chegar em casa após uma saída. Alternativamente, use a aba <strong style="color:var(--text2)">Viagem ativa</strong> se preferir registrar mais de um trecho durante o trajeto.<br><br>
-    <span style="color:var(--green-light)">1.</span> Informe o SoC ao sair e ao chegar, lidos no painel do veículo<br>
+    <span style="color:var(--green-light)">1.</span> Informe o SoC (carga atual da bateria) ao sair e ao chegar, lidos no painel do veículo<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
     <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
     <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em> — os dados entram no Histórico e calibram o modelo
@@ -687,7 +687,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
     Use esta aba para registrar a viagem em tempo real, trecho a trecho.<br><br>
-    <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial e toque em <em>Iniciar viagem ativa</em><br>
+    <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial (carga atual da bateria) e toque em <em>Iniciar viagem ativa</em><br>
     <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e as demais informações solicitadas; toque em <em>Registrar trecho</em><br>
     <span style="color:var(--green-light)">3. Ao final</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
   </div>
@@ -998,7 +998,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="fg" style="margin-bottom:14px">
       <label>Potência do carregador (kW)</label>
       <input type="number" id="pl-kw" min="1" max="400" step="1" placeholder="ex: 100" oninput="calcPlan()">
-      <div class="fhint">Insira a potência nominal anunciada pelo carregador (ex: "100 kW" na placa ou no app do operador), não a potência máxima do seu veículo, que já é considerada automaticamente. O tempo estimado já contempla a queda natural de potência ao longo da recarga.</div>
+      <div class="fhint">Insira a potência nominal anunciada pelo carregador (ex: "100 kW" na placa ou no app do operador), não a potência máxima do seu veículo, que já é considerada automaticamente. O tempo estimado contempla a queda natural de potência ao longo da recarga.</div>
     </div>
     <div style="margin-bottom:10px">
       <div class="seg-label">Ocupantes</div>
@@ -2525,6 +2525,7 @@ function buildEtapa(n,socAntes,socDepois,kmTrecho,minTrecho,tempoRecarga,tipoRec
     html+=`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min</div>`;
     const carregadosUrl='https://carregados.com.br/mapa?planejar=viagem';
     html+=`<div style="margin-top:6px"><a href="${carregadosUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--green-light);border:1px solid var(--green-dim);border-radius:20px;padding:3px 9px;text-decoration:none;background:var(--green-dim)">Carregadores no trajeto — Carregados.com.br</a></div>`;
+    if(socAntes!=null) html+=`<div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:6px">Chegada com ~${Math.max(0,socAntes)}% de bateria</div>`;
   } else if(!isPartida&&isFinal&&kmTrecho>0){
     html+=`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px">Trecho: <strong style="color:var(--text2)">${kmTrecho} km</strong> · ${minTrecho} min</div>`;
   }
