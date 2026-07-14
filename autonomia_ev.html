@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="27">
+<meta name="version" content="28">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -85,6 +85,7 @@ body.light .panel-green { background: #edf7f2; border-color: #a8d9c2; }
 .fg input:focus, .fg select:focus { outline: none; border-color: var(--green); }
 .fg select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7a58' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
 .fg input.hi { border-color: var(--green-dim); }
+.fg input[type="checkbox"] { -webkit-appearance: auto; appearance: auto; width: 16px; height: 16px; padding: 0; border: none; background: none; accent-color: var(--green); flex-shrink: 0; }
 
 /* SEGMENTED */
 .seg-label { font-size: 11px; color: var(--text3); margin-bottom: 5px; font-family: var(--mono); letter-spacing: 0.03em; }
@@ -979,7 +980,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div class="fg"><label>SoC atual (%)</label><input type="number" id="pl-soc" min="1" max="100" placeholder="ex: 85" oninput="calcPlan()"></div>
       <div class="fg"><label>Distância total (km) — via Google Maps</label><input type="number" id="pl-km" min="1" step="1" placeholder="ex: 420" oninput="calcPlan()"></div>
     </div>
-    <div class="fg">
+    <div class="fg" style="margin-bottom:14px">
       <label>Perfil predominante</label>
       <select id="pl-perfil" onchange="calcPlan()">
         <option value="estrada">Estrada</option>
@@ -1005,31 +1006,13 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 
     <div class="fg" style="margin-bottom:14px">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:400">
-        <input type="checkbox" id="pl-modo-fixo" onchange="togglePlModoFixo()" style="width:16px;height:16px;accent-color:var(--green)">
+        <input type="checkbox" id="pl-modo-fixo" onchange="togglePlModoFixo()">
         Já sei onde vou parar
       </label>
       <div class="fhint">Ative se você já conhece o ponto exato de recarga no trajeto (km e potência do carregador local), em vez de uma estimativa automática de paradas.</div>
     </div>
 
-    <div id="pl-paradas-fixas" style="display:none">
-      <div class="fg">
-        <label>Km até a parada</label>
-        <input type="number" id="pf-km-0" min="1" step="1" placeholder="ex: 200" oninput="calcPlan()">
-      </div>
-      <div class="g2">
-        <div class="fg">
-          <label>Tipo de carregador no local</label>
-          <div class="seg-ctrl" id="pf-ctrl-tipo-0">
-            <button class="seg-btn" onclick="setPfTipo(0,'ac',this)">AC</button>
-            <button class="seg-btn active" onclick="setPfTipo(0,'dc',this)">DC</button>
-          </div>
-        </div>
-        <div class="fg">
-          <label>Potência do carregador (kW)</label>
-          <input type="number" id="pf-kw-0" min="1" max="400" step="1" placeholder="ex: 100" oninput="calcPlan()">
-        </div>
-      </div>
-    </div>
+    <div id="pl-paradas-fixas" style="display:none;margin-bottom:10px"></div>
     <div style="margin-bottom:10px">
       <div class="seg-label">Ocupantes</div>
       <div class="seg-ctrl" id="pl-ctrl-ocup">
@@ -2360,8 +2343,8 @@ function applyConfigUI() {
 // ─── PLANEJAR ─────────────────────────────────────────────────────────────────
 let plTipo = 'dc';
 let plModoFixo = false;
-// Array pronto para múltiplas paradas fixas no futuro; Fase 1 usa apenas o índice 0.
-let paradasFixas = [{tipo:'dc'}];
+// Array de paradas fixas (até MAX_PARADAS_FIXAS), preenchido dinamicamente pela UI.
+let paradasFixas = [{tipo:'dc', km:null, kw:null}];
 
 function setPlTipo(tipo, btn) {
   plTipo = tipo;
@@ -2369,6 +2352,75 @@ function setPlTipo(tipo, btn) {
   btn.classList.add('active');
   const kwEl = document.getElementById('pl-kw');
   kwEl.placeholder = tipo==='dc' ? 'ex: 100' : 'ex: 11';
+  calcPlan();
+}
+
+const MAX_PARADAS_FIXAS = 3;
+
+function renderParadasFixasUI() {
+  const container = document.getElementById('pl-paradas-fixas');
+  let html = '';
+  paradasFixas.forEach((p, i) => {
+    const kmVal = (p.km!=null && !isNaN(p.km)) ? p.km : '';
+    const kwVal = (p.kw!=null && !isNaN(p.kw)) ? p.kw : '';
+    const acActive = p.tipo==='ac' ? ' active' : '';
+    const dcActive = p.tipo==='dc' ? ' active' : '';
+    const kwPlaceholder = p.tipo==='dc' ? 'ex: 100' : 'ex: 11';
+    html += `
+      <div class="panel" style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:500;color:var(--text2);font-family:var(--mono)">Parada ${i+1}</span>
+          ${paradasFixas.length>1 ? `<button type="button" class="btn-sm" onclick="removeParadaFixa(${i})">✕ Remover</button>` : ''}
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>Km até a parada${i>0?' (a partir da parada anterior)':''}</label>
+          <input type="number" min="1" step="1" placeholder="ex: 150" value="${kmVal}" oninput="setPfKm(${i},this.value)">
+        </div>
+        <div class="g2">
+          <div class="fg">
+            <label>Tipo de carregador no local</label>
+            <div class="seg-ctrl" id="pf-ctrl-tipo-${i}">
+              <button class="seg-btn${acActive}" onclick="setPfTipo(${i},'ac',this)">AC</button>
+              <button class="seg-btn${dcActive}" onclick="setPfTipo(${i},'dc',this)">DC</button>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Potência do carregador (kW)</label>
+            <input type="number" min="1" max="400" step="1" placeholder="${kwPlaceholder}" value="${kwVal}" oninput="setPfKw(${i},this.value)">
+          </div>
+        </div>
+      </div>`;
+  });
+  if(paradasFixas.length < MAX_PARADAS_FIXAS) {
+    html += `<button type="button" class="btn btn-green" style="width:100%" onclick="addParadaFixa()">+ Adicionar parada</button>`;
+  } else {
+    html += `<div class="fhint" style="text-align:center">Máximo de ${MAX_PARADAS_FIXAS} paradas fixas.</div>`;
+  }
+  container.innerHTML = html;
+}
+
+function addParadaFixa() {
+  if(paradasFixas.length >= MAX_PARADAS_FIXAS) return;
+  paradasFixas.push({tipo:'dc', km:null, kw:null});
+  renderParadasFixasUI();
+  calcPlan();
+}
+
+function removeParadaFixa(idx) {
+  paradasFixas.splice(idx, 1);
+  renderParadasFixasUI();
+  calcPlan();
+}
+
+function setPfKm(idx, val) {
+  const n = parseFloat(val);
+  paradasFixas[idx].km = isNaN(n) ? null : n;
+  calcPlan();
+}
+
+function setPfKw(idx, val) {
+  const n = parseFloat(val);
+  paradasFixas[idx].kw = isNaN(n) ? null : n;
   calcPlan();
 }
 
@@ -2383,8 +2435,8 @@ function setPfTipo(idx, tipo, btn) {
   paradasFixas[idx].tipo = tipo;
   document.getElementById('pf-ctrl-tipo-'+idx).querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const kwEl = document.getElementById('pf-kw-'+idx);
-  kwEl.placeholder = tipo==='dc' ? 'ex: 100' : 'ex: 11';
+  const kwEl = btn.closest('.panel').querySelector('input[type="number"][max="400"]');
+  if(kwEl) kwEl.placeholder = tipo==='dc' ? 'ex: 100' : 'ex: 11';
   calcPlan();
 }
 
@@ -2451,26 +2503,35 @@ function calcPlan() {
 
   if(plModoFixo){
     // ── Modo de parada(s) conhecida(s) pelo usuário ──────────────────────────
-    // Arquitetado para uma lista de pontos fixos (futuras Fases), embora a
-    // interface da Fase 1 só exponha um ponto (índice 0).
+    // Cada item de paradasFixas guarda o km do SEGMENTO (distância a partir da
+    // parada anterior, ou da origem para a primeira). Convertemos para posição
+    // absoluta (cumulativa) antes de simular.
     const kwhMargUtil2 = plMargem/100*BATT*UTIL;
     const kwhMax2      = 0.95*BATT*UTIL;
 
-    const pfKm  = parseFloat(document.getElementById('pf-km-0').value);
-    if(isNaN(pfKm) || pfKm<=0 || pfKm>=km){
-      al.className='alert a-info';
-      al.innerHTML='Informe o km da parada (maior que 0 e menor que a distância total de '+km+' km).';
-      document.getElementById('pl-tempo-total').textContent='—';
-      document.getElementById('pl-tempo-total-sub').textContent='';
-      etapas.innerHTML='';
-      return;
+    let cumKm = 0;
+    const pontosFixos = [];
+    for(let i=0; i<paradasFixas.length; i++){
+      const segVal = paradasFixas[i].km;
+      if(segVal==null || isNaN(segVal) || segVal<=0){
+        al.className='alert a-info';
+        al.innerHTML='Informe o km da <strong>Parada '+(i+1)+'</strong> (maior que 0 km).';
+        document.getElementById('pl-tempo-total').textContent='—';
+        document.getElementById('pl-tempo-total-sub').textContent='';
+        etapas.innerHTML='';
+        return;
+      }
+      cumKm += segVal;
+      if(cumKm >= km){
+        al.className='alert a-warn';
+        al.innerHTML='A distância acumulada até a <strong>Parada '+(i+1)+'</strong> ('+cumKm+' km) ultrapassa a distância total da viagem ('+km+' km). Ajuste os valores.';
+        document.getElementById('pl-tempo-total').textContent='—';
+        document.getElementById('pl-tempo-total-sub').textContent='';
+        etapas.innerHTML='';
+        return;
+      }
+      pontosFixos.push({km: cumKm, tipo: paradasFixas[i].tipo, kw: paradasFixas[i].kw});
     }
-    const pfKwRaw = parseFloat(document.getElementById('pf-kw-0').value);
-    const pontosFixos = [{
-      km: pfKm,
-      tipo: paradasFixas[0].tipo,
-      kw: (!isNaN(pfKwRaw) && pfKwRaw>0) ? pfKwRaw : null
-    }];
 
     function simularParadasFixas(pontos){
       let kwh=kwhDisp, kmAnterior=0, totalKwhCarregado=0;
@@ -2519,18 +2580,21 @@ function calcPlan() {
     document.getElementById('pl-tempo-total-sub').textContent=hStr(hViagem)+' deslocamento + '+hStr(hRecargaTotalF)+' recarga';
 
     const chegLabelF=(orig&&dest)?orig+' → '+dest:'';
-    if(!simFixo.paradas[0].alcancavel){
+    const idxFalha=simFixo.paradas.findIndex(p=>!p.alcancavel);
+    const nParadasF=pontosFixos.length;
+    if(idxFalha !== -1){
       al.className='alert a-warn';
-      al.innerHTML='A carga atual não é suficiente para alcançar a parada informada (km '+pfKm+'). Verifique o SoC de partida ou a localização da parada.';
+      al.innerHTML='A carga não é suficiente para alcançar a <strong>Parada '+(idxFalha+1)+'</strong> (km '+simFixo.paradas[idxFalha].km+'). Verifique o SoC de partida ou as distâncias informadas.';
     } else if(!simFixo.valido){
       al.className='alert a-warn';
-      al.innerHTML='Mesmo recarregando ao máximo nesta parada, a viagem não é viável com '+plMargem+'% de margem ao chegar. Considere reduzir a margem ou informar uma parada em outro ponto.';
+      al.innerHTML='Mesmo recarregando ao máximo nas paradas informadas, a viagem não é viável com '+plMargem+'% de margem ao chegar. Considere reduzir a margem ou ajustar as paradas.';
     } else if(simFixo.totalKwhCarregado<0.5){
       al.className='alert a-ok';
-      al.innerHTML='A carga atual é suficiente para os '+km+' km'+(chegLabelF?' ('+chegLabelF+')':'')+', mesmo passando pela parada informada. Chegada estimada com <strong>'+Math.round(Math.max(0,simFixo.socFinal))+'%</strong> de bateria.';
+      al.innerHTML='A carga atual é suficiente para os '+km+' km'+(chegLabelF?' ('+chegLabelF+')':'')+', mesmo passando pela'+(nParadasF>1?'s paradas informadas':' parada informada')+'. Chegada estimada com <strong>'+Math.round(Math.max(0,simFixo.socFinal))+'%</strong> de bateria.';
     } else {
       al.className='alert a-info';
-      al.innerHTML='Com a parada em <strong>km '+pfKm+'</strong>, é possível completar os '+km+' km'+(chegLabelF?' ('+chegLabelF+')':'')+' com <strong>'+plMargem+'%</strong> de margem ao chegar.';
+      const paradaWord = nParadasF===1 ? 'a parada em <strong>km '+pontosFixos[0].km+'</strong>' : 'as <strong>'+nParadasF+' paradas</strong> definidas';
+      al.innerHTML='Com '+paradaWord+', é possível completar os '+km+' km'+(chegLabelF?' ('+chegLabelF+')':'')+' com <strong>'+plMargem+'%</strong> de margem ao chegar.';
     }
 
     let htmlF='';
@@ -2795,6 +2859,7 @@ document.getElementById('f-data').value = new Date().toISOString().slice(0,10);
 document.getElementById('va-hora-inicio').value = new Date().getHours().toString().padStart(2,'0')+':'+new Date().getMinutes().toString().padStart(2,'0');
 // Init plan margem default
 document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
+renderParadasFixasUI();
 
 loadVehicleForm();
 applyConfigUI();
