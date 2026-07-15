@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="28">
+<meta name="version" content="30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -116,6 +116,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 .btn-red:active { background: var(--danger-bg); }
 .btn-sm { font-size: 11px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--text3); cursor: pointer; font-family: var(--mono); }
 .btn-sm:active { background: var(--danger-bg); color: var(--danger); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:disabled:active { background: transparent; }
 
 /* PROFILE BUTTONS */
 .fl { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -565,12 +567,23 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <!-- Instruções no topo -->
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
-    Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, de ponta a ponta. Por exemplo, ao chegar em casa após uma saída. Alternativamente, use a aba <strong style="color:var(--text2)">Viagem ativa</strong> se preferir registrar mais de um trecho durante o trajeto.<br><br>
+    Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, feitas com uma única carga (sem recarga no meio do trajeto) — por exemplo, ao chegar em casa após uma saída. Se houve recarga durante o percurso, use a aba <strong style="color:var(--text2)">Viagem ativa</strong>, que contabiliza corretamente a energia de cada trecho.<br><br>
     <span style="color:var(--green-light)">1.</span> Informe o SoC (carga atual da bateria) ao sair e ao chegar, lidos no painel do veículo<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
     <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
     <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em> — os dados entram no Histórico e calibram o modelo
   </div>
+
+  <div class="fg" style="margin-bottom:12px">
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:400">
+      <input type="checkbox" id="log-teve-recarga" onchange="toggleLogRecargaAlerta()">
+      Houve recarga durante o trajeto?
+    </label>
+  </div>
+  <div id="log-recarga-alerta" class="alert a-warn" style="display:none;margin-bottom:12px">
+    ⚠ Esta aba não contabiliza recargas intermediárias e geraria um cálculo de eficiência incorreto. Use a aba <strong>Viagem ativa</strong> para trajetos com recarga no meio do percurso.
+  </div>
+
   <div class="panel">
     <p class="sl">Dados da viagem</p>
     <div class="g2">
@@ -668,7 +681,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <div class="fg"><label>Observação</label><input type="text" id="f-obs" placeholder="ex: SP → interior"></div>
     </div>
     <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
-      <button class="btn btn-green" onclick="addTrip()">+ Registrar</button>
+      <button class="btn btn-green" id="btn-add-trip" onclick="addTrip()">+ Registrar</button>
       <span id="f-fb" style="font-size:12px;color:var(--text3);font-family:var(--mono)"></span>
     </div>
   </div>
@@ -687,9 +700,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 <div id="pane-recarga" class="pane">
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
-    Use esta aba para registrar a viagem em tempo real, trecho a trecho.<br><br>
+    Use esta aba para registrar a viagem em tempo real, trecho a trecho, em especial as mais longas com paradas para recarga.<br><br>
     <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial (carga atual da bateria) e toque em <em>Iniciar viagem ativa</em><br>
-    <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e as demais informações solicitadas; toque em <em>Registrar trecho</em><br>
+    <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e as demais informações solicitadas. Se for recarregar aqui, informe também o SoC após a recarga, para que o próximo trecho comece do valor correto; toque em <em>Registrar trecho</em><br>
     <span style="color:var(--green-light)">3. Ao final</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
   </div>
 
@@ -744,6 +757,11 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
         <div class="fg"><label>SoC agora (%)</label><input type="number" id="va-soc-now" min="0" max="99" placeholder="ex: 42" oninput="calcTrecho()"></div>
         <div class="fg"><label>Distância percorrida (km)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()"></div>
         <div class="fg"><label>Aut. indicada no painel (km)</label><input type="number" id="va-aut-panel" min="0" placeholder="ex: 78" oninput="calcTrecho()"></div>
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <label>SoC após recarga (%) — opcional</label>
+        <input type="number" id="va-soc-pos-recarga" min="1" max="100" placeholder="ex: 80">
+        <div class="fhint">Preencha apenas se você recarregou antes de continuar a viagem. O próximo trecho começará a partir deste valor, em vez do SoC de chegada informado acima.</div>
       </div>
       <div class="fg" style="margin-bottom:8px">
         <label>Efic. indicada pelo painel neste trecho (kWh/100km) — opcional</label>
@@ -1166,6 +1184,15 @@ function getCoeffs() {
 
 const PESO_OCUP = 75; // kg por ocupante adicional
 
+// Energia (kWh) real consumida numa viagem: usa o valor corretamente calculado
+// por trecho (kwhReal, gravado por encerrarViagem) quando disponível — essencial
+// para viagens com recarga intermediária, onde o delta simples de SoC inicial/
+// final não reflete o consumo real. Viagens de "Registrar Viagem" (carga única,
+// sem o campo kwhReal) caem no cálculo tradicional, que já é correto nesse caso.
+function tripKwh(t) {
+  return (t.kwhReal!=null && !isNaN(t.kwhReal)) ? t.kwhReal : (t.socI - t.socF) * vehicle.batt / 100;
+}
+
 function consumoBase(vel, nOcup, topo) {
   nOcup = nOcup || 1; topo = topo || 0;
   const {a, b, c} = getCoeffs();
@@ -1195,7 +1222,7 @@ function computeCalib() {
   if(trips.length < 2) { calibration.active = false; return; }
   let s = 0;
   trips.forEach(t => {
-    const real = (t.socI - t.socF) * vehicle.batt / 100 / t.km;
+    const real = tripKwh(t) / t.km;
     const pred = calcC(t.vel||90, t.temp||25, t.ac||0.8, t.traf||0, false);
     s += real / pred;
   });
@@ -1206,12 +1233,12 @@ function computeCalib() {
 function realAvgEf(arr) {
   if(!arr || !arr.length) return null;
   let tk=0, tw=0;
-  arr.forEach(t => { tk+=t.km; tw+=(t.socI-t.socF)*vehicle.batt/100; });
+  arr.forEach(t => { tk+=t.km; tw+=tripKwh(t); });
   return tw > 0 ? tk/tw : null;
 }
 
 function tripCostPerKm(t) {
-  const kwh = (t.socI - t.socF) * vehicle.batt / 100;
+  const kwh = tripKwh(t);
   let tar = t.tarifa || (!isNaN(t.total) && t.total > 0 ? t.total/kwh : null);
   if(t.tipo === 'casa' && !tar) tar = cfg.tarifa;
   if(!tar) return null;
@@ -1845,7 +1872,7 @@ function buildVelChart(cv, ct, ca, ctr, nOcup, topo) {
     cal.push(calcC(v,ct,ca,ctr,true,nOcup||1,topo||0));
   }
   const curC   = calcC(cv,ct,ca,ctr,true,nOcup||1,topo||0);
-  const realPts = trips.map(t=>({x:t.vel||90, y:(t.socI-t.socF)*vehicle.batt/100/t.km, color:'#d85a30'}));
+  const realPts = trips.map(t=>({x:t.vel||90, y:tripKwh(t)/t.km, color:'#d85a30'}));
   const bC=isLight?'#b8c9b5':'#3d5a3a', cC=isLight?'#1a8a63':'#1d9e75', dC=isLight?'#156e4f':'#2dc98f';
   svgChart('chartVelWrap',180,[{data:base,color:bC,w:1,dash:true},{data:cal,color:cC,w:1.5}],realPts,{x:cv,y:curC,color:dC});
 }
@@ -1892,7 +1919,17 @@ function previewLog() {
   ${painelCompareHtml}`;
 }
 
+function toggleLogRecargaAlerta() {
+  const checked = document.getElementById('log-teve-recarga').checked;
+  document.getElementById('log-recarga-alerta').style.display = checked ? 'block' : 'none';
+  document.getElementById('btn-add-trip').disabled = checked;
+}
+
 function addTrip() {
+  if(document.getElementById('log-teve-recarga').checked) {
+    showToast('⚠ Esta aba não é adequada para trajetos com recarga. Use a aba Viagem ativa.','err',5);
+    return;
+  }
   const si = parseFloat(document.getElementById('f-si').value);
   const sf = parseFloat(document.getElementById('f-sf').value);
   const km = parseFloat(document.getElementById('f-km').value);
@@ -2019,13 +2056,23 @@ function addTrecho() {
   const vel = parseFloat(document.getElementById('va-vel-hidden').value)||null;
   const fb  = document.getElementById('va-fb');
   if(isNaN(sn)||isNaN(km)||sn<0) { showToast('⚠ Informe SoC atual e km percorridos.','err',3); return; }
+  const socPosRecargaRaw = document.getElementById('va-soc-pos-recarga').value;
+  let socPosRecarga = null;
+  if(socPosRecargaRaw !== '') {
+    const spr = parseFloat(socPosRecargaRaw);
+    if(isNaN(spr) || spr<=sn || spr>100) {
+      showToast('⚠ SoC após recarga deve ser maior que o SoC de chegada e até 100%.','err',5);
+      return;
+    }
+    socPosRecarga = spr;
+  }
   const kmInicioDa=viagemAtiva.kmInicioDa||0;
   const kmAcum=viagemAtiva.trechos.reduce((s,t)=>s+t.km,0);
   const kmReal=Math.max(0.1,km-kmInicioDa-kmAcum);
   const modoTrecho=document.getElementById('va-modo-trecho').value;
   const tempTrecho=parseFloat(document.getElementById('va-temp-trecho').value)||null;
   viagemAtiva.trechos.push({
-    n:viagemAtiva.trechos.length+1, socI:viagemAtiva.socAtual, socF:sn,
+    n:viagemAtiva.trechos.length+1, socI:viagemAtiva.socAtual, socF:sn, socPosRecarga,
     km:parseFloat(kmReal.toFixed(1)), autPanel:parseFloat(document.getElementById('va-aut-panel').value)||null,
     efPainel:parseFloat(document.getElementById('va-ef-painel').value)||null,
     vel, destRestante:parseFloat(document.getElementById('va-dest-restante').value)||null,
@@ -2035,9 +2082,9 @@ function addTrecho() {
     hora, modo:modoTrecho,
     temp:tempTrecho, ac:vaAcVal, traf:vaTrafVal, ocup:vaOcupVal, topo:vaTopoVal
   });
-  viagemAtiva.socAtual=sn;
+  viagemAtiva.socAtual = (socPosRecarga!=null) ? socPosRecarga : sn;
   if(hora) viagemAtiva.horaUltimaPartida=hora;
-  ['va-soc-now','va-km','va-aut-panel','va-ef-painel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper','va-temp-trecho'].forEach(id=>document.getElementById(id).value='');
+  ['va-soc-now','va-km','va-aut-panel','va-ef-painel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper','va-temp-trecho','va-soc-pos-recarga'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('va-modo-trecho').value='padrao';
   // Reset condições do trecho para o padrão — cada trecho começa "limpo"
   vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
@@ -2090,6 +2137,7 @@ function renderTrechos() {
     const condStr=condParts.join(' · ');
     return`<div class="trecho-card"><div class="trecho-hdr"><span class="trecho-title">Trecho ${t.n}</span><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${t.socI}%→${t.socF}%</span></div>
     <div class="trecho-meta"><span>${t.km}km</span><span>${kwh.toFixed(1)}kWh</span><span>${ef}km/kWh</span>${t.efPainel?'<span>painel: '+t.efPainel.toFixed(1)+'kWh/100km</span>':''}${t.vel?'<span>'+t.vel.toFixed(0)+'km/h</span>':''}${tar?'<span>R$'+(kwh*tar).toFixed(2)+'</span>':''}${t.posto?'<span>'+t.posto+'</span>':''}</div>
+    ${t.socPosRecarga!=null?'<div style="font-size:10px;color:var(--green-light);font-family:var(--mono);margin-top:4px">⚡ Recarregado até '+t.socPosRecarga+'% antes do próximo trecho</div>':''}
     ${condStr?'<div style="font-size:10px;color:var(--text3);font-family:var(--mono);opacity:0.75;margin-top:4px">'+condStr+'</div>':''}</div>`;
   }).join('');
 }
@@ -2131,7 +2179,7 @@ function encerrarViagem() {
   const tempFinal = temps.length ? temps.reduce((s,v)=>s+v,0)/temps.length : 25;
 
   trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,
-    socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,autR:null,vel:velFinal,velCalc:velCalcFinal,
+    socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,kwhReal:tw,autR:null,vel:velFinal,velCalc:velCalcFinal,
     temp:tempFinal,ac:acFinal,traf:trafFinal,ocup:ocupFinal,topo:topoFinal,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,
     posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
   localStorage.setItem(SK.trips, JSON.stringify(trips));
@@ -2167,7 +2215,7 @@ function renderStats() {
   document.getElementById('stats-body').style.display='block';
   const BATT=vehicle.batt, UTIL=vehicle.util;
   let tk=0,tw=0,cs=0,cn=0;
-  filtered.forEach(t=>{tk+=t.km;tw+=(t.socI-t.socF)*BATT/100;const c=tripCostPerKm(t);if(c){cs+=c;cn++;}});
+  filtered.forEach(t=>{tk+=t.km;tw+=tripKwh(t);const c=tripCostPerKm(t);if(c){cs+=c;cn++;}});
   const avgEf=tw>0?tk/tw:0, re=Math.round(BATT*UTIL*avgEf);
   document.getElementById('st-n').textContent=filtered.length;
   document.getElementById('st-ef').textContent=avgEf>0?avgEf.toFixed(2):'—';
@@ -2194,12 +2242,12 @@ function renderStats() {
   drawEfKmChart();
 
   const tipoMap={};
-  trips.forEach(t=>{const kwh=(t.socI-t.socF)*BATT/100;let tar=t.tarifa||(!isNaN(t.total)&&t.total>0?t.total/kwh:null);if(t.tipo==='casa'&&!tar)tar=cfg.tarifa;if(!tar)return;if(!tipoMap[t.tipo])tipoMap[t.tipo]={sum:0,n:0};tipoMap[t.tipo].sum+=tar;tipoMap[t.tipo].n++;});
+  trips.forEach(t=>{const kwh=tripKwh(t);let tar=t.tarifa||(!isNaN(t.total)&&t.total>0?t.total/kwh:null);if(t.tipo==='casa'&&!tar)tar=cfg.tarifa;if(!tar)return;if(!tipoMap[t.tipo])tipoMap[t.tipo]={sum:0,n:0};tipoMap[t.tipo].sum+=tar;tipoMap[t.tipo].n++;});
   const keys=Object.keys(tipoMap);
   document.getElementById('custo-tipos').innerHTML=!keys.length?'Nenhum custo registrado ainda.':keys.map(k=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:5px 0">${TIPO_LABEL[k]||k} <span style="color:var(--text3)">(${tipoMap[k].n}×)</span> <strong style="color:var(--green-light)">R$ ${(tipoMap[k].sum/tipoMap[k].n).toFixed(2)}/kWh</strong></div>`).join('');
 
   document.getElementById('log-tbody').innerHTML=filtered.slice().reverse().map(t=>{
-    const kwh=((t.socI-t.socF)*BATT/100), ef=(t.km/kwh).toFixed(2), cpm=tripCostPerKm(t), kmDisp=parseFloat(t.km.toFixed(1));
+    const kwh=tripKwh(t), ef=(t.km/kwh).toFixed(2), cpm=tripCostPerKm(t), kmDisp=parseFloat(t.km.toFixed(1));
     const local=(t.orig&&t.dest)?t.orig+' → '+t.dest:([t.posto,t.mun].filter(Boolean).join(', ')||t.obs||'');
     const mL={'eco':'Eco','padrao':'Padrão','esportivo':'Esportivo'};
     const mTag=t.modo&&t.modo!=='padrao'?`<span style="font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:20px;background:var(--bg3);color:var(--text3);border:1px solid var(--border)">${mL[t.modo]||t.modo}</span>`:'';
@@ -2220,7 +2268,7 @@ function renderStats() {
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:2px 0 0">${t.efPainel?'painel: '+t.efPainel.toFixed(1)+' kWh/100km':(100/parseFloat(ef)).toFixed(1)+' kWh/100km'}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${(t.velCalc||(t.vel&&t.vel!==90&&t.vel!==70&&t.vel!==60&&t.vel!==35))?t.vel.toFixed(0):'—'}</p></div>
-        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km/(t.socI-t.socF)*100)}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km*BATT/tripKwh(t))}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
       </div>
       <button onclick="confirmDel(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
@@ -2232,7 +2280,7 @@ function buildCalibChart() {
   const isLight=document.body.classList.contains('light');
   const base=[],cal=[];
   for(let v=10;v<=130;v+=5){base.push(calcC(v,25,0.8,0,false,1,0));cal.push(calcC(v,25,0.8,0,true,1,0));}
-  const realPts=trips.map(t=>({x:t.vel||90,y:(t.socI-t.socF)*vehicle.batt/100/t.km,color:'#d85a30'}));
+  const realPts=trips.map(t=>({x:t.vel||90,y:tripKwh(t)/t.km,color:'#d85a30'}));
   const bC=isLight?'#b8c9b5':'#3d5a3a', cC=isLight?'#1a8a63':'#1d9e75';
   svgChart('chartCalibWrap',160,[{data:base,color:bC,w:1,dash:true},{data:cal,color:cC,w:2}],realPts,null);
 }
@@ -2260,7 +2308,7 @@ function drawEfViagemChart() {
   const BATT=vehicle.batt;
   const W=300,H=180,pad={l:36,r:8,t:10,b:28};
   const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
-  const efs=shown.map(t=>t.km/((t.socI-t.socF)*BATT/100));
+  const efs=shown.map(t=>t.km/tripKwh(t));
   const avgEf=efs.reduce((s,v)=>s+v,0)/efs.length;
   const yMin=Math.max(0,Math.min(...efs)*0.9),yMax=Math.max(...efs)*1.1;
   const py=v=>pad.t+ph*(1-(v-yMin)/(yMax-yMin));
@@ -2289,7 +2337,7 @@ function drawEfKmChart() {
   if(!trips.length){wrap.innerHTML='';return;}
   const sorted=trips.slice().sort((a,b)=>a.id-b.id);
   let kmAcum=0;
-  const pts=sorted.map(t=>{kmAcum+=t.km;return{x:kmAcum,y:t.km/((t.socI-t.socF)*BATT/100),p:t.perfil};});
+  const pts=sorted.map(t=>{kmAcum+=t.km;return{x:kmAcum,y:t.km/tripKwh(t),p:t.perfil};});
   const W=300,H=180,pad={l:36,r:8,t:10,b:28};
   const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
   const xMin=0,xMax=Math.max(100,kmAcum);
@@ -2453,7 +2501,7 @@ function calcPlan() {
   const perfTrips=trips.filter(t=>t.perfil===perf);
   let efBase;
   if(perfTrips.length>=2){
-    const tk=perfTrips.reduce((s,t)=>s+t.km,0),tw=perfTrips.reduce((s,t)=>s+(t.socI-t.socF)*BATT/100,0);
+    const tk=perfTrips.reduce((s,t)=>s+t.km,0),tw=perfTrips.reduce((s,t)=>s+tripKwh(t),0);
     efBase=tk/tw;
   } else {
     const vRef=perf==='estrada'?95:perf==='misto'?60:35;
