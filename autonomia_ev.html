@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="31">
+<meta name="version" content="32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -567,7 +567,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <!-- Instruções no topo -->
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
-    Use esta aba para registrar viagens ou trajetos já concluídos, realizados com uma única carga (isto é, sem recarga no meio do trecho percorrido). Se houve recarga durante o percurso, use a aba <strong style="color:var(--text2)">Viagem ativa</strong>, que contabiliza corretamente a energia utilizada em cada trecho.<br><br>
+    Use esta aba para registrar viagens ou trajetos já concluídos e realizados com uma única carga (isto é, sem recarga no meio do trecho percorrido). Se houver recarga durante o percurso, use a aba <strong style="color:var(--text2)">Viagem ativa</strong>, que contabiliza corretamente a energia utilizada em cada trecho.<br><br>
     <span style="color:var(--green-light)">1.</span> Informe o SoC (carga atual da bateria) ao sair e ao chegar, lidos no painel do veículo<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
     <span style="color:var(--green-light)">3.</span> Se houver paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
@@ -702,8 +702,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
     Use esta aba para registrar a viagem em tempo real, trecho a trecho, em especial as mais longas com paradas para recarga.<br><br>
     <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial (carga atual da bateria) e toque em <em>Iniciar viagem ativa</em><br>
-    <span style="color:var(--green-light)">2. Ao chegar ou parar</span> — informe SoC atual, km percorridos e as demais informações solicitadas. Se for recarregar aqui, informe também o SoC após a recarga, para que o próximo trecho comece do valor correto; toque em <em>Registrar trecho</em><br>
-    <span style="color:var(--green-light)">3. Ao final</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
+    <span style="color:var(--green-light)">2. A cada parada, inclusive a chegada final</span> — informe SoC atual, km percorridos e as demais informações solicitadas. Se for recarregar no local, informe também o SoC após a recarga; toque em <em>Registrar trecho</em><br>
+    <span style="color:var(--green-light)">3. Só depois de registrar o último trecho (a chegada ao destino)</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
   </div>
 
   <div id="va-inicio-panel" class="panel">
@@ -758,8 +758,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <p class="sl" id="va-trecho-titulo">Trecho 1 — em andamento</p>
       <div class="g2">
         <div class="fg"><label>SoC agora (%)</label><input type="number" id="va-soc-now" min="0" max="99" placeholder="ex: 42" oninput="calcTrecho()"></div>
-        <div class="fg"><label>Km total percorrido (desde a partida)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()">
-        <div class="fhint">Km acumulado desde o início da viagem, não a distância isolada deste trecho.</div></div>
+        <div class="fg"><label>Km no odômetro nesta parada</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()">
+        <div class="fhint">Leitura atual do odômetro do carro — o mesmo número que você informou em "Km no odômetro ao sair", só que agora. Não precisa calcular a distância deste trecho: o app faz essa conta automaticamente.</div></div>
       </div>
       <div class="fg" style="margin-bottom:10px">
         <label>SoC após recarga (%) — opcional</label>
@@ -1117,6 +1117,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="panel" id="pl-etapas-panel">
       <p class="sl">Roteiro de viagem</p>
       <div id="pl-etapas"></div>
+    </div>
+    <div class="alert a-warn" style="margin-top:0;margin-bottom:12px;font-size:11px">
+      ⚠ As estimativas não substituem o acompanhamento do estado real da bateria no painel do veículo durante a viagem.
     </div>
     <div class="panel" style="margin-top:0">
       <p class="sl">Nota</p>
@@ -2029,6 +2032,21 @@ function iniciarViagem() {
   const modo = document.getElementById('va-modo-inicio').value;
   viagemAtiva = {socInicio:soc, socAtual:soc, horaInicio:hora, horaUltimaPartida:hora||null,
     origem, destino:dest, kmInicioDa:kmI, kmAcum:0, perfilManual:vaPerfil, trechos:[], modo};
+  // Limpa todos os campos do formulário de trecho, evitando que dados digitados
+  // (mas não registrados) numa viagem anterior "vazem" para esta nova viagem.
+  ['va-soc-now','va-km','va-soc-pos-recarga','va-aut-panel','va-ef-painel','va-temp-trecho',
+   'va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('va-modo-trecho').value='padrao';
+  document.getElementById('va-tipo').value='ac-lento';
+  vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
+  ['va-ctrl-ac','va-ctrl-traf','va-ctrl-ocup','va-ctrl-topo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active', id==='va-ctrl-ac'?i===1:i===0));
+  });
+  document.getElementById('va-vel-hidden').value='0';
+  document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
   document.getElementById('va-inicio-panel').style.display = 'none';
   document.getElementById('va-ativa').style.display = 'block';
   let label = '';
@@ -2202,6 +2220,9 @@ function encerrarViagem() {
   if(!viagemAtiva||!viagemAtiva.trechos.length) { if(confirm('Nenhum trecho. Cancelar viagem?')){viagemAtiva=null;vaPerfil='auto';resetVaUI();}return; }
   const t=viagemAtiva.trechos;
   const tk=t.reduce((s,x)=>s+x.km,0), tw=t.reduce((s,x)=>s+(x.socI-x.socF)*vehicle.batt/100,0);
+  const confMsg='Encerrar viagem com '+tk.toFixed(1)+' km em '+t.length+' trecho'+(t.length>1?'s':'')+'?\n\n'+
+    'Se você ainda não registrou a chegada ao destino final, toque em Cancelar e registre o último trecho antes de encerrar.';
+  if(!confirm(confMsg)) return;
   const vls=t.filter(x=>x.vel&&x.hora);
   const avgVel=vls.length?vls.reduce((s,x)=>s+x.vel,0)/vls.length:null;
   const velCalcFinal=vls.length>0;
