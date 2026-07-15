@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="30">
+<meta name="version" content="31">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -567,11 +567,11 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <!-- Instruções no topo -->
   <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
     <span style="color:var(--text2);font-weight:500">Como usar</span><br>
-    Use esta aba para registrar viagens <strong style="color:var(--text2)">já concluídas</strong>, feitas com uma única carga (sem recarga no meio do trajeto) — por exemplo, ao chegar em casa após uma saída. Se houve recarga durante o percurso, use a aba <strong style="color:var(--text2)">Viagem ativa</strong>, que contabiliza corretamente a energia de cada trecho.<br><br>
+    Use esta aba para registrar viagens ou trajetos já concluídos, realizados com uma única carga (isto é, sem recarga no meio do trecho percorrido). Se houve recarga durante o percurso, use a aba <strong style="color:var(--text2)">Viagem ativa</strong>, que contabiliza corretamente a energia utilizada em cada trecho.<br><br>
     <span style="color:var(--green-light)">1.</span> Informe o SoC (carga atual da bateria) ao sair e ao chegar, lidos no painel do veículo<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
-    <span style="color:var(--green-light)">3.</span> Se houve paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
-    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em> — os dados entram no Histórico e calibram o modelo
+    <span style="color:var(--green-light)">3.</span> Se houver paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
+    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em>; os dados entram no Histórico e calibram o modelo
   </div>
 
   <div class="fg" style="margin-bottom:12px">
@@ -669,7 +669,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:5px 0 0;line-height:1.6">Na aba <strong style="color:var(--text2)">Viagem ativa</strong>, estas condições são ajustadas individualmente para cada trecho.</p>
     <p class="sdiv">Custo</p>
     <div class="g3">
-      <div class="fg"><label>Tipo de carga</label><select id="f-tipo"><option value="casa">Casa</option><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC fast</option></select></div>
+      <div class="fg"><label>Tipo de carga</label><select id="f-tipo"><option value="casa">Casa</option><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC rápido</option></select></div>
       <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="f-tarifa" min="0" step="0.01" placeholder="1.00" oninput="previewLog()"></div>
       <div class="fg"><label>Total pago (R$)</label><input type="number" id="f-total" min="0" step="0.01" placeholder="27.50" oninput="previewLog()"></div>
     </div>
@@ -708,9 +708,12 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 
   <div id="va-inicio-panel" class="panel">
     <p class="sl">Iniciar viagem</p>
-    <div class="g3">
+    <div class="g2">
       <div class="fg"><label>SoC ao sair (%)</label><input type="number" id="va-soc-inicio" min="1" max="100" value="100"></div>
       <div class="fg"><label>Horário de partida — opcional</label><input type="time" id="va-hora-inicio"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Local de partida — opcional</label><input type="text" id="va-origem" placeholder="ex: São Paulo"></div>
       <div class="fg"><label>Destino — opcional</label><input type="text" id="va-destino" placeholder="ex: Campinas"></div>
     </div>
     <div class="g3" style="margin-top:4px">
@@ -753,79 +756,122 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 
     <div class="panel">
       <p class="sl" id="va-trecho-titulo">Trecho 1 — em andamento</p>
-      <div class="g3">
+      <div class="g2">
         <div class="fg"><label>SoC agora (%)</label><input type="number" id="va-soc-now" min="0" max="99" placeholder="ex: 42" oninput="calcTrecho()"></div>
-        <div class="fg"><label>Distância percorrida (km)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()"></div>
-        <div class="fg"><label>Aut. indicada no painel (km)</label><input type="number" id="va-aut-panel" min="0" placeholder="ex: 78" oninput="calcTrecho()"></div>
+        <div class="fg"><label>Km total percorrido (desde a partida)</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()">
+        <div class="fhint">Km acumulado desde o início da viagem, não a distância isolada deste trecho.</div></div>
       </div>
       <div class="fg" style="margin-bottom:10px">
         <label>SoC após recarga (%) — opcional</label>
         <input type="number" id="va-soc-pos-recarga" min="1" max="100" placeholder="ex: 80">
         <div class="fhint">Preencha apenas se você recarregou antes de continuar a viagem. O próximo trecho começará a partir deste valor, em vez do SoC de chegada informado acima.</div>
       </div>
-      <div class="fg" style="margin-bottom:8px">
-        <label>Efic. indicada pelo painel neste trecho (kWh/100km) — opcional</label>
-        <input type="number" id="va-ef-painel" min="0" step="0.1" placeholder="ex: 15.2" oninput="calcTrecho()">
+
+      <!-- ▶ Condições deste trecho -->
+      <div class="adv-toggle" onclick="toggleAdv(this,'va-cond-body')" style="border-top:1px solid var(--border);margin-top:6px;padding-top:8px">
+        <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+        <span style="color:var(--text2);font-weight:500">Condições deste trecho (opcional)</span>
       </div>
-      <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 8px;line-height:1.6">Se o painel exibir a eficiência deste trecho, informe aqui para comparação. Não é usado na calibração do modelo.</p>
-      <div class="g2" style="margin-bottom:8px">
-        <div class="fg"><label>Modo de condução neste trecho</label><select id="va-modo-trecho"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
-        <div class="fg"><label>Temperatura (°C) — opcional</label><input type="number" id="va-temp-trecho" min="-15" max="50" placeholder="ex: 28"></div>
+      <div class="adv-body" id="va-cond-body">
+        <div style="padding-top:10px">
+          <div class="g2" style="margin-bottom:8px">
+            <div class="fg"><label>Modo de condução neste trecho</label><select id="va-modo-trecho"><option value="padrao">Padrão</option><option value="eco">Eco</option><option value="esportivo">Esportivo</option></select></div>
+            <div class="fg"><label>Temperatura (°C) — opcional</label><input type="number" id="va-temp-trecho" min="-15" max="50" placeholder="ex: 28"></div>
+          </div>
+          <div class="seg-label">Ar-condicionado</div>
+          <div class="seg-ctrl" id="va-ctrl-ac">
+            <button class="seg-btn" onclick="setVaAc(0,this)">Desl.</button>
+            <button class="seg-btn active" onclick="setVaAc(0.8,this)">Fraco</button>
+            <button class="seg-btn" onclick="setVaAc(1.5,this)">Mod.</button>
+            <button class="seg-btn" onclick="setVaAc(2,this)">Forte</button>
+          </div>
+          <div class="seg-label" style="margin-top:8px">Tráfego / paradas</div>
+          <div class="seg-ctrl" id="va-ctrl-traf">
+            <button class="seg-btn active" onclick="setVaTraf(0,this)">Livre</button>
+            <button class="seg-btn" onclick="setVaTraf(12,this)">Ocas.</button>
+            <button class="seg-btn" onclick="setVaTraf(25,this)">Mod.</button>
+            <button class="seg-btn" onclick="setVaTraf(40,this)">Int.</button>
+          </div>
+          <div class="seg-label" style="margin-top:8px">Ocupantes</div>
+          <div class="seg-ctrl" id="va-ctrl-ocup">
+            <button class="seg-btn active" onclick="setVaOcup(1,this)">1</button>
+            <button class="seg-btn" onclick="setVaOcup(2,this)">2</button>
+            <button class="seg-btn" onclick="setVaOcup(3,this)">3</button>
+            <button class="seg-btn" onclick="setVaOcup(4,this)">4</button>
+            <button class="seg-btn" onclick="setVaOcup(5,this)">5</button>
+          </div>
+          <div class="seg-label" style="margin-top:8px">Topografia</div>
+          <div class="seg-ctrl" id="va-ctrl-topo">
+            <button class="seg-btn active" onclick="setVaTopo(0,this)">Plano</button>
+            <button class="seg-btn" onclick="setVaTopo(1,this)">Subida</button>
+            <button class="seg-btn" onclick="setVaTopo(-1,this)">Descida</button>
+            <button class="seg-btn" onclick="setVaTopo(0.5,this)">Misto</button>
+          </div>
+          <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:8px 0 0;line-height:1.6">Estas condições valem apenas para este trecho — ajuste novamente a cada parada se mudarem.</p>
+        </div>
       </div>
-      <p class="sdiv">Condições deste trecho</p>
-      <div class="seg-label">Ar-condicionado</div>
-      <div class="seg-ctrl" id="va-ctrl-ac">
-        <button class="seg-btn" onclick="setVaAc(0,this)">Desl.</button>
-        <button class="seg-btn active" onclick="setVaAc(0.8,this)">Fraco</button>
-        <button class="seg-btn" onclick="setVaAc(1.5,this)">Mod.</button>
-        <button class="seg-btn" onclick="setVaAc(2,this)">Forte</button>
+
+      <!-- ▶ Comparação com painel -->
+      <div class="adv-toggle" onclick="toggleAdv(this,'va-comp-body')" style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px">
+        <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+        <span style="color:var(--text2);font-weight:500">Comparação com painel (opcional)</span>
       </div>
-      <div class="seg-label" style="margin-top:8px">Tráfego / paradas</div>
-      <div class="seg-ctrl" id="va-ctrl-traf">
-        <button class="seg-btn active" onclick="setVaTraf(0,this)">Livre</button>
-        <button class="seg-btn" onclick="setVaTraf(12,this)">Ocas.</button>
-        <button class="seg-btn" onclick="setVaTraf(25,this)">Mod.</button>
-        <button class="seg-btn" onclick="setVaTraf(40,this)">Int.</button>
+      <div class="adv-body" id="va-comp-body">
+        <div style="padding-top:10px">
+          <div class="fg" style="margin-bottom:8px">
+            <label>Aut. indicada no painel (km)</label>
+            <input type="number" id="va-aut-panel" min="0" placeholder="ex: 78" oninput="calcTrecho()">
+          </div>
+          <div class="fg" style="margin-bottom:8px">
+            <label>Efic. indicada pelo painel neste trecho (kWh/100km) — opcional</label>
+            <input type="number" id="va-ef-painel" min="0" step="0.1" placeholder="ex: 15.2" oninput="calcTrecho()">
+          </div>
+          <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0;line-height:1.6">Se o painel exibir a eficiência deste trecho, informe aqui para comparação. Não é usado na calibração do modelo.</p>
+        </div>
       </div>
-      <div class="seg-label" style="margin-top:8px">Ocupantes</div>
-      <div class="seg-ctrl" id="va-ctrl-ocup">
-        <button class="seg-btn active" onclick="setVaOcup(1,this)">1</button>
-        <button class="seg-btn" onclick="setVaOcup(2,this)">2</button>
-        <button class="seg-btn" onclick="setVaOcup(3,this)">3</button>
-        <button class="seg-btn" onclick="setVaOcup(4,this)">4</button>
-        <button class="seg-btn" onclick="setVaOcup(5,this)">5</button>
+
+      <!-- ▶ Recarga nesta parada -->
+      <div class="adv-toggle" onclick="toggleAdv(this,'va-recarga-body')" style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px">
+        <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+        <span style="color:var(--text2);font-weight:500">Recarga nesta parada (opcional)</span>
       </div>
-      <div class="seg-label" style="margin-top:8px">Topografia</div>
-      <div class="seg-ctrl" id="va-ctrl-topo">
-        <button class="seg-btn active" onclick="setVaTopo(0,this)">Plano</button>
-        <button class="seg-btn" onclick="setVaTopo(1,this)">Subida</button>
-        <button class="seg-btn" onclick="setVaTopo(-1,this)">Descida</button>
-        <button class="seg-btn" onclick="setVaTopo(0.5,this)">Misto</button>
+      <div class="adv-body" id="va-recarga-body">
+        <div style="padding-top:10px">
+          <div class="g3">
+            <div class="fg"><label>Tipo</label><select id="va-tipo"><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC rápido</option></select></div>
+            <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="va-tarifa" min="0" step="0.01" placeholder="1.00"></div>
+            <div class="fg"><label>Total pago (R$)</label><input type="number" id="va-total-pago" min="0" step="0.01" placeholder="45.00"></div>
+          </div>
+          <div class="g2">
+            <div class="fg"><label>Posto / local</label><input type="text" id="va-posto" placeholder="ex: Posto BR Km 47"></div>
+            <div class="fg"><label>Operadora</label><input type="text" id="va-oper" placeholder="ex: Zletric"></div>
+          </div>
+        </div>
       </div>
-      <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:8px 0 0;line-height:1.6">Estas condições valem apenas para este trecho — ajuste novamente a cada parada se mudarem.</p>
-      <div class="g2">
-        <div class="fg"><label>Horário de chegada / parada</label><input type="time" id="va-hora-trecho" oninput="calcTrechoVel()"></div>
-        <div class="fg"><label>Distância ao destino — opcional</label><input type="number" id="va-dest-restante" min="1" placeholder="deixe vazio se não souber" oninput="calcTrecho()"></div>
+
+      <!-- ▶ Chegando ao destino? -->
+      <div class="adv-toggle" onclick="toggleAdv(this,'va-dest-body')" style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px">
+        <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+        <span style="color:var(--text2);font-weight:500">Chegando ao destino? (opcional)</span>
       </div>
-      <div class="vel-calc" id="va-vel-calc">Informe km + horário para calcular velocidade.</div>
+      <div class="adv-body" id="va-dest-body">
+        <div style="padding-top:10px">
+          <div class="g2">
+            <div class="fg"><label>Horário de chegada / parada</label><input type="time" id="va-hora-trecho" oninput="calcTrechoVel()"></div>
+            <div class="fg"><label>Distância ao destino — opcional</label><input type="number" id="va-dest-restante" min="1" placeholder="deixe vazio se não souber" oninput="calcTrecho()"></div>
+          </div>
+          <div class="vel-calc" id="va-vel-calc">Informe km + horário para calcular velocidade.</div>
+          <p class="sdiv" style="margin-top:12px">Margem de segurança</p>
+          <div class="fl">
+            <button class="pb active" onclick="setMargin(10,this)">Mínima 10%</button>
+            <button class="pb" onclick="setMargin(20,this)">Confortável 20%</button>
+            <button class="pb" onclick="setMargin(30,this)">Conservadora 30%</button>
+          </div>
+        </div>
+      </div>
       <input type="hidden" id="va-vel-hidden" value="0">
-      <p class="sdiv">Recarga nesta parada (opcional)</p>
-      <div class="g3">
-        <div class="fg"><label>Tipo</label><select id="va-tipo"><option value="ac-lento">AC lento</option><option value="ac-rapido">AC rápido</option><option value="dc-fast">DC fast</option></select></div>
-        <div class="fg"><label>Tarifa (R$/kWh)</label><input type="number" id="va-tarifa" min="0" step="0.01" placeholder="1.00"></div>
-        <div class="fg"><label>Total pago (R$)</label><input type="number" id="va-total-pago" min="0" step="0.01" placeholder="45.00"></div>
-      </div>
-      <div class="g2">
-        <div class="fg"><label>Posto / local</label><input type="text" id="va-posto" placeholder="ex: Posto BR Km 47"></div>
-        <div class="fg"><label>Operadora</label><input type="text" id="va-oper" placeholder="ex: Zletric"></div>
-      </div>
-      <p class="sdiv" style="margin-top:12px">Margem de segurança</p>
-      <div class="fl">
-        <button class="pb active" onclick="setMargin(10,this)">Mínima 10%</button>
-        <button class="pb" onclick="setMargin(20,this)">Confortável 20%</button>
-        <button class="pb" onclick="setMargin(30,this)">Conservadora 30%</button>
-      </div>
-      <button class="btn btn-green" style="width:100%;padding:12px;margin-top:6px" onclick="addTrecho()">+ Registrar trecho e continuar</button>
+
+      <button class="btn btn-green" style="width:100%;padding:12px;margin-top:14px" onclick="addTrecho()">+ Registrar trecho e continuar</button>
       <div id="va-fb" style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--mono)"></div>
     </div>
 
@@ -1555,7 +1601,7 @@ function updateConfigAbout() {
 }
 
 // ─── GENERAL UTILITIES ────────────────────────────────────────────────────────
-const TIPO_LABEL = {casa:'Casa','ac-lento':'AC lento','ac-rapido':'AC rápido','dc-fast':'DC fast'};
+const TIPO_LABEL = {casa:'Casa','ac-lento':'AC lento','ac-rapido':'AC rápido','dc-fast':'DC rápido'};
 const HINTS = {
   auto:    '<strong>Automático:</strong> perfil inferido pela velocidade média ao encerrar — &lt;40 → Urbano · 40–60 → Misto · &gt;60 → Estrada.',
   urbano:  '<strong>Urbano:</strong> cidade, velocidade baixa, paradas frequentes.',
@@ -1977,14 +2023,19 @@ function iniciarViagem() {
   const soc = parseFloat(document.getElementById('va-soc-inicio').value);
   if(isNaN(soc)||soc<=0) { showToast('⚠ Informe o SoC inicial.','err',3); return; }
   const hora = document.getElementById('va-hora-inicio').value;
+  const origem = document.getElementById('va-origem').value.trim();
   const dest = document.getElementById('va-destino').value.trim();
   const kmI  = parseFloat(document.getElementById('va-km-inicio').value)||0;
   const modo = document.getElementById('va-modo-inicio').value;
   viagemAtiva = {socInicio:soc, socAtual:soc, horaInicio:hora, horaUltimaPartida:hora||null,
-    destino:dest, kmInicioDa:kmI, kmAcum:0, perfilManual:vaPerfil, trechos:[], modo};
+    origem, destino:dest, kmInicioDa:kmI, kmAcum:0, perfilManual:vaPerfil, trechos:[], modo};
   document.getElementById('va-inicio-panel').style.display = 'none';
   document.getElementById('va-ativa').style.display = 'block';
-  if(dest) document.getElementById('va-destino-label').textContent = '→ '+dest;
+  let label = '';
+  if(origem && dest) label = origem+' → '+dest;
+  else if(dest) label = '→ '+dest;
+  else if(origem) label = origem+' →';
+  document.getElementById('va-destino-label').textContent = label;
   updateViagemStats(); updateTabBadge();
   setStatus('Viagem ativa em andamento', true);
   showToast('▶ Viagem iniciada! SoC: '+soc+'%.','ok',4);
@@ -2069,6 +2120,11 @@ function addTrecho() {
   const kmInicioDa=viagemAtiva.kmInicioDa||0;
   const kmAcum=viagemAtiva.trechos.reduce((s,t)=>s+t.km,0);
   const kmReal=Math.max(0.1,km-kmInicioDa-kmAcum);
+  const kwhTrechoCheck=(viagemAtiva.socAtual-sn)*vehicle.batt/100;
+  const totalPagoCheck=parseFloat(document.getElementById('va-total-pago').value)||0;
+  if(kmReal<1 && (kwhTrechoCheck>2 || totalPagoCheck>5)) {
+    showToast("⚠ Distância muito pequena para os valores informados: confira o campo 'Km total percorrido'",'err',6);
+  }
   const modoTrecho=document.getElementById('va-modo-trecho').value;
   const tempTrecho=parseFloat(document.getElementById('va-temp-trecho').value)||null;
   viagemAtiva.trechos.push({
@@ -2181,7 +2237,7 @@ function encerrarViagem() {
   trips.push({id:Date.now(),data:new Date().toISOString().slice(0,10),perfil:perfilFinal,modo:modoFinal,
     socI:viagemAtiva.socInicio,socF:viagemAtiva.socAtual,km:tk,kwhReal:tw,autR:null,vel:velFinal,velCalc:velCalcFinal,
     temp:tempFinal,ac:acFinal,traf:trafFinal,ocup:ocupFinal,topo:topoFinal,tipo:t[t.length-1].tipo||'ac-rapido',tarifa:hc?tc/tw:null,total:hc?tc:null,
-    posto:postos,mun:'',oper:'',obs:(viagemAtiva.destino?'→ '+viagemAtiva.destino+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
+    posto:postos,mun:'',oper:'',obs:((viagemAtiva.origem||viagemAtiva.destino)?((viagemAtiva.origem||'')+' → '+(viagemAtiva.destino||'')).trim()+' ':'')+'('+t.length+' trecho'+(t.length>1?'s':'')+', '+perfilFinal+fonte+')',trechos:t});
   localStorage.setItem(SK.trips, JSON.stringify(trips));
   computeCalib(); viagemAtiva=null; vaPerfil='auto'; resetVaUI(); updateCalc();
   showToast('✓ Viagem encerrada e salva! Perfil: '+perfilFinal+' '+fonte,'ok',5);
@@ -2191,7 +2247,7 @@ function encerrarViagem() {
 function resetVaUI() {
   document.getElementById('va-inicio-panel').style.display='block';
   document.getElementById('va-ativa').style.display='none';
-  ['va-soc-inicio','va-hora-inicio','va-destino','va-km-inicio'].forEach(id=>document.getElementById(id).value='');
+  ['va-soc-inicio','va-hora-inicio','va-origem','va-destino','va-km-inicio'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('va-km-inicio').value=0;
   document.getElementById('va-modo-inicio').value='padrao';
   document.getElementById('va-soc-inicio').value=100;
