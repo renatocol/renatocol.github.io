@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="32">
+<meta name="version" content="33">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -758,8 +758,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       <p class="sl" id="va-trecho-titulo">Trecho 1 — em andamento</p>
       <div class="g2">
         <div class="fg"><label>SoC agora (%)</label><input type="number" id="va-soc-now" min="0" max="99" placeholder="ex: 42" oninput="calcTrecho()"></div>
-        <div class="fg"><label>Km no odômetro nesta parada</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel()">
-        <div class="fhint">Leitura atual do odômetro do carro — o mesmo número que você informou em "Km no odômetro ao sair", só que agora. Não precisa calcular a distância deste trecho: o app faz essa conta automaticamente.</div></div>
+        <div class="fg"><label>Km no odômetro nesta parada</label><input type="number" id="va-km" min="1" step="0.1" placeholder="ex: 155" oninput="calcTrechoVel();updateKmFeedback()">
+        <div class="fhint">Leitura atual do odômetro do carro — o mesmo número que você informou em "Km no odômetro ao sair", só que agora. Não precisa calcular a distância deste trecho, o app faz essa conta automaticamente.</div>
+        <div class="vel-calc" id="va-km-feedback">Aguardando número de km do odômetro...</div></div>
       </div>
       <div class="fg" style="margin-bottom:10px">
         <label>SoC após recarga (%) — opcional</label>
@@ -1692,6 +1693,23 @@ function calcLogVel() {
 
 function calcTrechoVel() { if(viagemAtiva) velFromTimes('va-km', timeToMin(viagemAtiva.horaUltimaPartida), 'va-hora-trecho','va-vel-calc','va-vel-hidden'); calcTrecho(); }
 
+function updateKmFeedback() {
+  const fb = document.getElementById('va-km-feedback');
+  if(!fb || !viagemAtiva) return;
+  const kmRaw = document.getElementById('va-km').value;
+  if(kmRaw === '') { fb.innerHTML = 'Aguardando número de km do odômetro...'; return; }
+  const km = parseFloat(kmRaw);
+  if(isNaN(km)) { fb.innerHTML = 'Aguardando número de km do odômetro...'; return; }
+  const kmInicioDa = viagemAtiva.kmInicioDa || 0;
+  const kmAcum = viagemAtiva.trechos.reduce((s,t)=>s+t.km,0);
+  const kmTrecho = km - kmInicioDa - kmAcum;
+  if(kmTrecho <= 0) {
+    fb.innerHTML = '<span style="color:var(--warn)">⚠ Isso daria '+kmTrecho.toFixed(1).replace('.',',')+' km neste trecho — confira o valor. Você digitou a distância deste trecho ou a leitura atual do odômetro?</span>';
+  } else {
+    fb.innerHTML = '= <strong>'+kmTrecho.toFixed(1).replace('.',',')+' km</strong> neste trecho';
+  }
+}
+
 // ─── PROFILES ─────────────────────────────────────────────────────────────────
 const profiles = {
   urbano:  {vel:35,  soc:80, temp:28, acIdx:1, trafIdx:2},
@@ -2047,6 +2065,7 @@ function iniciarViagem() {
   });
   document.getElementById('va-vel-hidden').value='0';
   document.getElementById('va-vel-calc').textContent='Informe km + horário para calcular velocidade.';
+  document.getElementById('va-km-feedback').innerHTML='Aguardando número de km do odômetro...';
   document.getElementById('va-inicio-panel').style.display = 'none';
   document.getElementById('va-ativa').style.display = 'block';
   let label = '';
@@ -2159,6 +2178,7 @@ function addTrecho() {
   viagemAtiva.socAtual = (socPosRecarga!=null) ? socPosRecarga : sn;
   if(hora) viagemAtiva.horaUltimaPartida=hora;
   ['va-soc-now','va-km','va-aut-panel','va-ef-painel','va-hora-trecho','va-dest-restante','va-tarifa','va-total-pago','va-posto','va-oper','va-temp-trecho','va-soc-pos-recarga'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('va-km-feedback').innerHTML='Aguardando número de km do odômetro...';
   document.getElementById('va-modo-trecho').value='padrao';
   // Reset condições do trecho para o padrão — cada trecho começa "limpo"
   vaAcVal=0.8; vaTrafVal=0; vaOcupVal=1; vaTopoVal=0;
