@@ -4,7 +4,8 @@
     "namespace": "android_app",
     "package_name": "io.github.renatocol.autonomia_ev",
     "sha256_cert_fingerprints": [
-      "DF:8C:2A:9B:BE:73:FE:F7:EB:D4:F0:53:AA:95:B4:F6:8D:70:AF:AA:B7:7D:E3:0A:DF:35:C1:64:F2:AF:0A:5C"
+      "DF:8C:2A:9B:BE:73:FE:F7:EB:D4:F0:53:AA:95:B4:F6:8D:70:AF:AA:B7:7D:E3:0A:DF:35:C1:64:F2:AF:0A:5C",
+      "AE:89:CF:34:4F:2C:01:33:35:5C:FD:47:CF:11:1B:86:D2:7A:1E:15:AC:91:97:D6:5F:B7:A8:DA:4A:EF:A7:DC"
     ]
   }
 }]
