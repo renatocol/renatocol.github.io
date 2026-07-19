@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="34">
+<meta name="version" content="35">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -428,6 +428,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 <div id="pane-calc" class="pane active">
   <div id="calc-no-vehicle" class="no-vehicle-banner">
     ⚠ Veículo não configurado. Os cálculos usam valores genéricos. <a onclick="switchTab('veiculo')">Configure seu veículo →</a>
+  </div>
+  <div class="panel panel-green" style="margin-bottom:14px">
+    <p style="font-size:12px;color:var(--text2);line-height:1.7;font-family:var(--mono);margin:0">Estime rapidamente a autonomia real do seu carro para uma viagem, considerando o estado atual da bateria e as condições do momento (velocidade, tráfego e demais itens).</p>
   </div>
   <div class="panel">
     <p class="sl">Perfis</p>
@@ -2361,12 +2364,13 @@ function renderStats() {
         ${local?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${local}</span>`:''}
         ${ctxStr?`<span style="font-family:var(--mono);font-size:10px;color:var(--text3);opacity:0.75">${ctxStr}</span>`:''}
       </div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px 6px;margin-bottom:8px">
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:2px 0 0">${t.efPainel?'painel: '+t.efPainel.toFixed(1)+' kWh/100km':(100/parseFloat(ef)).toFixed(1)+' kWh/100km'}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${(t.velCalc||(t.vel&&t.vel!==90&&t.vel!==70&&t.vel!==60&&t.vel!==35))?t.vel.toFixed(0):'—'}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km*BATT/tripKwh(t))}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Custo total</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+(cpm*t.km).toFixed(2):'—'}</p></div>
       </div>
       <button onclick="confirmDel(${t.id})" style="font-size:11px;padding:5px 12px;border:1px solid #5a2020;border-radius:var(--radius);background:transparent;color:var(--danger);cursor:pointer;font-family:var(--mono);width:100%">✕ Excluir esta viagem</button>
     </div>`;
