@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="37">
+<meta name="version" content="39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -969,6 +969,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <div class="panel">
       <p class="sl">Viagens registradas</p>
       <div id="log-tbody"></div>
+      <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 0;line-height:1.6">Pequenas diferenças na eficiência (km/kWh) entre o calculado e o painel são normais (arredondamento do SoC, medição do BMS). Com mais viagens registradas, o modelo se calibra e a discrepância tende a diminuir.</p>
     </div>
   </div>
 </div><!-- /pane-stats -->
@@ -2370,7 +2371,7 @@ function renderStats() {
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${kmDisp}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/kWh</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${ef}</p><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:2px 0 0">${t.efPainel?'painel: '+(100/t.efPainel).toFixed(2)+' km/kWh':(100/parseFloat(ef)).toFixed(1)+' kWh/100km'}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">km/h</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${(t.velCalc||(t.vel&&t.vel!==90&&t.vel!==70&&t.vel!==60&&t.vel!==35))?t.vel.toFixed(0):'—'}</p></div>
-        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km*BATT/tripKwh(t))}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
+        <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Aut. proj.</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${Math.round(t.km*BATT*UTIL/tripKwh(t))}<span style="font-size:10px;color:var(--text3);font-weight:400"> km</span></p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">R$/km</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+cpm.toFixed(3):'—'}</p></div>
         <div><p style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:0 0 1px">Custo total</p><p style="font-size:14px;font-weight:500;color:var(--text);font-family:var(--mono);margin:0">${cpm?'R$'+(cpm*t.km).toFixed(2):'—'}</p></div>
       </div>
@@ -2692,7 +2693,7 @@ function calcPlan() {
         const segKm=pf.km-kmAnterior;
         const kwhSeg=segKm/ef;
         kwh-=kwhSeg;
-        const socChegaP=kwh/BATT*100;
+        const socChegaP=kwh/(BATT*UTIL)*100;
         const alcancavel=kwh>=-0.01;
         const proxKm=(i+1<pontos.length)?pontos[i+1].km:km;
         const kwhSegProx=(proxKm-pf.km)/ef;
@@ -2711,14 +2712,14 @@ function calcPlan() {
         paradas.push({
           km:pf.km, segKm,
           socChega:Math.round(socChegaP), alcancavel,
-          kwhCarrega, socSai:Math.round(kwh/BATT*100),
+          kwhCarrega, socSai:Math.round(kwh/(BATT*UTIL)*100),
           tipo:pf.tipo, kWeffRaw:kWeffRawP, kWcharger:kWchargerP
         });
         kmAnterior=pf.km;
       }
       const segFinalKm=km-kmAnterior;
       kwh-=segFinalKm/ef;
-      const socFinal=kwh/BATT*100;
+      const socFinal=kwh/(BATT*UTIL)*100;
       const valido=(kwh>=kwhMargUtil2-0.5)&&paradas.every(p=>p.alcancavel);
       return {valido, socFinal, totalKwhCarregado, paradas, segFinalKm};
     }
@@ -2775,7 +2776,7 @@ function calcPlan() {
   }
 
   if(kwhDef<=0){
-    const socCheg=((kwhDisp-kwhNeed)/BATT*100);
+    const socCheg=((kwhDisp-kwhNeed)/(BATT*UTIL)*100);
     al.className='alert a-ok';
     const chegLabel=(orig&&dest)?orig+' → '+dest:'';
     al.innerHTML='A carga atual é suficiente para os '+km+' km'+(chegLabel?' ('+chegLabel+')':'')+'. Chegada estimada com <strong>'+Math.round(socCheg)+'%</strong> de bateria — acima da margem de '+plMargem+'%.';
@@ -2801,7 +2802,7 @@ function calcPlan() {
 
       for(let i = 0; i < nStops; i++) {
         kwh -= kwhSeg;                           // consome trecho i
-        const socChegaP = kwh / BATT * 100;
+        const socChegaP = kwh / (BATT*UTIL) * 100;
         // Precisa sair com energia suficiente para próximo trecho + margem
         const kwhNecessarioSaida = kwhSeg + kwhMargUtil;
         const kwhFalta = kwhNecessarioSaida - kwh;
@@ -2814,11 +2815,11 @@ function calcPlan() {
         paradas.push({
           socChega: Math.round(socChegaP),
           kwhCarrega,
-          socSai: Math.round(kwh / BATT * 100)
+          socSai: Math.round(kwh / (BATT*UTIL) * 100)
         });
       }
       kwh -= kwhSeg;                             // último trecho → destino
-      const socFinal = kwh / BATT * 100;
+      const socFinal = kwh / (BATT*UTIL) * 100;
       // Válido se chega com pelo menos a margem prometida
       return { valido: kwh >= kwhMargUtil - 0.5, socFinal, totalKwhCarregado, paradas };
     }
