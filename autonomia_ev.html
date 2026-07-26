@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="39">
+<meta name="version" content="40">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -968,8 +968,14 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     </div>
     <div class="panel">
       <p class="sl">Viagens registradas</p>
+      <div class="adv-toggle" onclick="toggleAdv(this,'log-diff-body')" style="margin-bottom:8px">
+        <span class="adv-arrow" style="color:var(--green-light);font-size:11px">▶</span>
+        <span style="color:var(--text2);font-weight:500">Por que os números podem diferir do painel?</span>
+      </div>
+      <div class="adv-body" id="log-diff-body">
+        <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:0 0 10px;line-height:1.6">Pequenas diferenças na eficiência (km/kWh) entre o calculado e o painel são normais (arredondamento do SoC, medição do BMS). Com mais viagens registradas, o modelo se calibra e a discrepância tende a diminuir.</p>
+      </div>
       <div id="log-tbody"></div>
-      <p style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 0;line-height:1.6">Pequenas diferenças na eficiência (km/kWh) entre o calculado e o painel são normais (arredondamento do SoC, medição do BMS). Com mais viagens registradas, o modelo se calibra e a discrepância tende a diminuir.</p>
     </div>
   </div>
 </div><!-- /pane-stats -->
