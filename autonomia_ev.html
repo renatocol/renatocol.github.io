@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="40">
+<meta name="version" content="41">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -575,7 +575,8 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <span style="color:var(--green-light)">1.</span> Informe o SoC (carga atual da bateria) ao sair e ao chegar, lidos no painel do veículo<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
     <span style="color:var(--green-light)">3.</span> Se houver paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
-    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em>; os dados entram no Histórico e calibram o modelo
+    <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em>; os dados entram no Histórico e calibram o modelo<br><br>
+    💡 Dica: tire foto do painel na partida e na chegada, e depois insira os dados no app com calma.
   </div>
 
   <div class="fg" style="margin-bottom:12px">
@@ -622,7 +623,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <p class="sdiv">Percurso</p>
     <div class="fg" style="margin-bottom:8px">
       <label>Distância (km)</label>
-      <input type="number" id="f-km" min="1" step="0.1" placeholder="ex: 233.4" oninput="calcLogVel();previewLog()">
+      <input type="number" id="f-km" min="1" step="0.1" placeholder="ex: 95.4" oninput="calcLogVel();previewLog()">
     </div>
     <div class="fg" style="margin-bottom:8px">
       <label>Efic. indicada pelo painel (kWh/100km) — opcional</label>
