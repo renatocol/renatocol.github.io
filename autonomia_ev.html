@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="43">
+<meta name="version" content="44">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -210,6 +210,13 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 .adv-arrow.open { transform: rotate(90deg); }
 .adv-body { display: none; }
 .adv-body.open { display: block; }
+
+/* HELP BOX (recolhível, lembra estado) */
+.help-box { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; background: var(--bg2); font-size: 11px; font-family: var(--mono); color: var(--text3); line-height: 1.8; }
+.help-head { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 12px; user-select: none; color: var(--text2); font-weight: 500; }
+.help-head:hover { color: var(--text); }
+.help-body { display: none; padding: 0 12px 10px; }
+.help-body.open { display: block; }
 
 /* VEHICLE COMPLETENESS BADGE */
 .veh-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 20px; }
@@ -569,14 +576,16 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   </div>
 
   <!-- Instruções no topo -->
-  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
-    <span style="color:var(--text2);font-weight:500">Como usar</span><br>
+  <div class="help-box">
+    <div class="help-head" onclick="toggleHelp('help-log')"><span class="adv-arrow" id="help-log-arrow" style="color:var(--green-light);font-size:11px">▶</span><span>Como usar</span></div>
+    <div class="help-body" id="help-log-body">
     Use esta aba para registrar viagens ou trajetos já concluídos e realizados com uma única carga (isto é, sem recarga no meio do trecho percorrido). Se houver recarga durante o percurso, use a aba <strong style="color:var(--text2)">Viagem ativa</strong>, que contabiliza corretamente a energia utilizada em cada trecho.<br><br>
     <span style="color:var(--green-light)">1.</span> Informe o SoC (carga atual da bateria) ao sair e ao chegar, lidos no painel do veículo<br>
     <span style="color:var(--green-light)">2.</span> Informe a distância percorrida, os horários e as demais informações solicitadas<br>
     <span style="color:var(--green-light)">3.</span> Se houver paradas, informe o tempo parado; a velocidade média será calculada sobre o tempo efetivo em movimento<br>
     <span style="color:var(--green-light)">4.</span> Toque em <em>Registrar viagem</em>; os dados entram no Histórico e calibram o modelo<br><br>
     💡 Dica: tire foto do painel na partida e na chegada, para depois inserir os dados no app com calma.
+    </div>
   </div>
 
   <div class="fg" style="margin-bottom:12px">
@@ -703,12 +712,14 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
      VIAGEM ATIVA
 ═══════════════════════════════════════════════════════ -->
 <div id="pane-recarga" class="pane">
-  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
-    <span style="color:var(--text2);font-weight:500">Como usar</span><br>
+  <div class="help-box">
+    <div class="help-head" onclick="toggleHelp('help-va')"><span class="adv-arrow" id="help-va-arrow" style="color:var(--green-light);font-size:11px">▶</span><span>Como usar</span></div>
+    <div class="help-body" id="help-va-body">
     Use esta aba para registrar a viagem em tempo real, trecho a trecho, em especial as mais longas com paradas para recarga.<br><br>
     <span style="color:var(--green-light)">1. Ao sair</span> — informe o SoC inicial (carga atual da bateria) e toque em <em>Iniciar viagem ativa</em><br>
     <span style="color:var(--green-light)">2. A cada parada, inclusive a chegada final</span> — informe SoC atual, km percorridos e as demais informações solicitadas. Se for recarregar no local, informe também o SoC após a recarga; toque em <em>Registrar trecho</em><br>
     <span style="color:var(--green-light)">3. Só depois de registrar o último trecho (a chegada ao destino)</span> — toque em <em>Encerrar e salvar</em> para gravar no Histórico
+    </div>
   </div>
 
   <div id="va-inicio-panel" class="panel">
@@ -1036,7 +1047,9 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
   <div id="plan-no-vehicle" class="no-vehicle-banner">
     ⚠ Veículo não configurado. Os cálculos usam valores genéricos. <a onclick="switchTab('veiculo')">Configure seu veículo →</a>
   </div>
-  <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;background:var(--bg2)">
+  <div class="help-box">
+    <div class="help-head" onclick="toggleHelp('help-plan')"><span class="adv-arrow" id="help-plan-arrow" style="color:var(--green-light);font-size:11px">▶</span><span>O que é esta aba e como usar</span></div>
+    <div class="help-body" id="help-plan-body">
     <span style="color:var(--text2);font-weight:500">O que é esta aba</span><br>
     Use antes de uma viagem longa para estimar se a bateria atual é suficiente — e, se não for, quantas paradas de recarga serão necessárias e quanto carregar em cada uma.<br><br>
     <span style="color:var(--green-light);font-weight:500">Como usar</span><br>
@@ -1045,6 +1058,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
     <span style="color:var(--green-light)">3.</span> Escolha o perfil predominante da viagem e a margem de chegada desejada<br>
     <span style="color:var(--green-light)">4.</span> O aplicativo calcula autonomia disponível, necessidade de recargas e tempo estimado<br><br>
     O cálculo usa sua eficiência média real registrada no Histórico. Sem dados suficientes, usa o modelo padrão calibrado.
+    </div>
   </div>
 
   <div class="panel">
@@ -1345,6 +1359,30 @@ function cdFromCarroceria(tipo, custom) {
   if(custom && !isNaN(custom)) return parseFloat(custom);
   const def = CARROCERIA_DEFAULTS[tipo];
   return def ? def.cd : VEH_DEFAULT.cd;
+}
+
+// ─── HELP BOXES (aberto na 1ª visita; depois recolhido; escolha do usuário lembrada) ───
+const HELP_TABS = { log:'help-log', recarga:'help-va', plan:'help-plan' };
+function helpKey(id){ return 'autonomia_ev_'+id; }
+function helpGet(id){ try{ return localStorage.getItem(helpKey(id)); }catch(e){ return null; } }
+function helpSet(id,v){ try{ localStorage.setItem(helpKey(id),v); }catch(e){} }
+function applyHelp(id, open){
+  const b=document.getElementById(id+'-body'), a=document.getElementById(id+'-arrow');
+  if(!b||!a) return;
+  b.classList.toggle('open',open); a.classList.toggle('open',open);
+}
+function toggleHelp(id){
+  const b=document.getElementById(id+'-body');
+  const open=!b.classList.contains('open');
+  applyHelp(id,open);
+  helpSet(id, open?'open':'closed');
+}
+function initHelp(){
+  Object.values(HELP_TABS).forEach(id=>applyHelp(id, helpGet(id)!=='closed'));
+}
+function helpMarkSeen(tab){
+  const id=HELP_TABS[tab];
+  if(id && helpGet(id)===null) helpSet(id,'closed'); // aberto agora; recolhido nas próximas aberturas do app
 }
 
 function toggleAdv(el, targetId) {
@@ -2937,6 +2975,7 @@ function switchTab(t) {
   document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('pane-'+t).classList.add('active');
+  helpMarkSeen(t);
   if(t==='stats')  renderStats();
   if(t==='calc')   requestAnimationFrame(()=>updateCalc());
   if(t==='plan')   { document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1)); }
@@ -3019,6 +3058,7 @@ document.getElementById('va-hora-inicio').value = new Date().getHours().toString
 // Init plan margem default
 document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
 renderParadasFixasUI();
+initHelp();
 
 loadVehicleForm();
 applyConfigUI();
