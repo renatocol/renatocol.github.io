@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="46">
+<meta name="version" content="47">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1025,7 +1025,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
       Nenhum veículo configurado. <a onclick="switchTab('veiculo')" style="color:var(--green-light);cursor:pointer;text-decoration:underline">Configure na aba Veículo →</a>
     </div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:var(--mono)">
-      Autonomia EV · versão 1.0<br>
+      Autonomia EV · versão <span id="app-ver">—</span><br>
       Disponível no Google Play<br><br>
       © 2026 Renato Perim Colistete<br>
       Desenvolvido com assistência de Claude (Anthropic)<br>
@@ -3059,6 +3059,7 @@ document.getElementById('va-hora-inicio').value = new Date().getHours().toString
 document.getElementById('pl-margem-ctrl').querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
 renderParadasFixasUI();
 initHelp();
+{ const v=document.querySelector('meta[name="version"]'), el=document.getElementById('app-ver'); if(v&&el) el.textContent=v.content; }
 
 loadVehicleForm();
 applyConfigUI();
