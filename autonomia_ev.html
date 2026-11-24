@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="47">
+<meta name="version" content="48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f1a14">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -999,7 +999,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: 
 <div id="pane-config" class="pane">
   <div class="panel">
     <p class="sl">Tarifa doméstica padrão</p>
-    <div class="fg" style="margin-bottom:10px"><label>Tarifa residencial (R$/kWh)</label><input type="number" id="cfg-tarifa" min="0" step="0.01" placeholder="ex: 1.00" oninput="saveConfig()"></div>
+    <div class="fg" style="margin-bottom:10px"><label>Tarifa residencial (R$/kWh)</label><input type="number" id="cfg-tarifa" min="0" step="0.01" placeholder="ex: 0.95" oninput="saveConfig()"></div>
     <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Usada automaticamente para viagens com tipo "Casa".</div>
   </div>
   <div class="panel">
@@ -1210,7 +1210,7 @@ const CARROCERIA_DEFAULTS = {
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let vehicle  = Object.assign({}, VEH_DEFAULT, JSON.parse(localStorage.getItem(SK.vehicle)||'{}'));
 let trips    = JSON.parse(localStorage.getItem(SK.trips)||'[]');
-let cfg      = JSON.parse(localStorage.getItem(SK.cfg)||'{"tarifa":1.00,"desconto":true}');
+let cfg      = JSON.parse(localStorage.getItem(SK.cfg)||'{"tarifa":0.95,"desconto":true}');
 let margin   = 10, plMargem = 20;
 let calcAcVal=0, calcTrafVal=0, logAcVal=0.8, logTrafVal=0;
 let calcOcup=1, calcTopo=0;
@@ -1678,7 +1678,7 @@ function setStatus(txt, active) {
   document.getElementById('status-dot').classList.toggle('active', !!active);
 }
 
-function saveConfig() { cfg.tarifa = parseFloat(document.getElementById('cfg-tarifa').value)||1.00; localStorage.setItem(SK.cfg, JSON.stringify(cfg)); }
+function saveConfig() { cfg.tarifa = parseFloat(document.getElementById('cfg-tarifa').value)||0.95; localStorage.setItem(SK.cfg, JSON.stringify(cfg)); }
 function toggleDesconto() { cfg.desconto=!cfg.desconto; document.getElementById('tog-desconto').classList.toggle('on',cfg.desconto); localStorage.setItem(SK.cfg,JSON.stringify(cfg)); }
 function setFilter(f,btn) { statsFilter=f; document.querySelectorAll('.filter-btns .pb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderStats(); }
 function setCalcAc(v,btn)  { calcAcVal=v;  document.getElementById('ctrl-ac').querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));   btn.classList.add('active'); updateCalc(); }
